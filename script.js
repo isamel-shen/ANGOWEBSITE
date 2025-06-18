@@ -312,4 +312,139 @@ if (contactForm) {
             submitBtn.disabled = false;
         }, 2000);
     });
-} 
+}
+
+// --- Modular Email Signup (Lead Magnet) ---
+const leadMagnetForm = document.getElementById('lead-magnet-form');
+const leadMagnetSuccess = document.getElementById('lead-magnet-success');
+
+if (leadMagnetForm) {
+    leadMagnetForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('lead-email').value;
+        // TODO: Integrate with Mailchimp, Google Sheets, or other service here
+        // Example: sendEmailToService(email);
+        leadMagnetForm.style.display = 'none';
+        leadMagnetSuccess.style.display = 'block';
+    });
+}
+
+// --- Tournaments/Events Data (Easy to Update) ---
+const tournaments = [
+    {
+        id: 1,
+        name: 'Spring Showdown',
+        sport: 'Basketball',
+        date: '2024-05-25',
+        time: '10:00 AM',
+        location: 'Downtown Sports Center',
+        format: 'Single Elimination',
+        entryFee: '$50',
+        prizePool: '$500',
+        skillLevel: 'All Levels',
+        merch: ['Shirt', 'Towel'],
+        media: [],
+        description: 'Kick off the season with our Spring Showdown!'
+    },
+    {
+        id: 2,
+        name: 'Summer Slam',
+        sport: 'Soccer',
+        date: '2024-07-10',
+        time: '2:00 PM',
+        location: 'Greenfield Park',
+        format: 'Round Robin',
+        entryFee: '$40',
+        prizePool: '$300',
+        skillLevel: 'Beginner/Intermediate',
+        merch: ['Shirt'],
+        media: [],
+        description: 'Join our fun and friendly summer soccer tournament!'
+    }
+    // Add more tournaments here
+];
+
+// --- Render Tournament List ---
+function renderTournamentList() {
+    const list = document.getElementById('tournament-list');
+    if (!list) return;
+    list.innerHTML = tournaments.map(t => `
+        <div class="tournament-card" onclick="showEventDetails(${t.id})">
+            <h3>${t.name}</h3>
+            <p><strong>Sport:</strong> ${t.sport}</p>
+            <p><strong>Date:</strong> ${t.date} &nbsp; <strong>Time:</strong> ${t.time}</p>
+            <p><strong>Location:</strong> ${t.location}</p>
+            <p><strong>Format:</strong> ${t.format}</p>
+            <p><strong>Entry Fee:</strong> ${t.entryFee}</p>
+            <p><strong>Prize Pool:</strong> ${t.prizePool}</p>
+            <button class="btn btn-primary" onclick="event.stopPropagation(); showRegistrationForm(${t.id})">Register</button>
+        </div>
+    `).join('');
+}
+
+// --- Show Event Details ---
+window.showEventDetails = function(id) {
+    const event = tournaments.find(t => t.id === id);
+    const details = document.getElementById('event-details');
+    if (!event || !details) return;
+    details.innerHTML = `
+        <div class="event-details-card">
+            <h2>${event.name}</h2>
+            <p><strong>Sport:</strong> ${event.sport}</p>
+            <p><strong>Date:</strong> ${event.date} &nbsp; <strong>Time:</strong> ${event.time}</p>
+            <p><strong>Location:</strong> ${event.location}</p>
+            <p><strong>Format:</strong> ${event.format}</p>
+            <p><strong>Entry Fee:</strong> ${event.entryFee}</p>
+            <p><strong>Prize Pool:</strong> ${event.prizePool}</p>
+            <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
+            <p><strong>Branded Merch:</strong> ${event.merch.join(', ')}</p>
+            <p>${event.description}</p>
+            <button class="btn btn-primary" onclick="showRegistrationForm(${event.id})">Register</button>
+            <button class="btn btn-secondary" onclick="closeEventDetails()">Close</button>
+        </div>
+    `;
+    details.scrollIntoView({behavior:'smooth'});
+}
+
+window.closeEventDetails = function() {
+    const details = document.getElementById('event-details');
+    if (details) details.innerHTML = '';
+}
+
+// --- Registration Form ---
+window.showRegistrationForm = function(id) {
+    const event = tournaments.find(t => t.id === id);
+    const reg = document.getElementById('registration-form-container');
+    if (!event || !reg) return;
+    reg.innerHTML = `
+        <form class="registration-form">
+            <h2>Register for ${event.name}</h2>
+            <input type="text" placeholder="Your Name" required><br>
+            <input type="email" placeholder="Your Email" required><br>
+            <input type="text" placeholder="Team Name (optional)"><br>
+            <button type="submit" class="btn btn-primary">Submit Registration</button>
+            <button type="button" class="btn btn-secondary" onclick="closeRegistrationForm()">Cancel</button>
+        </form>
+    `;
+    reg.scrollIntoView({behavior:'smooth'});
+    // Add submit handler
+    const form = reg.querySelector('.registration-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // TODO: Integrate with registration backend/service
+            alert('Registration submitted!');
+            reg.innerHTML = '';
+        });
+    }
+}
+
+window.closeRegistrationForm = function() {
+    const reg = document.getElementById('registration-form-container');
+    if (reg) reg.innerHTML = '';
+}
+
+// --- Render on Load ---
+document.addEventListener('DOMContentLoaded', () => {
+    renderTournamentList();
+}); 

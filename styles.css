@@ -570,12 +570,12 @@ html {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 950px;
+    max-width: 1200px;
     margin: 0 auto 2rem auto;
     background: #fff;
     border-radius: 18px;
     box-shadow: 0 2px 16px rgba(23,32,42,0.04);
-    padding: 2rem 1.5rem 2.5rem 1.5rem;
+    padding: 2.5rem 2rem 3rem 2rem;
 }
 .calendar-nav {
     display: flex;
@@ -707,7 +707,7 @@ html {
     font-weight: 500;
     text-align: left;
     width: 100%;
-    max-width: 160px;
+    max-width: 200px;
     box-sizing: border-box;
     margin: 0 auto;
     box-shadow: 0 1px 4px rgba(199,161,91,0.10);
@@ -730,12 +730,13 @@ html {
     color: #222;
 }
 .calendar-event-box .event-meta {
-    font-size: 1.01rem;
+    font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2px;
     margin-bottom: 0.1rem;
     color: #222;
+    display: inline;
 }
 @media (max-width: 900px) {
     .calendar-container-modern {

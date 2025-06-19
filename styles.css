@@ -570,12 +570,12 @@ html {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 900px;
+    max-width: 700px;
     margin: 0 auto 2rem auto;
     background: #fff;
     border-radius: 18px;
     box-shadow: 0 2px 16px rgba(23,32,42,0.04);
-    padding: 2rem 1rem 2.5rem 1rem;
+    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
 }
 .calendar-nav {
     display: flex;
@@ -632,12 +632,12 @@ html {
     border-right: none;
 }
 .calendar-cell {
-    min-height: 100px;
+    min-height: 75px;
     background: #fff;
     border-right: 1px solid #E0E0E0;
     border-bottom: 1px solid #E0E0E0;
     position: relative;
-    padding: 6px 4px 4px 4px;
+    padding: 4px 2px 2px 2px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -665,15 +665,15 @@ html {
     align-items: center;
 }
 .calendar-event-box {
-    background: #F6E7CB;
+    background: #f0dcb4;
     color: #222;
     border-radius: 8px;
-    padding: 12px 14px 10px 14px;
-    font-size: 1rem;
+    padding: 8px 10px 7px 10px;
+    font-size: 0.93rem;
     font-weight: 500;
     text-align: left;
     width: 100%;
-    max-width: 140px;
+    max-width: 110px;
     box-sizing: border-box;
     margin: 0 auto;
     box-shadow: 0 1px 4px rgba(199,161,91,0.10);
@@ -704,8 +704,20 @@ html {
     box-shadow: 0 4px 16px rgba(199,161,91,0.18);
 }
 .calendar-today {
-    border: 2px solid var(--gold);
+    background: var(--navy-dark);
+    color: #fff;
     border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1em;
+    margin: 0 auto 0.5em auto;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
 @media (max-width: 900px) {
     .calendar-container-modern {

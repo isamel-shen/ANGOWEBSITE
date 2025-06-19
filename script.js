@@ -503,8 +503,8 @@ function renderCalendar(year, month) {
         if (events.length > 0) {
             for (let ev of events) {
                 html += `<div class='calendar-event-summary' data-event-id='${ev.id}'>
-                    <strong>${ev.name}</strong><br>
-                    Fee: ${ev.entryFee}<br>
+                    <strong>${ev.sport}</strong><br>
+                    Entry: ${ev.entryFee}<br>
                     Prize: ${ev.prizePool}
                 </div>`;
             }

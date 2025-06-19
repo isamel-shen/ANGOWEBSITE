@@ -737,6 +737,11 @@ html {
     }
 }
 
+/* Remove any old .day or .event-box styles if present */
+.day, .event-box {
+    all: unset;
+}
+
 .community-links {
     display: flex;
     flex-wrap: wrap;

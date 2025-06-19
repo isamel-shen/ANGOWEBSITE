@@ -441,56 +441,62 @@ function renderCalendar(year, month) {
     const eventDetails = document.getElementById('calendar-event-details');
     if (eventDetails) eventDetails.style.display = 'none';
 
+    // Build calendar header
+    let html = `<div class='calendar-container-modern'>`;
+    html += `<div class='calendar-nav'>
+        <button class='btn btn-secondary' id='prev-month'>&lt;</button>
+        <span class='calendar-title'>${new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</span>
+        <button class='btn btn-secondary' id='next-month'>&gt;</button>
+    </div>`;
+    // Day headers
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    html += `<div class='calendar-grid'>`;
+    for (let d of days) html += `<div class='calendar-day-header'>${d}</div>`;
+
     // Get first and last day of the month
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const today = new Date();
 
-    // Build calendar header
-    let html = `<div class='calendar-nav'>
-        <button class='btn btn-secondary' id='prev-month'>&lt;</button>
-        <span class='calendar-title'>${firstDay.toLocaleString('default', { month: 'long' })} ${year}</span>
-        <button class='btn btn-secondary' id='next-month'>&gt;</button>
-    </div>`;
-    html += `<table class='calendar-table'><thead><tr>`;
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    for (let d of days) html += `<th>${d}</th>`;
-    html += `</tr></thead><tbody><tr>`;
-
     // Fill initial empty cells
-    for (let i = 0; i < firstDay.getDay(); i++) html += `<td></td>`;
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        html += `<div class='calendar-cell'></div>`;
+    }
 
     // Fill days
     for (let date = 1; date <= lastDay.getDate(); date++) {
         const thisDate = new Date(year, month, date);
         const dateStr = thisDate.toISOString().slice(0, 10);
         const events = tournaments.filter(ev => ev.date === dateStr);
-        let cellClass = '';
+        let cellClass = 'calendar-cell';
         if (
             thisDate.getDate() === today.getDate() &&
             thisDate.getMonth() === today.getMonth() &&
             thisDate.getFullYear() === today.getFullYear()
         ) {
-            cellClass = 'calendar-today';
+            cellClass += ' calendar-today';
         }
-        if (events.length > 0) cellClass += ' calendar-event-day';
-        html += `<td class='${cellClass.trim()}' data-date='${dateStr}'>
-            <div class='calendar-date-num'>${date}</div>`;
+        html += `<div class='${cellClass}' data-date='${dateStr}'>`;
+        html += `<div class='calendar-date-num'>${date}</div>`;
         if (events.length > 0) {
+            html += `<div class='calendar-event-stack'>`;
             for (let ev of events) {
-                html += `<div class='calendar-event-summary' data-event-id='${ev.id}'>
+                html += `<div class='calendar-event-box' data-event-id='${ev.id}'>
                     <strong>${ev.sport}</strong>
                     <span class='event-meta'>${ev.entryFee} ENTRY</span>
                     <span class='event-meta'>${ev.prizePool} PRIZE</span>
                 </div>`;
             }
+            html += `</div>`;
         }
-        html += `</td>`;
-        if ((thisDate.getDay() + 1) % 7 === 0 && date !== lastDay.getDate()) html += `</tr><tr>`;
+        html += `</div>`;
     }
     // Fill trailing empty cells
-    for (let i = lastDay.getDay() + 1; i <= 7 && lastDay.getDay() !== 6; i++) html += `<td></td>`;
-    html += `</tr></tbody></table>`;
+    const totalCells = firstDay.getDay() + lastDay.getDate();
+    for (let i = totalCells; i % 7 !== 0; i++) {
+        html += `<div class='calendar-cell'></div>`;
+    }
+    html += `</div></div>`;
     calendarContainer.innerHTML = html;
 
     // Month navigation
@@ -506,7 +512,7 @@ function renderCalendar(year, month) {
     };
 
     // Event click handlers
-    document.querySelectorAll('.calendar-event-summary').forEach(el => {
+    document.querySelectorAll('.calendar-event-box').forEach(el => {
         el.onclick = (e) => {
             e.stopPropagation();
             const eventId = parseInt(el.getAttribute('data-event-id'));

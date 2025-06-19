@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details | ANGO Competitive</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/logo.png" alt="ANGO Competitive Logo" style="height:48px;vertical-align:middle;"> <span style="font-size:1.5rem;font-weight:700;vertical-align:middle;">ANGO Competitive</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html#home" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="index.html#scheduling" class="nav-link">Scheduling</a></li>
+                <li class="nav-item"><a href="index.html#information" class="nav-link">Information</a></li>
+                <li class="nav-item"><a href="index.html#registration" class="nav-link">Registration</a></li>
+                <li class="nav-item"><a href="index.html#media" class="nav-link">Media</a></li>
+                <li class="nav-item"><a href="index.html#community" class="nav-link">Community</a></li>
+                <li class="nav-item"><a href="index.html#about" class="nav-link">About Us</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+    <section class="event-details" style="padding:5rem 0 2rem 0;min-height:60vh;">
+        <div class="container">
+            <div id="event-details-content"></div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <img src="assets/logo.png" alt="ANGO Logo" style="height:32px;vertical-align:middle;">
+                    <h3 style="display:inline-block;margin-left:0.5rem;">ANGO Competitive</h3>
+                    <p>Bringing the thrill of competition to everyone.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#home">Home</a></li>
+                        <li><a href="index.html#scheduling">Scheduling</a></li>
+                        <li><a href="index.html#information">Information</a></li>
+                        <li><a href="index.html#registration">Registration</a></li>
+                        <li><a href="index.html#media">Media</a></li>
+                        <li><a href="index.html#community">Community</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="mailto:info@angocompetitive.com"><i class="fas fa-envelope"></i> info@angocompetitive.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ANGO Competitive. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+    // Tournament data (should match script.js)
+    const tournaments = [
+        {
+            id: 1,
+            name: 'Spring Showdown',
+            sport: 'Basketball',
+            date: '2024-05-25',
+            time: '10:00 AM',
+            location: 'Downtown Sports Center',
+            format: 'Single Elimination',
+            entryFee: '$50',
+            prizePool: '$500',
+            skillLevel: 'All Levels',
+            merch: ['Shirt', 'Towel'],
+            media: [],
+            description: 'Kick off the season with our Spring Showdown!'
+        },
+        {
+            id: 2,
+            name: 'Summer Slam',
+            sport: 'Soccer',
+            date: '2024-07-10',
+            time: '2:00 PM',
+            location: 'Greenfield Park',
+            format: 'Round Robin',
+            entryFee: '$40',
+            prizePool: '$300',
+            skillLevel: 'Beginner/Intermediate',
+            merch: ['Shirt'],
+            media: [],
+            description: 'Join our fun and friendly summer soccer tournament!'
+        }
+        // Add more tournaments here
+    ];
+    function getEventIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        return parseInt(params.get('id'));
+    }
+    function renderEventDetails() {
+        const id = getEventIdFromUrl();
+        const event = tournaments.find(ev => ev.id === id);
+        const container = document.getElementById('event-details-content');
+        if (!event) {
+            container.innerHTML = '<p>Event not found.</p>';
+            return;
+        }
+        container.innerHTML = `
+            <div class="event-details-card" style="background:var(--offwhite);padding:2rem 2.5rem;border-radius:18px;box-shadow:0 4px 32px rgba(23,32,42,0.06);max-width:600px;margin:0 auto;">
+                <h1 style="font-size:2.2rem;font-weight:800;color:var(--navy-dark);margin-bottom:1rem;">${event.name}</h1>
+                <p><strong>Sport:</strong> ${event.sport}</p>
+                <p><strong>Date:</strong> ${event.date} &nbsp; <strong>Time:</strong> ${event.time}</p>
+                <p><strong>Location:</strong> ${event.location}</p>
+                <p><strong>Format:</strong> ${event.format}</p>
+                <p><strong>Entry Fee:</strong> ${event.entryFee}</p>
+                <p><strong>Prize Pool:</strong> ${event.prizePool}</p>
+                <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
+                <p><strong>Branded Merch:</strong> ${event.merch.join(', ')}</p>
+                <p>${event.description}</p>
+                <button class="btn btn-primary" onclick="window.location.href='index.html#registration'">Register</button>
+                <button class="btn btn-secondary" onclick="window.history.back()">Back</button>
+            </div>
+        `;
+    }
+    document.addEventListener('DOMContentLoaded', renderEventDetails);
+    </script>
+</body>
+</html> 

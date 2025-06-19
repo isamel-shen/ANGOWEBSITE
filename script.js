@@ -520,39 +520,10 @@ function renderCalendar(year, month) {
         el.onclick = (e) => {
             e.stopPropagation();
             const eventId = parseInt(el.getAttribute('data-event-id'));
-            showCalendarEventDetails(eventId);
+            window.location.href = `event.html?id=${eventId}`;
         };
     });
 }
-
-function showCalendarEventDetails(eventId) {
-    const event = tournaments.find(ev => ev.id === eventId);
-    const eventDetails = document.getElementById('calendar-event-details');
-    if (!event || !eventDetails) return;
-    eventDetails.innerHTML = `
-        <div class='calendar-event-modal'>
-            <h2>${event.name}</h2>
-            <p><strong>Sport:</strong> ${event.sport}</p>
-            <p><strong>Date:</strong> ${event.date} &nbsp; <strong>Time:</strong> ${event.time}</p>
-            <p><strong>Location:</strong> ${event.location}</p>
-            <p><strong>Format:</strong> ${event.format}</p>
-            <p><strong>Entry Fee:</strong> ${event.entryFee}</p>
-            <p><strong>Prize Pool:</strong> ${event.prizePool}</p>
-            <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
-            <p><strong>Branded Merch:</strong> ${event.merch.join(', ')}</p>
-            <p>${event.description}</p>
-            <button class='btn btn-primary' onclick='showRegistrationForm(${event.id})'>Register</button>
-            <button class='btn btn-secondary' onclick='closeCalendarEventDetails()'>Close</button>
-        </div>
-    `;
-    eventDetails.style.display = 'block';
-    eventDetails.scrollIntoView({behavior:'smooth'});
-}
-
-window.closeCalendarEventDetails = function() {
-    const eventDetails = document.getElementById('calendar-event-details');
-    if (eventDetails) eventDetails.style.display = 'none';
-};
 
 // --- Render on Load ---
 document.addEventListener('DOMContentLoaded', () => {

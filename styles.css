@@ -39,7 +39,7 @@ body {
     background: var(--offwhite);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    padding: 0.1rem 0;
+    padding: 0.5vh 0;
     transition: all 0.3s ease;
     box-shadow: 0 2px 20px rgba(23,32,42,0.04);
 }
@@ -47,87 +47,26 @@ body {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 2vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 65px;
+    height: 8vh;
+    min-height: 50px;
+    max-height: 80px;
 }
 
-.nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    position: relative;
+.logo {
+    height: 6vh;
+    min-height: 40px;
+    max-height: 65px;
+    width: auto;
+    transition: all 0.3s ease;
 }
 
-.nav-logo img {
-    height: 55px;
-    vertical-align: middle;
-    margin-top: 2px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.nav-logo .logo-spacer {
-    width: 55px;
-}
-
-.nav-logo .logo-text {
-    font-family: 'Eurostile Bold Extended', 'Eurostile', 'Arial Black', Arial, sans-serif;
-    font-size: 1.8rem;
+.nav-logo h2 {
+    color: var(--navy-dark);
     font-weight: 700;
-    letter-spacing: 0.04em;
-    vertical-align: middle;
-    font-style: italic;
-    margin-left: -4px;
-}
-
-/* Responsive logo sizing */
-@media screen and (min-width: 1024px) {
-    .nav-container {
-        height: 75px;
-    }
-    .nav-logo img {
-        height: 85px;
-    }
-    .nav-logo .logo-spacer {
-        width: 85px;
-    }
-    .nav-logo .logo-text {
-        font-size: 2.2rem;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .nav-container {
-        height: 60px;
-    }
-    .nav-logo img {
-        height: 50px;
-    }
-    .nav-logo .logo-spacer {
-        width: 50px;
-    }
-    .nav-logo .logo-text {
-        font-size: 1.6rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .nav-container {
-        height: 50px;
-    }
-    .nav-logo img {
-        height: 40px;
-    }
-    .nav-logo .logo-spacer {
-        width: 40px;
-    }
-    .nav-logo .logo-text {
-        font-size: 1.4rem;
-    }
 }
 
 .nav-menu {

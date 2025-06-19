@@ -452,16 +452,13 @@ function renderCalendar(year, month) {
     if (!calendarContainer) return;
     const eventDetails = document.getElementById('calendar-event-details');
     if (eventDetails) eventDetails.style.display = 'none';
-    if (killSwitch || tournaments.length === 0) {
-        calendarContainer.innerHTML = '';
-        return;
-    }
+    // Always show the calendar grid, but hide events if killSwitch is on
     // Build calendar header
     let html = `<div class='calendar-container-modern'>`;
     html += `<div class='calendar-nav'>
-        <button class='btn btn-secondary' id='prev-month'>&lt;</button>
+        <button class='calendar-arrow' id='prev-month'>&lt;</button>
         <span class='calendar-title'>${new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</span>
-        <button class='btn btn-secondary' id='next-month'>&gt;</button>
+        <button class='calendar-arrow' id='next-month'>&gt;</button>
     </div>`;
     // Day headers
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -482,7 +479,7 @@ function renderCalendar(year, month) {
     for (let date = 1; date <= lastDay.getDate(); date++) {
         const thisDate = new Date(year, month, date);
         const dateStr = thisDate.toISOString().slice(0, 10);
-        const events = tournaments.filter(ev => ev.date === dateStr);
+        const events = (!killSwitch) ? tournaments.filter(ev => ev.date === dateStr) : [];
         let cellClass = 'calendar-cell';
         let dateNumClass = 'calendar-date-num';
         if (

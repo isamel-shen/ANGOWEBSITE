@@ -570,30 +570,21 @@ html {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 700px;
+    max-width: 950px;
     margin: 0 auto 2rem auto;
     background: #fff;
     border-radius: 18px;
     box-shadow: 0 2px 16px rgba(23,32,42,0.04);
-    padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+    padding: 2rem 1.5rem 2.5rem 1.5rem;
 }
 .calendar-nav {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 1.5rem;
-    gap: 2.5rem;
+    gap: 0;
     width: 100%;
-}
-.calendar-title {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    color: var(--navy-dark);
-    text-transform: uppercase;
-    margin: 0 1.5rem;
-    flex: 1;
-    text-align: center;
+    position: relative;
 }
 .calendar-nav button {
     background: none;
@@ -603,10 +594,31 @@ html {
     color: var(--navy-dark);
     cursor: pointer;
     padding: 0 0.7rem;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s;
+    border-radius: 50%;
+    outline: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
 }
-.calendar-nav button:hover {
-    color: var(--gold);
+.calendar-nav button#prev-month {
+    left: 0;
+}
+.calendar-nav button#next-month {
+    right: 0;
+}
+.calendar-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--navy-dark);
+    text-transform: uppercase;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 0;
 }
 .calendar-grid {
     display: grid;
@@ -632,12 +644,12 @@ html {
     border-right: none;
 }
 .calendar-cell {
-    min-height: 75px;
+    min-height: 110px;
     background: #fff;
     border-right: 1px solid #E0E0E0;
     border-bottom: 1px solid #E0E0E0;
     position: relative;
-    padding: 4px 2px 2px 2px;
+    padding: 8px 6px 6px 6px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -665,15 +677,15 @@ html {
     align-items: center;
 }
 .calendar-event-box {
-    background: #f0dcb4;
+    background: #f0dcb4 !important;
     color: #222;
     border-radius: 8px;
-    padding: 8px 10px 7px 10px;
-    font-size: 0.93rem;
+    padding: 14px 18px 12px 18px;
+    font-size: 1.05rem;
     font-weight: 500;
     text-align: left;
     width: 100%;
-    max-width: 110px;
+    max-width: 160px;
     box-sizing: border-box;
     margin: 0 auto;
     box-shadow: 0 1px 4px rgba(199,161,91,0.10);
@@ -684,6 +696,10 @@ html {
     align-items: flex-start;
     border: none;
     gap: 2px;
+}
+.calendar-event-box:hover {
+    background: #e5cfa2 !important;
+    box-shadow: 0 4px 16px rgba(199,161,91,0.18);
 }
 .calendar-event-box strong {
     font-size: 1.13rem;
@@ -699,22 +715,18 @@ html {
     margin-bottom: 0.1rem;
     color: #222;
 }
-.calendar-event-box:hover {
-    background: #ecd6a7;
-    box-shadow: 0 4px 16px rgba(199,161,91,0.18);
-}
 .calendar-today {
     background: var(--navy-dark);
-    color: #fff;
+    color: #fff !important;
     border-radius: 50%;
-    width: 2em;
-    height: 2em;
+    width: 2.3em;
+    aspect-ratio: 1/1;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
     font-size: 1.1em;
-    margin: 0 auto 0.5em auto;
+    margin: 0 auto;
     border: none;
     box-shadow: none;
     padding: 0;

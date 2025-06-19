@@ -54,9 +54,80 @@ body {
     height: 65px;
 }
 
-.nav-logo h2 {
-    color: var(--navy-dark);
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+}
+
+.nav-logo img {
+    height: 55px;
+    vertical-align: middle;
+    margin-top: 2px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-logo .logo-spacer {
+    width: 55px;
+}
+
+.nav-logo .logo-text {
+    font-family: 'Eurostile Bold Extended', 'Eurostile', 'Arial Black', Arial, sans-serif;
+    font-size: 1.8rem;
     font-weight: 700;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    font-style: italic;
+    margin-left: -4px;
+}
+
+/* Responsive logo sizing */
+@media screen and (min-width: 1024px) {
+    .nav-container {
+        height: 75px;
+    }
+    .nav-logo img {
+        height: 85px;
+    }
+    .nav-logo .logo-spacer {
+        width: 85px;
+    }
+    .nav-logo .logo-text {
+        font-size: 2.2rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nav-container {
+        height: 60px;
+    }
+    .nav-logo img {
+        height: 50px;
+    }
+    .nav-logo .logo-spacer {
+        width: 50px;
+    }
+    .nav-logo .logo-text {
+        font-size: 1.6rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .nav-container {
+        height: 50px;
+    }
+    .nav-logo img {
+        height: 40px;
+    }
+    .nav-logo .logo-spacer {
+        width: 40px;
+    }
+    .nav-logo .logo-text {
+        font-size: 1.4rem;
+    }
 }
 
 .nav-menu {

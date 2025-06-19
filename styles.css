@@ -665,15 +665,15 @@ html {
     align-items: center;
 }
 .calendar-event-box {
-    background: #C79A4B;
-    color: #111;
+    background: #F6E7CB;
+    color: #222;
     border-radius: 8px;
-    padding: 10px 8px;
+    padding: 12px 14px 10px 14px;
     font-size: 1rem;
-    font-weight: 600;
-    text-align: center;
+    font-weight: 500;
+    text-align: left;
     width: 100%;
-    max-width: 120px;
+    max-width: 140px;
     box-sizing: border-box;
     margin: 0 auto;
     box-shadow: 0 1px 4px rgba(199,161,91,0.10);
@@ -681,22 +681,26 @@ html {
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    border: none;
+    gap: 2px;
 }
 .calendar-event-box strong {
-    font-size: 1.08rem;
+    font-size: 1.13rem;
     font-weight: 800;
     margin-bottom: 2px;
+    color: #222;
 }
 .calendar-event-box .event-meta {
-    font-size: 0.97rem;
+    font-size: 1.01rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
     margin-bottom: 0.1rem;
+    color: #222;
 }
 .calendar-event-box:hover {
-    background: #b88a3a;
+    background: #ecd6a7;
     box-shadow: 0 4px 16px rgba(199,161,91,0.18);
 }
 .calendar-today {
@@ -738,9 +742,9 @@ html {
 }
 
 /* Remove any old .day or .event-box styles if present */
-.day, .event-box {
+/* .day, .event-box {
     all: unset;
-}
+} */
 
 .community-links {
     display: flex;

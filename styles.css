@@ -668,6 +668,44 @@ html {
     margin-bottom: 0.5rem;
     color: var(--navy-dark);
     text-align: center;
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.calendar-today .calendar-date-num {
+    color: #fff !important;
+}
+.calendar-today .calendar-date-num::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2em;
+    height: 2em;
+    background: var(--navy-dark);
+    border-radius: 50%;
+    z-index: -1;
+    display: block;
+}
+.calendar-today {
+    background: none !important;
+    color: inherit;
+    border-radius: 0;
+    width: auto;
+    height: auto;
+    aspect-ratio: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: inherit;
+    font-size: inherit;
+    margin: 0 auto;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
 .calendar-event-stack {
     display: flex;
@@ -714,22 +752,6 @@ html {
     letter-spacing: 0.2px;
     margin-bottom: 0.1rem;
     color: #222;
-}
-.calendar-today {
-    background: var(--navy-dark);
-    color: #fff !important;
-    border-radius: 50%;
-    width: 2.3em;
-    aspect-ratio: 1/1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 1.1em;
-    margin: 0 auto;
-    border: none;
-    box-shadow: none;
-    padding: 0;
 }
 @media (max-width: 900px) {
     .calendar-container-modern {

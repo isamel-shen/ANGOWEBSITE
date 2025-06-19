@@ -542,7 +542,17 @@ function renderCalendar(year, month) {
 // --- Render on Load ---
 document.addEventListener('DOMContentLoaded', () => {
     renderTournamentList();
-    // Render calendar for current month
+    // Find the next upcoming event
     const now = new Date();
-    renderCalendar(now.getFullYear(), now.getMonth());
+    let nextEvent = tournaments
+        .map(ev => ({...ev, dateObj: new Date(ev.date)}))
+        .filter(ev => ev.dateObj >= new Date(now.getFullYear(), now.getMonth(), 1))
+        .sort((a, b) => a.dateObj - b.dateObj)[0];
+    let startYear = now.getFullYear();
+    let startMonth = now.getMonth();
+    if (nextEvent) {
+        startYear = nextEvent.dateObj.getFullYear();
+        startMonth = nextEvent.dateObj.getMonth();
+    }
+    renderCalendar(startYear, startMonth);
 }); 

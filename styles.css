@@ -586,27 +586,35 @@ html {
     width: 100%;
     position: relative;
 }
-.calendar-nav button {
-    background: none;
+.calendar-arrow {
+    background-color: transparent;
     border: none;
     font-size: 2.2rem;
     font-weight: 800;
     color: var(--navy-dark);
     cursor: pointer;
-    padding: 0 0.7rem;
-    transition: color 0.2s, background 0.2s;
+    transition: background-color 0.2s, color 0.2s;
+    padding: 4px;
+    line-height: 1;
+    vertical-align: middle;
     border-radius: 50%;
     outline: none;
     position: absolute;
     top: 50%;
+    left: unset;
+    right: unset;
     transform: translateY(-50%);
     z-index: 1;
 }
-.calendar-nav button#prev-month {
+.calendar-arrow#prev-month {
     left: 0;
 }
-.calendar-nav button#next-month {
+.calendar-arrow#next-month {
     right: 0;
+}
+.calendar-arrow:hover, .calendar-arrow:focus {
+    background-color: var(--gold);
+    color: #fff;
 }
 .calendar-title {
     font-size: 2rem;
@@ -664,48 +672,24 @@ html {
 }
 .calendar-date-num {
     font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-weight: 500;
+    margin-bottom: 6px;
     color: var(--navy-dark);
     text-align: center;
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-.calendar-today .calendar-date-num {
-    color: #fff !important;
-}
-.calendar-today .calendar-date-num::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 2em;
-    height: 2em;
-    background: var(--navy-dark);
-    border-radius: 50%;
-    z-index: -1;
     display: block;
 }
-.calendar-today {
-    background: none !important;
-    color: inherit;
-    border-radius: 0;
-    width: auto;
-    height: auto;
-    aspect-ratio: unset;
+.today {
+    background-color: #0F1111;
+    color: #fff !important;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: inherit;
-    font-size: inherit;
-    margin: 0 auto;
-    border: none;
-    box-shadow: none;
-    padding: 0;
+    margin: 0 auto 6px auto;
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 .calendar-event-stack {
     display: flex;

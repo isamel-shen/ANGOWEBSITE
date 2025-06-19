@@ -469,15 +469,17 @@ function renderCalendar(year, month) {
         const dateStr = thisDate.toISOString().slice(0, 10);
         const events = tournaments.filter(ev => ev.date === dateStr);
         let cellClass = 'calendar-cell';
+        let dateNumClass = 'calendar-date-num';
         if (
             thisDate.getDate() === today.getDate() &&
             thisDate.getMonth() === today.getMonth() &&
             thisDate.getFullYear() === today.getFullYear()
         ) {
-            cellClass += ' calendar-today';
+            cellClass += '';
+            dateNumClass += ' today';
         }
         html += `<div class='${cellClass}' data-date='${dateStr}'>`;
-        html += `<div class='calendar-date-num'>${date}</div>`;
+        html += `<div class='${dateNumClass}'>${date}</div>`;
         if (events.length > 0) {
             html += `<div class='calendar-event-stack'>`;
             for (let ev of events) {

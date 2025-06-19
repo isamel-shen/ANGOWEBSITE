@@ -609,9 +609,9 @@ function renderCalendar(year, month) {
         if (events.length > 0) {
             for (let ev of events) {
                 html += `<div class='calendar-event-summary' data-event-id='${ev.id}'>
-                    <strong>${ev.sport}</strong><br>
-                    Entry: ${ev.entryFee}<br>
-                    Prize: ${ev.prizePool}
+                    <strong>${ev.sport}</strong>
+                    <span class='event-meta'>${ev.entryFee} ENTRY</span>
+                    <span class='event-meta'>${ev.prizePool} PRIZE</span>
                 </div>`;
             }
         }

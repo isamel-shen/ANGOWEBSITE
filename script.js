@@ -645,6 +645,26 @@ function renderCalendar(year, month) {
     });
 }
 
+// --- Render All Tournament Information ---
+function renderAllTournamentsInfo() {
+    const infoDiv = document.getElementById('all-tournaments-info');
+    if (!infoDiv) return;
+    infoDiv.innerHTML = tournaments.map(t => `
+        <div class="tournament-info-card" style="background:var(--offwhite);margin-bottom:2rem;padding:2rem 1.5rem;border-radius:16px;box-shadow:0 2px 12px rgba(23,32,42,0.06);max-width:600px;margin-left:auto;margin-right:auto;">
+            <h2 style="font-size:1.5rem;font-weight:800;color:var(--navy-dark);margin-bottom:0.7rem;">${t.name}</h2>
+            <p><strong>Sport:</strong> ${t.sport}</p>
+            <p><strong>Date:</strong> ${t.date} &nbsp; <strong>Time:</strong> ${t.time}</p>
+            <p><strong>Location:</strong> ${t.location}</p>
+            <p><strong>Format:</strong> ${t.format}</p>
+            <p><strong>Entry Fee:</strong> ${t.entryFee}</p>
+            <p><strong>Prize Pool:</strong> ${t.prizePool}</p>
+            <p><strong>Skill Level:</strong> ${t.skillLevel}</p>
+            <p><strong>Branded Merch:</strong> ${t.merch.join(', ')}</p>
+            <p>${t.description}</p>
+        </div>
+    `).join('');
+}
+
 // --- Render on Load ---
 document.addEventListener('DOMContentLoaded', () => {
     renderTournamentList();
@@ -661,4 +681,5 @@ document.addEventListener('DOMContentLoaded', () => {
         startMonth = nextEvent.dateObj.getMonth();
     }
     renderCalendar(startYear, startMonth);
+    renderAllTournamentsInfo();
 }); 

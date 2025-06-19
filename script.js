@@ -360,8 +360,22 @@ const tournaments = [
         merch: ['Shirt'],
         media: [],
         description: 'Join our fun and friendly summer soccer tournament!'
+    },
+    {
+        id: 3,
+        name: 'Downtown Basketball Classic',
+        sport: 'Basketball',
+        date: '2024-06-27',
+        time: '5:00 PM',
+        location: 'Downtown Arena',
+        format: 'Single Elimination',
+        entryFee: '$200',
+        prizePool: '$500',
+        skillLevel: 'All Levels',
+        merch: ['Shirt'],
+        media: [],
+        description: 'Compete in the Downtown Basketball Classic for a shot at $500! Open to all skill levels.'
     }
-    // Add more tournaments here
 ];
 
 // --- Render Tournament List ---

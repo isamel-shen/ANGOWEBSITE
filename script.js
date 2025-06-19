@@ -331,11 +331,19 @@ if (leadMagnetForm) {
 
 // --- Load tournaments from JSON ---
 let tournaments = [];
+let killSwitch = false;
 function loadTournamentsAndRender() {
     fetch('assets/tournaments.json')
         .then(res => res.json())
         .then(data => {
-            tournaments = data;
+            // Support both old and new JSON structure
+            if (Array.isArray(data)) {
+                tournaments = data;
+                killSwitch = false;
+            } else {
+                tournaments = data.tournaments || [];
+                killSwitch = !!data.killSwitch;
+            }
             renderTournamentList();
             // Find the next upcoming event
             const now = new Date();
@@ -358,6 +366,10 @@ function loadTournamentsAndRender() {
 function renderTournamentList() {
     const list = document.getElementById('tournament-list');
     if (!list) return;
+    if (killSwitch || tournaments.length === 0) {
+        list.innerHTML = '';
+        return;
+    }
     list.innerHTML = tournaments.map(t => `
         <div class="tournament-card" onclick="showEventDetails(${t.id})">
             <h3>${t.name}</h3>
@@ -440,7 +452,10 @@ function renderCalendar(year, month) {
     if (!calendarContainer) return;
     const eventDetails = document.getElementById('calendar-event-details');
     if (eventDetails) eventDetails.style.display = 'none';
-
+    if (killSwitch || tournaments.length === 0) {
+        calendarContainer.innerHTML = '';
+        return;
+    }
     // Build calendar header
     let html = `<div class='calendar-container-modern'>`;
     html += `<div class='calendar-nav'>
@@ -527,6 +542,10 @@ function renderCalendar(year, month) {
 function renderAllTournamentsInfo() {
     const infoDiv = document.getElementById('all-tournaments-info');
     if (!infoDiv) return;
+    if (killSwitch || tournaments.length === 0) {
+        infoDiv.innerHTML = `<div style="text-align:center;font-size:1.2rem;color:var(--navy-dark);padding:2rem 0;">We're working on something big...</div>`;
+        return;
+    }
     infoDiv.innerHTML = tournaments.map(t => `
         <div class="tournament-info-card" style="background:var(--offwhite);margin-bottom:2rem;padding:2rem 1.5rem;border-radius:16px;box-shadow:0 2px 12px rgba(23,32,42,0.06);max-width:600px;margin-left:auto;margin-right:auto;">
             <h2 style="font-size:1.5rem;font-weight:800;color:var(--navy-dark);margin-bottom:0.7rem;">${t.name}</h2>

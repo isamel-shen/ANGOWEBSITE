@@ -655,7 +655,7 @@ html {
     color: #fff;
 }
 .calendar-title {
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 4vw, 2rem);
     font-weight: 800;
     letter-spacing: 1.5px;
     color: var(--navy-dark);
@@ -677,7 +677,7 @@ html {
     overflow: hidden;
 }
 .calendar-day-header {
-    font-size: 1.1rem;
+    font-size: clamp(0.7rem, 2.5vw, 1.1rem);
     font-weight: 700;
     text-align: center;
     padding: 0.7rem 0;
@@ -709,7 +709,7 @@ html {
     border-bottom: none;
 }
 .calendar-date-num {
-    font-size: 1.1rem;
+    font-size: clamp(0.8rem, 2.5vw, 1.1rem);
     font-weight: 500;
     margin-bottom: 6px;
     color: var(--navy-dark);
@@ -740,8 +740,8 @@ html {
     background: #f0dcb4 !important;
     color: #222;
     border-radius: 8px;
-    padding: 14px 18px 12px 18px;
-    font-size: 1.05rem;
+    padding: clamp(6px, 1.5vw, 14px) clamp(8px, 2vw, 18px);
+    font-size: clamp(0.8rem, 2.2vw, 1.05rem);
     font-weight: 500;
     text-align: left;
     width: 100%;
@@ -762,13 +762,13 @@ html {
     box-shadow: 0 4px 16px rgba(199,161,91,0.18);
 }
 .calendar-event-box strong {
-    font-size: 1.13rem;
+    font-size: clamp(0.85rem, 2.5vw, 1.13rem);
     font-weight: 800;
     margin-bottom: 2px;
     color: #222;
 }
 .calendar-event-box .event-meta {
-    font-size: 0.85rem;
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.2px;
@@ -796,17 +796,26 @@ html {
         font-size: 0.85rem;
     }
     .calendar-event-box {
-        max-width: 70px;
-        font-size: 0.85rem;
-        padding: 7px 4px;
+        max-width: 100%;
+        padding: 8px 10px;
     }
     .calendar-day-header {
-        font-size: 0.85rem;
-        padding: 0.4rem 0;
+        font-size: 0.75rem;
+        padding: 0.5rem 0;
     }
     .calendar-cell {
-        min-height: 60px;
-        padding: 2px 2px 2px 2px;
+        min-height: 90px;
+    }
+}
+@media (max-width: 480px) {
+    .calendar-day-header {
+        font-size: 0.6rem;
+    }
+    .calendar-event-box strong {
+        font-size: 0.8rem;
+    }
+    .calendar-event-box .event-meta {
+        font-size: 0.65rem;
     }
 }
 

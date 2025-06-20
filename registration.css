@@ -1,0 +1,150 @@
+body {
+    background-color: var(--offwhite);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(23, 32, 42, 0.08);
+    width: 100%;
+    max-width: 600px;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--navy-dark);
+}
+
+.back-link {
+    display: block;
+    text-align: left;
+    margin-bottom: 1rem;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 500;
+}
+.back-link:hover {
+    color: var(--gold);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--navy);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(199, 161, 91, 0.2);
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+.form-row .form-group {
+    flex: 1;
+}
+
+.team-member-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.team-member-input input {
+    flex: 1;
+}
+.add-team-member {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.add-team-member:hover {
+    background-color: #ddd;
+}
+
+.e-transfer-box {
+    background-color: var(--offwhite);
+    border: 1px solid var(--gold);
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+.e-transfer-box p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--navy-dark);
+}
+.e-transfer-box strong {
+    color: var(--navy-dark);
+    font-weight: 700;
+}
+
+.btn-register {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--gold);
+    color: var(--navy-dark);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.btn-register:hover {
+    background-color: #b38f4d;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 1rem 0.5rem;
+    }
+    .form-container {
+        padding: 1.5rem;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+} 

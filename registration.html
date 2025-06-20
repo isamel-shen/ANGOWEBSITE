@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register for a Tournament | ANGO Competitive</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="registration.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <a href="index.html" class="back-link">&larr; Back to Home</a>
+            <h1>Tournament Registration</h1>
+        </div>
+        <form id="registration-form" novalidate>
+            <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" name="fullName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="team-members">Team Member Emails (Optional)</label>
+                <div id="team-members-container">
+                    <div class="team-member-input">
+                        <input type="email" name="teamMembers" placeholder="Email 1">
+                        <button type="button" class="add-team-member">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="team-name">Team Name</label>
+                    <input type="text" id="team-name" name="teamName">
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input type="tel" id="phone-number" name="phoneNumber">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="select-event">Select Event</label>
+                <select id="select-event" name="selectEvent" required>
+                    <option value="">Select Event</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="discount-code">Discount Code</label>
+                <input type="text" id="discount-code" name="discountCode">
+            </div>
+
+            <div id="e-transfer-details" class="form-group e-transfer-box" style="display: none;">
+                <p>E-Transfer <strong id="final-amount">$0</strong> to agoboits2006@gmail.com with the following code as the message: <strong id="confirmation-code"></strong></p>
+            </div>
+
+            <button type="submit" class="btn-register">Register</button>
+        </form>
+    </div>
+
+    <script src="registration.js"></script>
+</body>
+</html> 

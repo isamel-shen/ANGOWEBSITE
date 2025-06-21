@@ -23,8 +23,8 @@ body {
 
 .wheel-wrapper {
     position: relative;
-    width: 350px;
-    height: 350px;
+    width: 500px;
+    height: 500px;
 }
 
 .wheel {
@@ -57,7 +57,7 @@ body {
     text-align: center;
     color: var(--navy-dark);
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
 }
 
 .slice-content img {
@@ -147,6 +147,16 @@ body {
     text-decoration: none;
     font-weight: 600;
     border-radius: 50px;
+}
+
+@media (max-width: 600px) {
+    .wheel-wrapper {
+        width: 400px;
+        height: 400px;
+    }
+    .slice-content {
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 480px) {

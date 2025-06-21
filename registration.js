@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 6. Click Deploy. Authorize permissions.
         // 7. Copy the Web app URL and paste it below.
         
-        const googleSheetScriptURL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        const googleSheetScriptURL = 'https://script.google.com/macros/s/AKfycbxEHStMp5X3ZWwItXNGoAxbZfPqxhFsjbQUxc5Zc9o3QU7_Y3X4cuRV10X8Eys8v3-I/exec';
 
         // Placeholder for email function
         sendConfirmationEmail(dataToSubmit.email, dataToSubmit.confirmationCode, dataToSubmit.selectedEvent, dataToSubmit.finalEntryFee);

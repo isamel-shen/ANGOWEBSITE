@@ -1,0 +1,34 @@
+{
+    "rewards": [
+        {
+            "text": "10% OFF",
+            "icon": "assets/logo_transparent.png",
+            "chance": 40
+        },
+        {
+            "text": "FREE SHIRT",
+            "icon": "assets/logo_transparent.png",
+            "chance": 5
+        },
+        {
+            "text": "20% OFF",
+            "icon": "assets/logo_transparent.png",
+            "chance": 20
+        },
+        {
+            "text": "TRY AGAIN",
+            "icon": "assets/logo_transparent.png",
+            "chance": 20
+        },
+        {
+            "text": "FREE TEAM ENTRY",
+            "icon": "assets/logo_transparent.png",
+            "chance": 5
+        },
+        {
+            "text": "30% OFF",
+            "icon": "assets/logo_transparent.png",
+            "chance": 10
+        }
+    ]
+} 

@@ -60,6 +60,25 @@ document.addEventListener('DOMContentLoaded', () => {
         el.classList.add('fade-in');
         observer.observe(el);
     });
+
+    const leadMagnetForm = document.getElementById('lead-magnet-form');
+    if (leadMagnetForm) {
+        leadMagnetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('lead-email');
+            const email = emailInput.value;
+
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            // Redirect to the spin page with the email as a query parameter
+            window.location.href = `spin.html?email=${encodeURIComponent(email)}`;
+        });
+    }
 });
 
 // Contact form handling

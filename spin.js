@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             const contentAngle = startAngle + sliceAngle / 2; // Midpoint angle of the slice
-            const radius = wheel.offsetWidth / 4; // Position content halfway from the center
+            const radius = wheel.offsetWidth / 3; // Position content further from the center
             
             // Convert angle to radians for Math.sin/cos
             const angleRad = (contentAngle - 90) * (Math.PI / 180);

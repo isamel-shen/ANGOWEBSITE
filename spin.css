@@ -41,20 +41,22 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Center the content */
+    transform: translate(-50%, -50%);
     color: var(--navy-dark);
     font-weight: 700;
     font-size: 1.1rem;
-    width: 50%; /* Make content area half the wheel width */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    text-align: center;
 }
 
 .slice-content img {
+    display: block;
+    margin: 0 auto 8px auto;
     width: 60px;
     height: 60px;
+}
+
+.slice-content span {
+    display: block;
 }
 
 .wheel-pointer {

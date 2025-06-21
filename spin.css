@@ -33,31 +33,20 @@ body {
     border-radius: 50%;
     border: 10px solid var(--navy-dark);
     position: relative;
-    overflow: hidden;
-    transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1); /* Ease-out spinning animation */
-}
-
-.wheel-slice {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    background-color: var(--slice-color);
-    transform-origin: 100% 100%;
-    transform: rotate(var(--rotation));
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-left: 20px;
-    box-sizing: border-box;
+    transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    /* The background will be set by JS */
 }
 
 .slice-content {
-    transform: rotate(28deg); /* Adjust content angle to be readable */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the content */
     text-align: center;
     color: var(--navy-dark);
     font-weight: 700;
     font-size: 1.1rem;
+    width: 50%; /* Make content area half the wheel width */
 }
 
 .slice-content img {

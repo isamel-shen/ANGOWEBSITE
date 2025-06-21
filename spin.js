@@ -29,23 +29,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function buildWheel() {
         wheel.innerHTML = '';
-        const sliceAngle = 360 / rewards.length;
+        const sliceCount = rewards.length;
+        const sliceAngle = 360 / sliceCount;
+        const gradientParts = [];
+
         rewards.forEach((reward, i) => {
-            const slice = document.createElement('div');
-            slice.className = 'wheel-slice';
+            const startAngle = sliceAngle * i;
+            const endAngle = startAngle + sliceAngle;
             const sliceColor = i % 2 === 0 ? '#FFFFFF' : '#F0EAD6';
-            slice.style.setProperty('--slice-color', sliceColor);
-            slice.style.setProperty('--rotation', `${sliceAngle * i}deg`);
-            
+            gradientParts.push(`${sliceColor} ${startAngle}deg ${endAngle}deg`);
+
+            // Create and position the content for each slice
             const content = document.createElement('div');
             content.className = 'slice-content';
             content.innerHTML = `
                 <span>${reward.text}</span>
                 <img src="${reward.icon}" alt="${reward.text}">
             `;
-            slice.appendChild(content);
-            wheel.appendChild(slice);
+
+            const contentAngle = startAngle + sliceAngle / 2; // Midpoint angle of the slice
+            const radius = wheel.offsetWidth / 4; // Position content halfway from the center
+            
+            // Convert angle to radians for Math.sin/cos
+            const angleRad = (contentAngle - 90) * (Math.PI / 180);
+
+            const x = (wheel.offsetWidth / 2) + radius * Math.cos(angleRad);
+            const y = (wheel.offsetHeight / 2) + radius * Math.sin(angleRad);
+            
+            content.style.left = `${x}px`;
+            content.style.top = `${y}px`;
+            content.style.transform = `translate(-50%, -50%) rotate(${contentAngle}deg)`;
+
+            wheel.appendChild(content);
         });
+
+        wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
     }
 
     function getWeightedRandomReward() {

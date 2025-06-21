@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const content = document.createElement('div');
             content.className = 'slice-content';
             content.innerHTML = `
-                <span>${reward.text}</span>
                 <img src="${reward.icon}" alt="${reward.text}">
+                <span>${reward.text}</span>
             `;
 
             const contentAngle = startAngle + sliceAngle / 2; // Midpoint angle of the slice

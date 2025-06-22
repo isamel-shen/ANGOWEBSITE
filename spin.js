@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
+    const backendURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
+    let generatedCode = '';
+    let spunReward = '';
 
     // --- Google Sheets Integration ---
     // 1. Create a new Google Sheet for logging rewards.
@@ -108,33 +111,59 @@ document.addEventListener('DOMContentLoaded', () => {
         return 0; // Fallback
     }
 
-    function spinWheel() {
+    async function checkIfEmailUsed(email) {
+        const res = await fetch(backendURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'checkIfEmailUsed', email })
+        });
+        return await res.json();
+    }
+
+    async function generatePromoCode(email, reward) {
+        const res = await fetch(backendURL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'generatePromoCode', email, reward })
+        });
+        return await res.json();
+    }
+
+    async function handleSpin() {
         if (isSpinning) return;
         isSpinning = true;
         spinButton.disabled = true;
 
+        // Check if email already used
+        const check = await checkIfEmailUsed(userEmail);
+        if (check.used) {
+            rewardText.textContent = "You've already used your spin with this email.";
+            resultPopup.classList.add('show');
+            isSpinning = false;
+            return;
+        }
+
         const winningSliceIndex = getWeightedRandomReward();
         const sliceAngle = 360 / rewards.length;
         const midAngleOfWinner = (winningSliceIndex * sliceAngle) + (sliceAngle / 2);
-        
-        // Random offset within the slice to make it less predictable
         const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.8);
-        
-        // The pointer is at 270 degrees. We want the middle of the winning slice to align with it.
         const targetRotation = (360 * 5) + 270 - midAngleOfWinner - randomOffset;
-
         wheel.style.transform = `rotate(${targetRotation}deg)`;
 
-        setTimeout(() => {
+        setTimeout(async () => {
             const winningReward = rewards[winningSliceIndex];
-            rewardText.textContent = winningReward.text;
-            resultPopup.classList.add('show');
-            
-            if(winningReward.text.toLowerCase() !== 'try again') {
-                logRewardToSheet(userEmail, winningReward.text);
+            spunReward = winningReward.text;
+            // Call backend to generate code and log
+            const backendRes = await generatePromoCode(userEmail, spunReward);
+            if (backendRes.error) {
+                rewardText.textContent = backendRes.error;
+            } else {
+                generatedCode = backendRes.code;
+                rewardText.innerHTML = `You won: <strong>${spunReward}</strong><br>Your code: <strong>${generatedCode}</strong>`;
             }
-
-        }, 5500); // Wait for animation to finish
+            resultPopup.classList.add('show');
+            isSpinning = false;
+        }, 5500);
     }
 
     function logRewardToSheet(email, reward) {
@@ -169,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     
     getEmailFromURL();
-    spinButton.addEventListener('click', spinWheel);
+    spinButton.addEventListener('click', handleSpin);
 });
 
 /*

@@ -172,4 +172,51 @@ body {
     .slice-content {
         font-size: 0.8rem;
     }
+}
+
+.spin-btn:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.hidden {
+    display: none;
+}
+
+.congrats-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.congrats-message {
+    background-color: #1a1a1a;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #444;
+}
+
+.congrats-message h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #4CAF50; /* Green color for success */
+}
+
+.congrats-message p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.congrats-message strong {
+    font-weight: bold;
+    color: #FFC107; /* Amber color for the prize */
 } 

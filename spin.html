@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin to Win! | ANGO Competitive</title>
+    <title>Spin to Win</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="spin.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="spin-container">
-        <div class="wheel-wrapper">
-            <div class="wheel-pointer"></div>
-            <canvas id="wheel" class="wheel"></canvas>
-        </div>
-        <button id="spin-button">SPIN</button>
-        <div id="result-popup" class="result-popup">
-            <div class="result-popup-content">
-                <h2>Congratulations!</h2>
-                <p>You won: <strong id="reward-text"></strong></p>
-                <a href="index.html" class="back-home-btn">Back to Home</a>
-            </div>
+    <div class="container">
+        <div id="email-display" class="email-display"></div>
+        <div class="wheel-container">
+            <canvas id="wheelCanvas" width="600" height="600"></canvas>
+            <div id="spinBtn" class="spin-btn">SPIN</div>
         </div>
     </div>
+
+    <div id="congrats-overlay" class="congrats-overlay hidden">
+        <div class="congrats-message">
+            <h2>Congratulations!</h2>
+            <p>You won: <strong id="prize-name"></strong></p>
+            <p>Please check your email shortly for your reward!</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="spin.js"></script>
 </body>
 </html> 

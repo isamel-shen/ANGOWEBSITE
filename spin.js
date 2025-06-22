@@ -39,32 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function buildWheel(loadedRewards) {
-        const canvas = wheel; // wheel is now the canvas element
+        const canvas = wheel;
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
         const ctx = canvas.getContext('2d');
-        const wheelSize = canvas.offsetWidth;
-        canvas.width = wheelSize;
-        canvas.height = wheelSize;
-        const center = wheelSize / 2;
-        const radius = center - 10; // Leave a small border
+        ctx.scale(dpr, dpr);
 
+        const wheelSize = rect.width; // Use layout size for calculations
+        const center = wheelSize / 2;
+        const radius = center - 10;
         const sliceCount = loadedRewards.length;
         const anglePerSlice = (2 * Math.PI) / sliceCount;
 
-        // --- Draw slices and text ---
         loadedRewards.forEach((reward, i) => {
             const startAngle = i * anglePerSlice;
             const endAngle = startAngle + anglePerSlice;
             
-            // 1. Draw the slice background
             ctx.beginPath();
             ctx.moveTo(center, center);
             ctx.arc(center, center, radius, startAngle, endAngle);
             ctx.closePath();
             ctx.fillStyle = i % 2 === 0 ? '#FFFFFF' : '#F0EAD6';
             ctx.fill();
-            ctx.stroke(); // Draw border for each slice
+            ctx.stroke();
 
-            // 2. Prepare to draw the content (logo + text)
             const midAngle = startAngle + anglePerSlice / 2;
             const textRadius = radius * 0.65;
             const x = center + textRadius * Math.cos(midAngle);
@@ -72,29 +72,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ctx.save();
             ctx.translate(x, y);
-            ctx.rotate(midAngle);
+            ctx.rotate(midAngle + Math.PI / 2); // Correct rotation to be perpendicular to the radius line
 
-            // 3. Normalize upside-down text
-            if (midAngle > Math.PI / 2 && midAngle < 3 * Math.PI / 2) {
-                ctx.rotate(Math.PI);
-            }
-
-            // 4. Draw the content, centered at the new (0,0)
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillStyle = '#101820';
             ctx.font = "bold 16px Inter";
             
-            const logo = reward.iconImg; // Use the preloaded image object
-            
+            const logo = reward.iconImg;
             const words = reward.text.split(' ');
             const lineHeight = 20;
-            const logoYOffset = -(words.length > 1 ? 15 : 10);
+            const logoYOffset = -25;
+            const textYOffset = 25;
             
-            ctx.drawImage(logo, -25, logoYOffset - 50, 50, 50);
+            ctx.drawImage(logo, -25, logoYOffset - 25, 50, 50);
 
             words.forEach((word, index) => {
-                ctx.fillText(word, 0, (index * lineHeight));
+                const yPos = textYOffset + (index * lineHeight);
+                ctx.fillText(word, 0, yPos);
             });
 
             ctx.restore();
@@ -120,10 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const winningSliceIndex = getWeightedRandomReward();
         const sliceAngle = 360 / rewards.length;
+        const midAngleOfWinner = (winningSliceIndex * sliceAngle) + (sliceAngle / 2);
         
-        // Calculate rotation: 5 full spins + random offset within the winning slice
-        const randomOffset = Math.random() * (sliceAngle - 10) + 5; // Avoid landing exactly on the line
-        const targetRotation = (360 * 5) + (360 - (winningSliceIndex * sliceAngle) - randomOffset);
+        // Random offset within the slice to make it less predictable
+        const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.8);
+        
+        // The pointer is at 270 degrees. We want the middle of the winning slice to align with it.
+        const targetRotation = (360 * 5) + 270 - midAngleOfWinner - randomOffset;
 
         wheel.style.transform = `rotate(${targetRotation}deg)`;
 

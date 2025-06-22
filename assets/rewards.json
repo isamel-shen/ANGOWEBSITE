@@ -3,32 +3,32 @@
         {
             "text": "10% OFF",
             "icon": "assets/logo_transparent.png",
-            "chance": 40
+            "chance": 90
         },
         {
-            "text": "FREE SHIRT",
+            "text": "5% OFF",
             "icon": "assets/logo_transparent.png",
-            "chance": 5
+            "chance": 9
         },
         {
             "text": "20% OFF",
             "icon": "assets/logo_transparent.png",
-            "chance": 20
+            "chance": 1
         },
         {
-            "text": "TRY AGAIN",
+            "text": "BASKETBALL SET",
             "icon": "assets/logo_transparent.png",
-            "chance": 20
+            "chance": 0
         },
         {
             "text": "FREE TICKETS",
             "icon": "assets/logo_transparent.png",
-            "chance": 5
+            "chance": 0
         },
         {
             "text": "30% OFF",
             "icon": "assets/logo_transparent.png",
-            "chance": 10
+            "chance": 0
         }
     ]
 } 

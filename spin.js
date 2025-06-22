@@ -27,63 +27,78 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function buildWheel() {
-        wheel.innerHTML = ''; // Clear previous content
-        const svgNS = "http://www.w3.org/2000/svg";
-        const svg = document.createElementNS(svgNS, "svg");
-        const wheelSize = wheel.offsetWidth;
+    function preloadImages(rewards) {
+        return Promise.all(rewards.map(reward => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = reward.icon;
+                img.onload = () => resolve({ ...reward, iconImg: img });
+                img.onerror = reject;
+            });
+        }));
+    }
+
+    function buildWheel(loadedRewards) {
+        const canvas = wheel; // wheel is now the canvas element
+        const ctx = canvas.getContext('2d');
+        const wheelSize = canvas.offsetWidth;
+        canvas.width = wheelSize;
+        canvas.height = wheelSize;
         const center = wheelSize / 2;
-        svg.setAttribute("viewBox", `0 0 ${wheelSize} ${wheelSize}`);
+        const radius = center - 10; // Leave a small border
 
-        const sliceCount = rewards.length;
-        const anglePerSlice = 360 / sliceCount;
-        const radius = center * 0.65; // Position the center of our content group at 65% of the radius
-        const logoSize = 50;
-        const textYOffset = 15; // Vertical distance of text from the anchor point
-        const logoYOffset = -35; // Vertical distance of logo from the anchor point
+        const sliceCount = loadedRewards.length;
+        const anglePerSlice = (2 * Math.PI) / sliceCount;
 
-        rewards.forEach((reward, i) => {
-            // Angle for the centerline of the slice
-            const midAngle = (i * anglePerSlice) + (anglePerSlice / 2);
+        // --- Draw slices and text ---
+        loadedRewards.forEach((reward, i) => {
+            const startAngle = i * anglePerSlice;
+            const endAngle = startAngle + anglePerSlice;
             
-            // Convert angle to radians for positioning
-            const angleRad = midAngle * (Math.PI / 180);
-            const x = center + radius * Math.cos(angleRad);
-            const y = center + radius * Math.sin(angleRad);
+            // 1. Draw the slice background
+            ctx.beginPath();
+            ctx.moveTo(center, center);
+            ctx.arc(center, center, radius, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = i % 2 === 0 ? '#FFFFFF' : '#F0EAD6';
+            ctx.fill();
+            ctx.stroke(); // Draw border for each slice
 
-            // The <g> element is our container for a slice's content
-            const contentGroup = document.createElementNS(svgNS, "g");
-            // Translate the group to the anchor point, then rotate it to face outwards
-            contentGroup.setAttribute("transform", `translate(${x}, ${y}) rotate(${midAngle + 90})`);
+            // 2. Prepare to draw the content (logo + text)
+            const midAngle = startAngle + anglePerSlice / 2;
+            const textRadius = radius * 0.65;
+            const x = center + textRadius * Math.cos(midAngle);
+            const y = center + textRadius * Math.sin(midAngle);
 
-            // The logo image, centered at (0, logoYOffset) within the rotated group
-            const image = document.createElementNS(svgNS, "image");
-            image.setAttributeNS(null, "href", reward.icon);
-            image.setAttribute("x", -logoSize / 2);
-            image.setAttribute("y", logoYOffset);
-            image.setAttribute("width", logoSize);
-            image.setAttribute("height", logoSize);
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(midAngle);
 
-            // The text element, centered at (0, textYOffset) within the rotated group
-            const text = document.createElementNS(svgNS, "text");
-            text.setAttribute("class", "wheel-text");
-            text.setAttribute("y", textYOffset);
+            // 3. Normalize upside-down text
+            if (midAngle > Math.PI / 2 && midAngle < 3 * Math.PI / 2) {
+                ctx.rotate(Math.PI);
+            }
 
+            // 4. Draw the content, centered at the new (0,0)
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = '#101820';
+            ctx.font = "bold 16px Inter";
+            
+            const logo = reward.iconImg; // Use the preloaded image object
+            
             const words = reward.text.split(' ');
+            const lineHeight = 20;
+            const logoYOffset = -(words.length > 1 ? 15 : 10);
+            
+            ctx.drawImage(logo, -25, logoYOffset - 50, 50, 50);
+
             words.forEach((word, index) => {
-                const tspan = document.createElementNS(svgNS, "tspan");
-                tspan.textContent = word;
-                tspan.setAttribute("x", 0);
-                tspan.setAttribute("dy", index === 0 ? "0" : "1.2em"); // Handle line breaks
-                text.appendChild(tspan);
+                ctx.fillText(word, 0, (index * lineHeight));
             });
 
-            contentGroup.appendChild(image);
-            contentGroup.appendChild(text);
-            svg.appendChild(contentGroup);
+            ctx.restore();
         });
-
-        wheel.appendChild(svg);
     }
 
     function getWeightedRandomReward() {
@@ -148,8 +163,11 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             rewards = data.rewards;
+            return preloadImages(rewards);
+        })
+        .then(loadedRewards => {
             // Defer wheel building to ensure correct dimensions are read
-            setTimeout(buildWheel, 0);
+            setTimeout(() => buildWheel(loadedRewards), 0);
         });
     
     getEmailFromURL();

@@ -198,4 +198,24 @@ function doPost(e) {
   }
 }
 
-*/ 
+*/
+
+const scriptURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
+
+document.getElementById('spinForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const email = document.getElementById('spinEmail').value;
+  const resultDiv = document.getElementById('spinResult');
+  resultDiv.textContent = "Spinning...";
+  const res = await fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify({action: 'generatePromoCode', email}),
+    headers: {'Content-Type': 'application/json'}
+  });
+  const data = await res.json();
+  if (data.error) {
+    resultDiv.textContent = data.error;
+  } else {
+    resultDiv.innerHTML = `Your code: <b>${data.code}</b><br>Discount: <b>${data.discount}</b>`;
+  }
+}); 

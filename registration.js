@@ -97,6 +97,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
+
+    document.getElementById('regForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('regEmail').value;
+        const code = document.getElementById('regPromo').value.trim();
+        const resultDiv = document.getElementById('regResult');
+        if (code) {
+            // Validate code for registration
+            const res = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({action: 'validateCodeForRegistration', code, email}),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const data = await res.json();
+            if (data.error) {
+                resultDiv.textContent = data.error;
+                return;
+            } else {
+                resultDiv.innerHTML = `Registration successful! Discount applied: <b>${data.discount}</b>`;
+                // Proceed with registration logic...
+                return;
+            }
+        } else {
+            resultDiv.textContent = "Registration successful! (No promo code used)";
+            // Proceed with registration logic...
+        }
+    });
+
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -135,12 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 6. Click Deploy. Authorize permissions.
         // 7. Copy the Web app URL and paste it below.
         
-        const googleSheetScriptURL = 'https://script.google.com/macros/s/AKfycbxEHStMp5X3ZWwItXNGoAxbZfPqxhFsjbQUxc5Zc9o3QU7_Y3X4cuRV10X8Eys8v3-I/exec';
-
-        // Placeholder for email function
-        sendConfirmationEmail(dataToSubmit.email, dataToSubmit.confirmationCode, dataToSubmit.selectedEvent, dataToSubmit.finalEntryFee);
-        
-        fetch(googleSheetScriptURL, {
+        fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors', // Important for sending data from browser to Google Apps Script
             cache: 'no-cache',

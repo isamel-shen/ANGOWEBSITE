@@ -12,4 +12,3 @@
 - registration system
 ---- logging down registrations & payment
 - promo code system
-

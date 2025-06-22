@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. For "Who has access", select "Anyone".
     // 6. Click Deploy. Authorize permissions.
     // 7. Copy the Web app URL and paste it below.
-    const googleSheetScriptURL = 'PASTE_YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE';
+    const googleSheetScriptURL = 'https://script.google.com/macros/s/AKfycbydU2U1RDCqTJt68twVWqP4uXmQyXQ5MDxRHGYNvfp9R4_7x62IpJZ6tI1f47yzRFEc/exec';
 
     function getEmailFromURL() {
         const params = new URLSearchParams(window.location.search);

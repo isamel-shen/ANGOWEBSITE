@@ -1,79 +1,62 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('wheelCanvas');
-    const spinBtn = document.getElementById('spinBtn');
-    const emailDisplay = document.getElementById('email-display');
-    const congratsOverlay = document.getElementById('congrats-overlay');
-    const prizeName = document.getElementById('prize-name');
-    const ctx = canvas.getContext('2d');
+    const wheel = document.getElementById('wheel');
+    const spinButton = document.getElementById('spin-button');
+    const resultPopup = document.getElementById('result-popup');
+    const rewardText = document.getElementById('reward-text');
 
-    let prizes = [];
+    let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    let currentAngle = 0;
 
     // --- Google Sheets Integration ---
-    // Make sure this URL is correct and the script is deployed as a web app.
-    const googleSheetScriptURL = 'https://script.google.com/macros/s/AKfycbwPz26Bv-st1R1r9P_nCEX2KuDkPb4JkM-O46NnvRflg61Gz7sWnug172qA12b32Y5H/exec';
+    // 1. Create a new Google Sheet for logging rewards.
+    // 2. Go to Extensions > Apps Script.
+    // 3. Paste the server-side script (provided at the bottom of this file) and save.
+    // 4. Click Deploy > New deployment. Select "Web app".
+    // 5. For "Who has access", select "Anyone".
+    // 6. Click Deploy. Authorize permissions.
+    // 7. Copy the Web app URL and paste it below.
+    const googleSheetScriptURL = 'https://script.google.com/macros/s/AKfycbydU2U1RDCqTJt68twVWqP4uXmQyXQ5MDxRHGYNvfp9R4_7x62IpJZ6tI1f47yzRFEc/exec';
 
     function getEmailFromURL() {
         const params = new URLSearchParams(window.location.search);
         userEmail = params.get('email') || '';
-        if (userEmail) {
-            emailDisplay.textContent = `Spinning for: ${userEmail}`;
-        } else {
-            spinBtn.style.display = 'none';
-            emailDisplay.textContent = 'Email not found. Please go back and sign up.';
+        if (!userEmail) {
+            spinButton.disabled = true;
+            alert('Email not found. Please sign up from the homepage.');
         }
     }
 
-    function preloadImages(prizes) {
-        let loaded = 0;
-        return new Promise((resolve) => {
-            if (prizes.every(p => !p.icon)) {
-                resolve(prizes.map(p => ({ ...p, iconImg: null })));
-                return;
-            }
-            prizes.forEach((prize, index) => {
-                if (prize.icon) {
-                    const img = new Image();
-                    img.src = prize.icon;
-                    img.onload = () => {
-                        prizes[index].iconImg = img;
-                        loaded++;
-                        if (loaded === prizes.length) resolve(prizes);
-                    };
-                    img.onerror = () => { // Handle cases where an image might fail
-                        prizes[index].iconImg = null;
-                        loaded++;
-                        if (loaded === prizes.length) resolve(prizes);
-                    };
-                } else {
-                    prizes[index].iconImg = null;
-                    loaded++;
-                    if (loaded === prizes.length) resolve(prizes);
-                }
+    function preloadImages(rewards) {
+        return Promise.all(rewards.map(reward => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = reward.icon;
+                img.onload = () => resolve({ ...reward, iconImg: img });
+                img.onerror = reject;
             });
-        });
+        }));
     }
 
-    function buildWheel(loadedPrizes) {
+    function buildWheel(loadedRewards) {
+        const canvas = wheel;
         const dpr = window.devicePixelRatio || 1;
-        canvas.width = 600 * dpr;
-        canvas.height = 600 * dpr;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        const ctx = canvas.getContext('2d');
         ctx.scale(dpr, dpr);
-        const center = 300;
-        const radius = 290;
-        const numPrizes = loadedPrizes.length;
-        const anglePerPrize = (2 * Math.PI) / numPrizes;
 
-        ctx.clearRect(0, 0, 600, 600);
-        ctx.font = 'bold 18px Inter, sans-serif';
+        const wheelSize = rect.width; // Use layout size for calculations
+        const center = wheelSize / 2;
+        const radius = center - 10;
+        const sliceCount = loadedRewards.length;
+        const anglePerSlice = (2 * Math.PI) / sliceCount;
 
-        loadedPrizes.forEach((prize, i) => {
-            const startAngle = i * anglePerPrize + currentAngle;
-            const endAngle = startAngle + anglePerPrize;
-
-            // Draw slice
+        loadedRewards.forEach((reward, i) => {
+            const startAngle = i * anglePerSlice;
+            const endAngle = startAngle + anglePerSlice;
+            
             ctx.beginPath();
             ctx.moveTo(center, center);
             ctx.arc(center, center, radius, startAngle, endAngle);
@@ -82,64 +65,45 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fill();
             ctx.stroke();
 
-            // --- Draw content ---
+            const midAngle = startAngle + anglePerSlice / 2;
+            const textRadius = radius * 0.65;
+            const x = center + textRadius * Math.cos(midAngle);
+            const y = center + textRadius * Math.sin(midAngle);
+
             ctx.save();
-            const midAngle = startAngle + anglePerPrize / 2;
-            ctx.translate(center, center);
-            ctx.rotate(midAngle);
-            
-            // Text settings
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            ctx.translate(x, y);
+            ctx.rotate(midAngle + Math.PI / 2); // Correct rotation to be perpendicular to the radius line
+
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
             ctx.fillStyle = '#101820';
+            ctx.font = "bold 16px Inter";
             
-            const textRadius = radius * 0.6;
-            const iconRadius = radius * 0.75;
+            const logo = reward.iconImg;
+            const words = reward.text.split(' ');
+            const lineHeight = 20;
+            const logoYOffset = -25;
+            const textYOffset = 25;
             
-            // Check if text should be flipped
-            const isFlipped = midAngle > Math.PI / 2 && midAngle < (3 * Math.PI) / 2;
-            
-            if (isFlipped) {
-                ctx.rotate(Math.PI);
-                ctx.translate(-textRadius, 0);
-            } else {
-                ctx.translate(textRadius, 0);
-            }
+            ctx.drawImage(logo, -25, logoYOffset - 25, 50, 50);
 
-            // Draw prize name (handle multi-line)
-            const words = prize.name.split(' ');
-            const lineHeight = 22;
-            let line = '';
-            let y = -((words.length -1) * lineHeight) /2; // Start y position to center text block
-
-            words.forEach(word => {
-                ctx.fillText(word, 0, y);
-                y += lineHeight;
+            words.forEach((word, index) => {
+                const yPos = textYOffset + (index * lineHeight);
+                ctx.fillText(word, 0, yPos);
             });
-            
-            // Draw icon
-            if (prize.iconImg) {
-                const iconSize = 50;
-                let iconX = -iconSize / 2;
-                let iconY = -60 - (iconSize /2); // Position above text
-                
-                if (isFlipped) {
-                    ctx.drawImage(prize.iconImg, iconX, -iconY-80, iconSize, iconSize);
-                } else {
-                    ctx.drawImage(prize.iconImg, iconX, iconY, iconSize, iconSize);
-                }
-            }
-            
+
             ctx.restore();
         });
     }
 
-    function getWeightedRandomPrizeIndex() {
-        const totalWeight = prizes.reduce((sum, p) => sum + p.probability, 0);
-        let random = Math.random() * totalWeight;
-        for (let i = 0; i < prizes.length; i++) {
-            if (random < prizes[i].probability) return i;
-            random -= prizes[i].probability;
+    function getWeightedRandomReward() {
+        const totalChance = rewards.reduce((sum, reward) => sum + reward.chance, 0);
+        let random = Math.random() * totalChance;
+        for (let i = 0; i < rewards.length; i++) {
+            if (random < rewards[i].chance) {
+                return i;
+            }
+            random -= rewards[i].chance;
         }
         return 0; // Fallback
     }
@@ -147,91 +111,70 @@ document.addEventListener('DOMContentLoaded', () => {
     function spinWheel() {
         if (isSpinning) return;
         isSpinning = true;
-        spinBtn.style.pointerEvents = 'none'; // Prevent re-clicks
+        spinButton.disabled = true;
 
-        const actualPrizeIndex = getWeightedRandomPrizeIndex();
-        const numPrizes = prizes.length;
-        const anglePerPrize = (2 * Math.PI) / numPrizes;
-
-        // Calculate where the wheel needs to stop. The pointer is at 270 degrees (top).
-        const prizeStopAngle = actualPrizeIndex * anglePerPrize;
-        const targetStopAngle = (3 * Math.PI) / 2; // Pointer position
-        const randomOffset = (Math.random() - 0.5) * anglePerPrize * 0.8;
+        const winningSliceIndex = getWeightedRandomReward();
+        const sliceAngle = 360 / rewards.length;
+        const midAngleOfWinner = (winningSliceIndex * sliceAngle) + (sliceAngle / 2);
         
-        const rotationNeeded = (targetStopAngle - prizeStopAngle - randomOffset) - currentAngle;
-        const totalRotation = (10 * 2 * Math.PI) + rotationNeeded; // 10 full spins + final adjustment
+        // Random offset within the slice to make it less predictable
+        const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.8);
         
-        let startTime = null;
-        const duration = 5000; // 5 seconds
+        // The pointer is at 270 degrees. We want the middle of the winning slice to align with it.
+        const targetRotation = (360 * 5) + 270 - midAngleOfWinner - randomOffset;
 
-        function animate(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const progress = timestamp - startTime;
-            const easeOutProgress = Math.pow(progress / duration, 0.5); // Ease-out effect
+        wheel.style.transform = `rotate(${targetRotation}deg)`;
 
-            if (progress < duration) {
-                const angle = currentAngle + totalRotation * (progress / duration);
-                canvas.style.transform = `rotate(${angle * 180/Math.PI}deg)`;
-                requestAnimationFrame(animate);
-            } else {
-                currentAngle = rotationNeeded; // Set final angle correctly
-                canvas.style.transform = `rotate(${currentAngle * 180/Math.PI}deg)`;
-                
-                setTimeout(() => {
-                    isSpinning = false;
-                    const winningPrize = prizes[actualPrizeIndex];
-                    
-                    // Show congrats message
-                    prizeName.textContent = winningPrize.name;
-                    congratsOverlay.classList.remove('hidden');
-
-                    // Trigger confetti
-                    confetti({
-                        particleCount: 150,
-                        spread: 90,
-                        origin: { y: 0.6 }
-                    });
-
-                    // Log to Google Sheet if not 'Try Again'
-                    if (winningPrize.name.toLowerCase() !== 'try again') {
-                        logRewardToSheet(userEmail, winningPrize.name);
-                    }
-                }, 500); // Short delay before showing modal
+        setTimeout(() => {
+            const winningReward = rewards[winningSliceIndex];
+            rewardText.textContent = winningReward.text;
+            resultPopup.classList.add('show');
+            confetti({
+                particleCount: 150,
+                spread: 180,
+                origin: { y: 0.6 }
+            });
+            
+            if(winningReward.text.toLowerCase() !== 'try again') {
+                logRewardToSheet(userEmail, winningReward.text);
             }
-        }
-        requestAnimationFrame(animate);
+
+        }, 5500); // Wait for animation to finish
     }
-    
+
     function logRewardToSheet(email, reward) {
-        if (!googleSheetScriptURL || !googleSheetScriptURL.includes('macros')) {
+        if (!googleSheetScriptURL.includes('macros')) {
             console.warn('Google Sheets URL is not set. Skipping log.');
             return;
         }
-        const data = { email, reward };
         
+        const dataToSubmit = { email, reward };
+
         fetch(googleSheetScriptURL, {
             method: 'POST',
             mode: 'no-cors',
             cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).catch(err => console.error("Error logging to sheet:", err));
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSubmit)
+        }).catch(error => console.error('Error logging to sheet:', error));
     }
-
-    // --- Init ---
+    
+    // Initial setup
     fetch('assets/rewards.json')
-        .then(res => res.json())
+        .then(response => response.json())
         .then(data => {
-            return preloadImages(data.rewards);
+            rewards = data.rewards;
+            return preloadImages(rewards);
         })
-        .then(loadedPrizes => {
-            prizes = loadedPrizes;
-            buildWheel(prizes); // Initial wheel draw
-        })
-        .catch(console.error);
-
+        .then(loadedRewards => {
+            // Defer wheel building to ensure correct dimensions are read
+            setTimeout(() => buildWheel(loadedRewards), 0);
+        });
+    
     getEmailFromURL();
-    spinBtn.addEventListener('click', spinWheel);
+    spinButton.addEventListener('click', spinWheel);
 });
 
 /*

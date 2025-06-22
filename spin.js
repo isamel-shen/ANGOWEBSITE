@@ -62,7 +62,22 @@ document.addEventListener('DOMContentLoaded', () => {
             text.setAttribute("x", center);
             text.setAttribute("y", center - radius + 30); // Position below the image
             text.setAttribute("class", "wheel-text");
-            text.textContent = reward.text;
+
+            // Handle multi-line text
+            const words = reward.text.split(' ');
+            if (words.length > 1) {
+                words.forEach((word, index) => {
+                    const tspan = document.createElementNS(svgNS, "tspan");
+                    tspan.textContent = word;
+                    tspan.setAttribute("x", center);
+                    if (index > 0) {
+                        tspan.setAttribute("dy", "1.2em"); // Line height
+                    }
+                    text.appendChild(tspan);
+                });
+            } else {
+                text.textContent = reward.text;
+            }
             
             // --- Keep content upright on the left side of the wheel ---
             if (angle > 90 && angle < 270) {

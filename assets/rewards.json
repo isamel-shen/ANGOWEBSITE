@@ -3,12 +3,12 @@
         {
             "text": "10% OFF",
             "icon": "assets/logo_transparent.png",
-            "chance": 90
+            "chance": 99
         },
         {
-            "text": "5% OFF",
+            "text": "TOWEL",
             "icon": "assets/logo_transparent.png",
-            "chance": 9
+            "chance": 0
         },
         {
             "text": "20% OFF",
@@ -16,7 +16,7 @@
             "chance": 1
         },
         {
-            "text": "BASKETBALL SET",
+            "text": "T-SHIRT",
             "icon": "assets/logo_transparent.png",
             "chance": 0
         },

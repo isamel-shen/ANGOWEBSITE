@@ -7,19 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
+    const backendURL = 'https://script.google.com/macros/s/AKfycbzfTSIxL6bbNzkLdgBqEwI5W_8kBXO2JPIa7M7IsHaOuiYYofjDe1naWLCUN3Wojkcd2Q/exec';
     let generatedCode = '';
     let spunReward = '';
-
-    // --- Google Sheets Integration ---
-    // 1. Create a new Google Sheet for logging rewards.
-    // 2. Go to Extensions > Apps Script.
-    // 3. Paste the server-side script (provided at the bottom of this file) and save.
-    // 4. Click Deploy > New deployment. Select "Web app".
-    // 5. For "Who has access", select "Anyone".
-    // 6. Click Deploy. Authorize permissions.
-    // 7. Copy the Web app URL and paste it below.
-    const googleSheetScriptURL = 'https://script.google.com/macros/s/AKfycbydU2U1RDCqTJt68twVWqP4uXmQyXQ5MDxRHGYNvfp9R4_7x62IpJZ6tI1f47yzRFEc/exec';
 
     function getEmailFromURL() {
         const params = new URLSearchParams(window.location.search);
@@ -50,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ctx = canvas.getContext('2d');
         ctx.scale(dpr, dpr);
 
-        const wheelSize = rect.width; // Use layout size for calculations
+        const wheelSize = rect.width;
         const center = wheelSize / 2;
         const radius = center - 10;
         const sliceCount = loadedRewards.length;
@@ -75,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ctx.save();
             ctx.translate(x, y);
-            ctx.rotate(midAngle + Math.PI / 2); // Correct rotation to be perpendicular to the radius line
+            ctx.rotate(midAngle + Math.PI / 2);
 
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -108,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             random -= rewards[i].chance;
         }
-        return 0; // Fallback
+        return 0;
     }
 
     async function checkIfEmailUsed(email) {
@@ -165,25 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isSpinning = false;
         }, 5500);
     }
-
-    function logRewardToSheet(email, reward) {
-        if (!googleSheetScriptURL.includes('macros')) {
-            console.warn('Google Sheets URL is not set. Skipping log.');
-            return;
-        }
-        
-        const dataToSubmit = { email, reward };
-
-        fetch(googleSheetScriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(dataToSubmit)
-        }).catch(error => console.error('Error logging to sheet:', error));
-    }
     
     // Initial setup
     fetch('assets/rewards.json')
@@ -193,58 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return preloadImages(rewards);
         })
         .then(loadedRewards => {
-            // Defer wheel building to ensure correct dimensions are read
             setTimeout(() => buildWheel(loadedRewards), 0);
         });
     
     getEmailFromURL();
     spinButton.addEventListener('click', handleSpin);
-});
-
-/*
---- GOOGLE APPS SCRIPT CODE (for RewardsLog Sheet) ---
-Copy this code into your new Google Apps Script project.
-
-function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('RewardsLog');
-    if (!sheet) {
-      sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('RewardsLog');
-      sheet.appendRow(['Timestamp', 'Email', 'Reward Won']);
-    }
-    
-    var data = JSON.parse(e.postData.contents);
-    
-    sheet.appendRow([
-      new Date(),
-      data.email,
-      data.reward
-    ]);
-    
-    return ContentService.createTextOutput(JSON.stringify({ 'result': 'success' })).setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ 'result': 'error', 'error': error.toString() })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-*/
-
-const scriptURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
-
-document.getElementById('spinForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const email = document.getElementById('spinEmail').value;
-  const resultDiv = document.getElementById('spinResult');
-  resultDiv.textContent = "Spinning...";
-  const res = await fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify({action: 'generatePromoCode', email}),
-    headers: {'Content-Type': 'application/json'}
-  });
-  const data = await res.json();
-  if (data.error) {
-    resultDiv.textContent = data.error;
-  } else {
-    resultDiv.innerHTML = `Your code: <b>${data.code}</b><br>Discount: <b>${data.discount}</b>`;
-  }
 }); 

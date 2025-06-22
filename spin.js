@@ -28,67 +28,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function buildWheel() {
-        wheel.innerHTML = ''; // Clear previous HTML content
-        const sliceCount = rewards.length;
-        const sliceAngle = 360 / sliceCount;
-        const wheelSize = wheel.offsetWidth;
-        const center = wheelSize / 2;
-        const radius = center * 0.6; // Position content at 60% of the radius
-
-        // Create SVG element
+        wheel.innerHTML = ''; // Clear previous content
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(svgNS, "svg");
+        const wheelSize = wheel.offsetWidth;
+        const center = wheelSize / 2;
         svg.setAttribute("viewBox", `0 0 ${wheelSize} ${wheelSize}`);
 
+        const sliceCount = rewards.length;
+        const anglePerSlice = 360 / sliceCount;
+        const radius = center * 0.65; // Position the center of our content group at 65% of the radius
+        const logoSize = 50;
+        const textYOffset = 15; // Vertical distance of text from the anchor point
+        const logoYOffset = -35; // Vertical distance of logo from the anchor point
+
         rewards.forEach((reward, i) => {
-            const angle = sliceAngle * i + sliceAngle / 2; // Midpoint angle of the slice
-            const angleRad = angle * (Math.PI / 180);
+            // Angle for the centerline of the slice
+            const midAngle = (i * anglePerSlice) + (anglePerSlice / 2);
+            
+            // Convert angle to radians for positioning
+            const angleRad = midAngle * (Math.PI / 180);
+            const x = center + radius * Math.cos(angleRad);
+            const y = center + radius * Math.sin(angleRad);
 
-            // --- Create a group for each slice's content ---
+            // The <g> element is our container for a slice's content
             const contentGroup = document.createElementNS(svgNS, "g");
-            // Rotate the entire group around the wheel's center
-            contentGroup.setAttribute("transform", `rotate(${angle}, ${center}, ${center})`);
+            // Translate the group to the anchor point, then rotate it to face outwards
+            contentGroup.setAttribute("transform", `translate(${x}, ${y}) rotate(${midAngle + 90})`);
 
-            // --- Add the Image ---
+            // The logo image, centered at (0, logoYOffset) within the rotated group
             const image = document.createElementNS(svgNS, "image");
             image.setAttributeNS(null, "href", reward.icon);
-            image.setAttribute("x", center - 30); // Center the image
-            image.setAttribute("y", center - radius - 40); // Position along the radius
-            image.setAttribute("width", "60");
-            image.setAttribute("height", "60");
+            image.setAttribute("x", -logoSize / 2);
+            image.setAttribute("y", logoYOffset);
+            image.setAttribute("width", logoSize);
+            image.setAttribute("height", logoSize);
 
-            // --- Add the Text ---
+            // The text element, centered at (0, textYOffset) within the rotated group
             const text = document.createElementNS(svgNS, "text");
-            text.setAttribute("x", center);
-            text.setAttribute("y", center - radius + 30); // Position below the image
             text.setAttribute("class", "wheel-text");
+            text.setAttribute("y", textYOffset);
 
-            // Handle multi-line text
             const words = reward.text.split(' ');
-            if (words.length > 1) {
-                words.forEach((word, index) => {
-                    const tspan = document.createElementNS(svgNS, "tspan");
-                    tspan.textContent = word;
-                    tspan.setAttribute("x", center);
-                    if (index > 0) {
-                        tspan.setAttribute("dy", "1.2em"); // Line height
-                    }
-                    text.appendChild(tspan);
-                });
-            } else {
-                text.textContent = reward.text;
-            }
-            
-            // --- Keep content upright on the left side of the wheel ---
-            if (angle > 90 && angle < 270) {
-                const textX = Number(text.getAttribute("x"));
-                const textY = Number(text.getAttribute("y"));
-                const imgX = Number(image.getAttribute("x")) + 30; // 30 is half width
-                const imgY = Number(image.getAttribute("y")) + 30; // 30 is half height
-                
-                text.setAttribute("transform", `rotate(180, ${textX}, ${textY})`);
-                image.setAttribute("transform", `rotate(180, ${imgX}, ${imgY})`);
-            }
+            words.forEach((word, index) => {
+                const tspan = document.createElementNS(svgNS, "tspan");
+                tspan.textContent = word;
+                tspan.setAttribute("x", 0);
+                tspan.setAttribute("dy", index === 0 ? "0" : "1.2em"); // Handle line breaks
+                text.appendChild(tspan);
+            });
 
             contentGroup.appendChild(image);
             contentGroup.appendChild(text);

@@ -40,15 +40,16 @@ body {
 .wheel svg {
     width: 100%;
     height: 100%;
-    overflow: visible; /* Allows content to be placed without being cut off */
+    overflow: visible;
 }
 
 .wheel-text {
     font-family: 'Inter', sans-serif;
-    font-size: 24px; /* A fixed font size in pixels works best for SVG scaling */
+    font-size: 20px;
     font-weight: 700;
     fill: var(--navy-dark);
-    text-anchor: middle; /* Center text horizontally */
+    text-anchor: middle;
+    dominant-baseline: middle;
 }
 
 .slice-content {

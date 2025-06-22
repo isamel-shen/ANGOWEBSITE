@@ -129,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             rewards = data.rewards;
-            buildWheel();
+            // Defer wheel building to ensure correct dimensions are read
+            setTimeout(buildWheel, 0);
         });
     
     getEmailFromURL();

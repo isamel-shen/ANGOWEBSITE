@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             content.style.left = `${x}px`;
             content.style.top = `${y}px`;
             content.style.transform = `translate(-50%, -50%) rotate(${contentAngle}deg)`;
+            content.style.transformOrigin = 'center center';
 
             wheel.appendChild(content);
         });

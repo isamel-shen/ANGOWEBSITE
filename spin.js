@@ -129,11 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const winningReward = rewards[winningSliceIndex];
             rewardText.textContent = winningReward.text;
             resultPopup.classList.add('show');
-            confetti({
-                particleCount: 150,
-                spread: 180,
-                origin: { y: 0.6 }
-            });
             
             if(winningReward.text.toLowerCase() !== 'try again') {
                 logRewardToSheet(userEmail, winningReward.text);

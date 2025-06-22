@@ -28,43 +28,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function buildWheel() {
-        wheel.innerHTML = '';
+        wheel.innerHTML = ''; // Clear previous HTML content
         const sliceCount = rewards.length;
         const sliceAngle = 360 / sliceCount;
-        const gradientParts = [];
+        const wheelSize = wheel.offsetWidth;
+        const center = wheelSize / 2;
+        const radius = center * 0.6; // Position content at 60% of the radius
+
+        // Create SVG element
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("viewBox", `0 0 ${wheelSize} ${wheelSize}`);
 
         rewards.forEach((reward, i) => {
-            const startAngle = sliceAngle * i;
-            const endAngle = startAngle + sliceAngle;
-            const sliceColor = i % 2 === 0 ? '#FFFFFF' : '#F0EAD6';
-            gradientParts.push(`${sliceColor} ${startAngle}deg ${endAngle}deg`);
+            const angle = sliceAngle * i + sliceAngle / 2; // Midpoint angle of the slice
+            const angleRad = angle * (Math.PI / 180);
 
-            // Create and position the content for each slice
-            const content = document.createElement('div');
-            content.className = 'slice-content';
-            content.innerHTML = `
-                <img src="${reward.icon}" alt="${reward.text}">
-                <span>${reward.text}</span>
-            `;
+            // --- Create a group for each slice's content ---
+            const contentGroup = document.createElementNS(svgNS, "g");
+            // Rotate the entire group around the wheel's center
+            contentGroup.setAttribute("transform", `rotate(${angle}, ${center}, ${center})`);
 
-            const contentAngle = startAngle + sliceAngle / 2; // Midpoint angle of the slice
-            const radius = wheel.offsetWidth / 3; // Position content further from the center
+            // --- Add the Image ---
+            const image = document.createElementNS(svgNS, "image");
+            image.setAttributeNS(null, "href", reward.icon);
+            image.setAttribute("x", center - 30); // Center the image
+            image.setAttribute("y", center - radius - 40); // Position along the radius
+            image.setAttribute("width", "60");
+            image.setAttribute("height", "60");
+
+            // --- Add the Text ---
+            const text = document.createElementNS(svgNS, "text");
+            text.setAttribute("x", center);
+            text.setAttribute("y", center - radius + 30); // Position below the image
+            text.setAttribute("class", "wheel-text");
+            text.textContent = reward.text;
             
-            // Convert angle to radians for Math.sin/cos
-            const angleRad = (contentAngle - 90) * (Math.PI / 180);
+            // --- Keep content upright on the left side of the wheel ---
+            if (angle > 90 && angle < 270) {
+                const textX = Number(text.getAttribute("x"));
+                const textY = Number(text.getAttribute("y"));
+                const imgX = Number(image.getAttribute("x")) + 30; // 30 is half width
+                const imgY = Number(image.getAttribute("y")) + 30; // 30 is half height
+                
+                text.setAttribute("transform", `rotate(180, ${textX}, ${textY})`);
+                image.setAttribute("transform", `rotate(180, ${imgX}, ${imgY})`);
+            }
 
-            const x = (wheel.offsetWidth / 2) + radius * Math.cos(angleRad);
-            const y = (wheel.offsetHeight / 2) + radius * Math.sin(angleRad);
-            
-            content.style.left = `${x}px`;
-            content.style.top = `${y}px`;
-            content.style.transform = `translate(-50%, -50%) rotate(${contentAngle}deg)`;
-            content.style.transformOrigin = 'center center';
-
-            wheel.appendChild(content);
+            contentGroup.appendChild(image);
+            contentGroup.appendChild(text);
+            svg.appendChild(contentGroup);
         });
 
-        wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+        wheel.appendChild(svg);
     }
 
     function getWeightedRandomReward() {

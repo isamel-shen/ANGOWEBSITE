@@ -34,7 +34,21 @@ body {
     border: 10px solid var(--navy-dark);
     position: relative;
     transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
-    /* The background will be set by JS */
+    background: conic-gradient(var(--offwhite) 0deg 60deg, #F0EAD6 60deg 120deg, var(--offwhite) 120deg 180deg, #F0EAD6 180deg 240deg, var(--offwhite) 240deg 300deg, #F0EAD6 300deg 360deg);
+}
+
+.wheel svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible; /* Allows content to be placed without being cut off */
+}
+
+.wheel-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px; /* A fixed font size in pixels works best for SVG scaling */
+    font-weight: 700;
+    fill: var(--navy-dark);
+    text-anchor: middle; /* Center text horizontally */
 }
 
 .slice-content {

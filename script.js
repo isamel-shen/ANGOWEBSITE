@@ -573,7 +573,7 @@ function renderCalendar(year, month) {
                         <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
                         <p><strong>Branded Merch:</strong> ${event.merch ? event.merch.join(', ') : ''}</p>
                         <p>${event.description || ''}</p>
-                        <button class="btn btn-primary" onclick="window.location.href='registration.html'">Register</button>
+                        <button class="btn btn-primary" onclick="window.location.href='registration.html?event=${event.id}'">Register</button>
                         <button class="btn btn-secondary" onclick="document.getElementById('calendar-event-details').style.display='none';">Close</button>
                     </div>
                 `;

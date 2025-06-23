@@ -20,6 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             tournaments = data.tournaments;
             if (selectEvent) populateEventsDropdown();
+            // Autofill event if event id is in URL
+            const params = new URLSearchParams(window.location.search);
+            const eventId = parseInt(params.get('event'));
+            if (eventId && selectEvent) {
+                // Wait for dropdown to populate
+                setTimeout(() => {
+                    selectEvent.value = eventId;
+                    selectEvent.dispatchEvent(new Event('change'));
+                }, 0);
+            }
         });
 
     function populateEventsDropdown() {

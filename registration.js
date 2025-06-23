@@ -58,29 +58,47 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePrice();
     });
 
-    discountCodeInput.addEventListener('blur', () => {
-        const code = discountCodeInput.value.toUpperCase();
-        const userEmail = document.getElementById('email').value;
-
-        if (promoCodes[code]) {
-            // In a real app, you would need a backend to check if the email has already used the code.
-            // For this example, we'll just check the static list.
-            if (promoCodes[code].usedEmails.includes(userEmail)) {
-                alert('This promo code has already been used with this email address.');
-                currentDiscount = 0;
-            } else {
-                currentDiscount = promoCodes[code].discount / 100;
-                alert(`Applied a ${promoCodes[code].discount}% discount!`);
+    // Remove static promoCodes and usedEmails logic
+    // Use backend for promo code validation
+    const backendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxIZdHrBA5Ir2tKNjJM01f6zSiejFJLO3RxWVIW-lZY3lnAwSb_HEq7RSYeBWeT-x0Xhg/exec");
+    
+    async function validateDiscountCode(code, email) {
+        if (!code) return { valid: false };
+        try {
+            const res = await fetch(backendURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'validateCodeForRegistration', code, email })
+            });
+            const data = await res.json();
+            if (data.error) {
+                return { valid: false, error: data.error };
             }
-        } else if (code !== '') {
-            alert('Invalid promo code.');
+            return { valid: true, discount: data.discount };
+        } catch (err) {
+            return { valid: false, error: 'Network error' };
+        }
+    }
+
+    discountCodeInput.addEventListener('blur', async () => {
+        const code = discountCodeInput.value.trim().toUpperCase();
+        const userEmail = document.getElementById('email').value.trim();
+        if (!code) {
             currentDiscount = 0;
+            updatePrice();
+            return;
+        }
+        const result = await validateDiscountCode(code, userEmail);
+        if (result.valid) {
+            currentDiscount = parseFloat(result.discount) / 100;
+            alert(`Applied a ${result.discount}% discount!`);
         } else {
             currentDiscount = 0;
+            alert(result.error || 'Invalid promo code.');
         }
         updatePrice();
     });
-    
+
     teamMembersContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('add-team-member')) {
             const teamMemberInputs = teamMembersContainer.querySelectorAll('input[name="teamMembers"]');
@@ -126,23 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
         if (!selectedEvent) {
             alert('Please select an event.');
             return;
         }
-
         const confirmationCode = generateConfirmationCode();
         confirmationCodeEl.textContent = confirmationCode;
-        updatePrice(); // Recalculate price one last time before submitting
-
+        updatePrice();
         const formData = new FormData(form);
         const teamMembers = Array.from(formData.getAll('teamMembers')).filter(email => email);
-        
         const finalPrice = finalAmountEl.textContent;
-
         const dataToSubmit = {
             fullName: formData.get('fullName'),
             email: formData.get('email'),
@@ -154,23 +167,22 @@ document.addEventListener('DOMContentLoaded', () => {
             finalEntryFee: finalPrice,
             confirmationCode: confirmationCode,
         };
-
-        // --- Google Sheets Integration ---
-        // 1. Create a Google Sheet.
-        // 2. Go to Extensions > Apps Script.
-        // 3. Paste the server-side script (provided in comments below) and save.
-        // 4. Click Deploy > New deployment. Select "Web app".
-        // 5. For "Who has access", select "Anyone".
-        // 6. Click Deploy. Authorize permissions.
-        // 7. Copy the Web app URL and paste it below.
-        
-        fetch(scriptURL, {
+        // Validate code again on submit (in case user didn't blur input)
+        const code = dataToSubmit.discountCode;
+        if (code) {
+            const result = await validateDiscountCode(code, dataToSubmit.email);
+            if (!result.valid) {
+                alert(result.error || 'Invalid promo code.');
+                return;
+            }
+            // Optionally update price again
+            currentDiscount = parseFloat(result.discount) / 100;
+            updatePrice();
+        }
+        // Submit registration data (no-cors mode for Apps Script)
+        fetch(backendURL, {
             method: 'POST',
-            mode: 'no-cors', // Important for sending data from browser to Google Apps Script
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataToSubmit)
         })
         .then(() => {

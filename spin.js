@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = 'https://script.google.com/macros/s/AKfycby72_yMgYg2HPIE168GwmHiWyjOOM9oO2nVWPppv0dD-8FzKyFaZhRdfFowuFG35vcKHw/exec';
+    const backendURL = 'https://script.google.com/macros/s/AKfycbx_F4mXfWJrnm-Cd5pikKXWS7nAKrVZp8N31-6XuNH6ngrWX2Wy_z536mK9hQCgESZX2g/exec';
     let generatedCode = '';
     let spunReward = '';
 
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(backendURL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({ action: 'checkIfEmailUsed', email })
             });
             return await res.json();
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch(backendURL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({ action: 'generatePromoCode', email, reward })
             });
             return await res.json();

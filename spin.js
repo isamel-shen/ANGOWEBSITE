@@ -157,13 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Check if email already used
         console.log('Checking if email already used...');
         const check = await checkIfEmailUsed(userEmail);
-        if (check.status === "error") {
-            showErrorModal(check.message || "An error occurred.");
-            isSpinning = false;
-            return;
-        }
         if (check.used) {
-            showErrorModal("You've already used your spin with this email.");
+            console.log('Email already used');
+            rewardText.textContent = "You've already used your spin with this email.";
+            resultPopup.classList.add('show');
             isSpinning = false;
             return;
         }
@@ -189,27 +186,27 @@ document.addEventListener('DOMContentLoaded', () => {
             // Call backend to generate code and log
             console.log('Generating promo code...');
             const backendRes = await generatePromoCode(userEmail, spunReward);
-            if (backendRes.status === "error") {
-                showErrorModal(backendRes.message || "An error occurred.");
-            } else if (backendRes.status === "success") {
-                showCongratsModal(`You won: <strong>${spunReward}</strong><br><br>Your code is: <strong>${backendRes.code}</strong>`);
+            
+            // Find the parent paragraph to update its content correctly
+            const rewardParagraph = rewardText.parentElement;
+            const popupContent = rewardParagraph.parentElement;
+            if (backendRes.error || (backendRes.message && backendRes.message.includes('already used'))) {
+                // Show error box
+                popupContent.innerHTML = `
+                  <div class="error-popup-content">
+                    <h2>Error</h2>
+                    <p>You've already used your free spin.</p>
+                    <button onclick="window.location.href='index.html'" class="back-home-btn">Back to Home</button>
+                  </div>
+                `;
             } else {
-                showErrorModal("Non-JSON response from backend");
+                generatedCode = backendRes.code;
+                console.log('Generated code:', generatedCode);
+                rewardParagraph.innerHTML = `You won: <strong>${spunReward}</strong><br><br>Your code is: <strong>${generatedCode}</strong>`;
             }
+            resultPopup.classList.add('show');
             isSpinning = false;
         }, 5500);
-    }
-
-    function showCongratsModal(message) {
-        document.querySelector('.result-popup-content h2').textContent = "Congratulations!";
-        document.getElementById('reward-text').innerHTML = message;
-        resultPopup.classList.add('show');
-    }
-
-    function showErrorModal(message) {
-        document.querySelector('.result-popup-content h2').textContent = "Error";
-        document.getElementById('reward-text').innerHTML = message;
-        resultPopup.classList.add('show');
     }
     
     // Initial setup

@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (backendRes.status === "success") {
                 generatedCode = backendRes.code;
                 console.log('Generated code:', generatedCode);
-                rewardParagraph.innerHTML = `You won: <strong>${spunReward}</strong><br><br>Your code is: <strong>${generatedCode}</strong>`;
+                rewardParagraph.innerHTML = `You won: <strong>${spunReward}</strong><br><br>Your code is: <strong>${generatedCode}</strong><br><br><em>This promotion will be emailed to you shortly.</em>`;
             } else {
                 // Handle other errors
                 rewardParagraph.innerHTML = `An error occurred: <br><strong>${backendRes.error || backendRes.raw || 'Unknown error'}</strong>`;

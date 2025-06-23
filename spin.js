@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = 'https://api.cors.lol/?url=https://script.google.com/macros/s/AKfycbwSp0e233nlGSnnvGfbZF4WfVLkFUEKW23I-L-ghitsm6RefoxvT_wC-9DH_E20NN8OXQ/exec';
+    const backendURL = 'https://script.google.com/macros/s/AKfycbwqMHtUZ7Qsrj6LYMhLv2FqAdMessBe6lxPwpyTrjIO8QTyM40qtztr1lpw3ZaZNXLBzQ/exec';
     let generatedCode = '';
     let spunReward = '';
 

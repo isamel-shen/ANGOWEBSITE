@@ -8,9 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamMembersContainer = document.getElementById('team-members-container');
 
     let tournaments = [];
-    let promoCodes = {};
     let selectedEvent = null;
     let currentDiscount = 0;
+    // Generate confirmation code ONCE on page load
+    const confirmationCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+    if (confirmationCodeEl) confirmationCodeEl.textContent = confirmationCode;
 
     // Fetch tournament data
     fetch('assets/tournaments.json')
@@ -18,13 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             tournaments = data.tournaments;
             if (selectEvent) populateEventsDropdown();
-        });
-
-    // Fetch promo code data
-    fetch('assets/promocodes.json')
-        .then(response => response.json())
-        .then(data => {
-            promoCodes = data;
         });
 
     function populateEventsDropdown() {
@@ -36,10 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function generateConfirmationCode() {
-        return Math.random().toString(36).substring(2, 7).toUpperCase();
-    }
-
     function updatePrice() {
         if (!selectedEvent) return;
         const basePrice = parseFloat(selectedEvent.entryFee.replace('$', ''));
@@ -48,18 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (eTransferDetails) eTransferDetails.style.display = 'block';
     }
 
-    if (selectEvent) {
-        selectEvent.addEventListener('change', () => {
-            const eventId = parseInt(selectEvent.value);
-            selectedEvent = tournaments.find(t => t.id === eventId);
-            currentDiscount = 0;
-            if (discountCodeInput) discountCodeInput.value = '';
-            updatePrice();
-        });
-    }
-
-    // Remove static promoCodes and usedEmails logic
-    // Use backend for promo code validation
     const backendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxIZdHrBA5Ir2tKNjJM01f6zSiejFJLO3RxWVIW-lZY3lnAwSb_HEq7RSYeBWeT-x0Xhg/exec");
     
     async function validateDiscountCode(code, email) {
@@ -78,6 +57,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             return { valid: false, error: 'Network error' };
         }
+    }
+
+    if (selectEvent) {
+        selectEvent.addEventListener('change', () => {
+            const eventId = parseInt(selectEvent.value);
+            selectedEvent = tournaments.find(t => t.id === eventId);
+            currentDiscount = 0;
+            if (discountCodeInput) discountCodeInput.value = '';
+            updatePrice();
+        });
     }
 
     if (discountCodeInput) {
@@ -119,8 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
-
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -128,13 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Please select an event.');
                 return;
             }
-            const confirmationCode = generateConfirmationCode();
-            if (confirmationCodeEl) confirmationCodeEl.textContent = confirmationCode;
             updatePrice();
             const formData = new FormData(form);
             const teamMembers = Array.from(formData.getAll('teamMembers')).filter(email => email);
             const finalPrice = finalAmountEl ? finalAmountEl.textContent : '';
             const dataToSubmit = {
+                action: 'register',
                 fullName: formData.get('fullName'),
                 email: formData.get('email'),
                 teamMembers: teamMembers.join(', '),
@@ -157,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentDiscount = parseFloat(result.discount) / 100;
                 updatePrice();
             }
-            // Submit registration data (no-cors mode for Apps Script)
+            // Submit registration data
             fetch(backendURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -173,13 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Placeholder function for sending a confirmation email.
-     * @param {string} email - The user's email address.
-     * @param {string} code - The generated confirmation code.
-     * @param {string} eventName - The name of the event.
-     * @param {string} amount - The final amount to be paid.
-     */
     function sendConfirmationEmail(email, code, eventName, amount) {
         // You can integrate your email service here (e.g., EmailJS, SendGrid).
         console.log(`Sending email to ${email} with code ${code} for event ${eventName} with amount ${amount}`);

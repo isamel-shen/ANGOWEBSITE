@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = 'https://script.google.com/macros/s/AKfycbzfTSIxL6bbNzkLdgBqEwI5W_8kBXO2JPIa7M7IsHaOuiYYofjDe1naWLCUN3Wojkcd2Q/exec';
+    const backendURL = 'https://script.google.com/macros/s/AKfycbzVzffY-_144kbJUBmuX2FQNx4Jp1cDdrEtnGxrhhlCkYlzqXhpInExktPHSxJ42Rvh0w/exec';
     let generatedCode = '';
     let spunReward = '';
 

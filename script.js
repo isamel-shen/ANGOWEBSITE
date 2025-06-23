@@ -557,7 +557,29 @@ function renderCalendar(year, month) {
         el.onclick = (e) => {
             e.stopPropagation();
             const eventId = parseInt(el.getAttribute('data-event-id'));
-            window.location.href = `event.html?id=${eventId}`;
+            // Instead of redirecting, show event details in the calendar-event-details div
+            const event = tournaments.find(ev => ev.id === eventId);
+            const detailsDiv = document.getElementById('calendar-event-details');
+            if (event && detailsDiv) {
+                detailsDiv.innerHTML = `
+                    <div class="event-details-card" style="background:var(--offwhite);padding:2rem 2.5rem;border-radius:18px;box-shadow:0 4px 32px rgba(23,32,42,0.06);max-width:600px;margin:1.5rem auto;">
+                        <h2 style="font-size:2rem;font-weight:800;color:var(--navy-dark);margin-bottom:1rem;">${event.name}</h2>
+                        <p><strong>Sport:</strong> ${event.sport}</p>
+                        <p><strong>Date:</strong> ${event.date} &nbsp; <strong>Time:</strong> ${event.time}</p>
+                        <p><strong>Location:</strong> ${event.location}</p>
+                        <p><strong>Format:</strong> ${event.format}</p>
+                        <p><strong>Entry Fee:</strong> ${event.entryFee}</p>
+                        <p><strong>Prize Pool:</strong> ${event.prizePool}</p>
+                        <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
+                        <p><strong>Branded Merch:</strong> ${event.merch ? event.merch.join(', ') : ''}</p>
+                        <p>${event.description || ''}</p>
+                        <button class="btn btn-primary" onclick="window.location.href='index.html#registration'">Register</button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('calendar-event-details').style.display='none';">Close</button>
+                    </div>
+                `;
+                detailsDiv.style.display = 'block';
+                detailsDiv.scrollIntoView({behavior:'smooth'});
+            }
         };
     });
 }

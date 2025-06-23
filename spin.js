@@ -108,10 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'checkIfEmailUsed', email })
             });
-            return await res.json();
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch (jsonErr) {
+                return { error: "Non-JSON response from backend", raw: text };
+            }
         } catch (error) {
-            console.log('Backend check failed, allowing spin:', error);
-            return { used: false };
+            return { error: error.toString() };
         }
     }
 
@@ -122,12 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'generatePromoCode', email, reward })
             });
-            return await res.json();
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch (jsonErr) {
+                return { error: "Non-JSON response from backend", raw: text };
+            }
         } catch (error) {
-            console.log('Backend code generation failed:', error);
-            // Generate a local code if backend fails
-            const localCode = Math.random().toString(36).substring(2, 7).toUpperCase();
-            return { code: localCode, discount: reward };
+            return { error: error.toString() };
         }
     }
 

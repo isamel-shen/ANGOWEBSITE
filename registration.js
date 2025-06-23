@@ -39,12 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (eTransferDetails) eTransferDetails.style.display = 'block';
     }
 
-    const backendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxIZdHrBA5Ir2tKNjJM01f6zSiejFJLO3RxWVIW-lZY3lnAwSb_HEq7RSYeBWeT-x0Xhg/exec");
-    
+    // URLs for backends (with CORS proxy)
+    const spinnerCodesBackendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxIZdHrBA5Ir2tKNjJM01f6zSiejFJLO3RxWVIW-lZY3lnAwSb_HEq7RSYeBWeT-x0Xhg/exec");
+    const registrationsBackendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxEHStMp5X3ZWwItXNGoAxbZfPqxhFsjbQUxc5Zc9o3QU7_Y3X4cuRV10X8Eys8v3-I/exec");
+
     async function validateDiscountCode(code, email) {
         if (!code) return { valid: false };
         try {
-            const res = await fetch(backendURL, {
+            const res = await fetch(spinnerCodesBackendURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'validateCodeForRegistration', code, email })
@@ -144,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updatePrice();
             }
             // Submit registration data
-            fetch(backendURL, {
+            fetch(registrationsBackendURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataToSubmit)

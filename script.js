@@ -371,6 +371,17 @@ function loadTournamentsAndRender() {
                 tournaments = data.tournaments || [];
                 killSwitch = !!data.killSwitch;
             }
+            
+            // Replace video with logo if killswitch is true
+            if (killSwitch) {
+                const videoContainer = document.getElementById('hero-video-content');
+                if (videoContainer) {
+                    videoContainer.innerHTML = `
+                        <img src="assets/logo_transparent.png" alt="ANGO Logo" style="width:100%;height:100%;object-fit:contain;border-radius:16px;">
+                    `;
+                }
+            }
+            
             renderTournamentList();
             // Find the next upcoming event
             const now = new Date();

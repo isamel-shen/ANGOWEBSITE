@@ -102,53 +102,90 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function checkIfEmailUsed(email) {
-        const res = await fetch(backendURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'checkIfEmailUsed', email })
-        });
-        return await res.json();
+        try {
+            const res = await fetch(backendURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'checkIfEmailUsed', email })
+            });
+            return await res.json();
+        } catch (error) {
+            console.log('Backend check failed, allowing spin:', error);
+            return { used: false };
+        }
     }
 
     async function generatePromoCode(email, reward) {
-        const res = await fetch(backendURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'generatePromoCode', email, reward })
-        });
-        return await res.json();
+        try {
+            const res = await fetch(backendURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'generatePromoCode', email, reward })
+            });
+            return await res.json();
+        } catch (error) {
+            console.log('Backend code generation failed:', error);
+            // Generate a local code if backend fails
+            const localCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+            return { code: localCode, discount: reward };
+        }
     }
 
     async function handleSpin() {
-        if (isSpinning) return;
+        console.log('Spin button clicked');
+        if (isSpinning) {
+            console.log('Already spinning, ignoring click');
+            return;
+        }
+        
+        if (!userEmail) {
+            console.log('No email found');
+            alert('Email not found. Please sign up from the homepage.');
+            return;
+        }
+        
+        console.log('Starting spin for email:', userEmail);
         isSpinning = true;
         spinButton.disabled = true;
 
         // Check if email already used
+        console.log('Checking if email already used...');
         const check = await checkIfEmailUsed(userEmail);
         if (check.used) {
+            console.log('Email already used');
             rewardText.textContent = "You've already used your spin with this email.";
             resultPopup.classList.add('show');
             isSpinning = false;
             return;
         }
 
+        console.log('Email not used, proceeding with spin');
         const winningSliceIndex = getWeightedRandomReward();
+        console.log('Winning slice index:', winningSliceIndex);
+        
         const sliceAngle = 360 / rewards.length;
         const midAngleOfWinner = (winningSliceIndex * sliceAngle) + (sliceAngle / 2);
         const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.8);
         const targetRotation = (360 * 5) + 270 - midAngleOfWinner - randomOffset;
+        
+        console.log('Spinning wheel to rotation:', targetRotation);
         wheel.style.transform = `rotate(${targetRotation}deg)`;
 
         setTimeout(async () => {
+            console.log('Spin animation complete');
             const winningReward = rewards[winningSliceIndex];
             spunReward = winningReward.text;
+            console.log('Winning reward:', spunReward);
+            
             // Call backend to generate code and log
+            console.log('Generating promo code...');
             const backendRes = await generatePromoCode(userEmail, spunReward);
             if (backendRes.error) {
+                console.log('Backend error:', backendRes.error);
                 rewardText.textContent = backendRes.error;
             } else {
                 generatedCode = backendRes.code;
+                console.log('Generated code:', generatedCode);
                 rewardText.innerHTML = `You won: <strong>${spunReward}</strong><br>Your code: <strong>${generatedCode}</strong>`;
             }
             resultPopup.classList.add('show');
@@ -157,16 +194,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Initial setup
+    console.log('Starting spinner initialization...');
     fetch('assets/rewards.json')
         .then(response => response.json())
         .then(data => {
+            console.log('Rewards loaded:', data.rewards);
             rewards = data.rewards;
             return preloadImages(rewards);
         })
         .then(loadedRewards => {
-            setTimeout(() => buildWheel(loadedRewards), 0);
+            console.log('Images preloaded, building wheel...');
+            setTimeout(() => {
+                buildWheel(loadedRewards);
+                console.log('Wheel built successfully');
+            }, 0);
+        })
+        .catch(error => {
+            console.error('Error loading rewards:', error);
         });
     
     getEmailFromURL();
+    console.log('Adding click event listener to spin button');
     spinButton.addEventListener('click', handleSpin);
+    console.log('Spinner initialization complete');
 }); 

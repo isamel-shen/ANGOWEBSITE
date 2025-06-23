@@ -609,6 +609,6 @@ function renderAllTournamentsInfo() {
 }
 
 // --- Render on Load ---
-document.addEventListener('DOMContentLoaded', () => {
+(function() {
     loadTournamentsAndRender();
-}); 
+})(); 

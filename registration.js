@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             tournaments = data.tournaments;
-            populateEventsDropdown();
+            if (selectEvent) populateEventsDropdown();
         });
 
     // Fetch promo code data
@@ -42,21 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePrice() {
         if (!selectedEvent) return;
-
         const basePrice = parseFloat(selectedEvent.entryFee.replace('$', ''));
         const discountedPrice = basePrice * (1 - currentDiscount);
-
-        finalAmountEl.textContent = `$${discountedPrice.toFixed(2)}`;
-        eTransferDetails.style.display = 'block';
+        if (finalAmountEl) finalAmountEl.textContent = `$${discountedPrice.toFixed(2)}`;
+        if (eTransferDetails) eTransferDetails.style.display = 'block';
     }
 
-    selectEvent.addEventListener('change', () => {
-        const eventId = parseInt(selectEvent.value);
-        selectedEvent = tournaments.find(t => t.id === eventId);
-        currentDiscount = 0;
-        discountCodeInput.value = '';
-        updatePrice();
-    });
+    if (selectEvent) {
+        selectEvent.addEventListener('change', () => {
+            const eventId = parseInt(selectEvent.value);
+            selectedEvent = tournaments.find(t => t.id === eventId);
+            currentDiscount = 0;
+            if (discountCodeInput) discountCodeInput.value = '';
+            updatePrice();
+        });
+    }
 
     // Remove static promoCodes and usedEmails logic
     // Use backend for promo code validation
@@ -80,40 +80,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    discountCodeInput.addEventListener('blur', async () => {
-        const code = discountCodeInput.value.trim().toUpperCase();
-        const userEmail = document.getElementById('email').value.trim();
-        if (!code) {
-            currentDiscount = 0;
+    if (discountCodeInput) {
+        discountCodeInput.addEventListener('blur', async () => {
+            const code = discountCodeInput.value.trim().toUpperCase();
+            const userEmail = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
+            if (!code) {
+                currentDiscount = 0;
+                updatePrice();
+                return;
+            }
+            const result = await validateDiscountCode(code, userEmail);
+            if (result.valid) {
+                currentDiscount = parseFloat(result.discount) / 100;
+                alert(`Applied a ${result.discount}% discount!`);
+            } else {
+                currentDiscount = 0;
+                alert(result.error || 'Invalid promo code.');
+            }
             updatePrice();
-            return;
-        }
-        const result = await validateDiscountCode(code, userEmail);
-        if (result.valid) {
-            currentDiscount = parseFloat(result.discount) / 100;
-            alert(`Applied a ${result.discount}% discount!`);
-        } else {
-            currentDiscount = 0;
-            alert(result.error || 'Invalid promo code.');
-        }
-        updatePrice();
-    });
+        });
+    }
 
-    teamMembersContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('add-team-member')) {
-            const teamMemberInputs = teamMembersContainer.querySelectorAll('input[name="teamMembers"]');
-            const newIndex = teamMemberInputs.length + 1;
-            const newInputDiv = document.createElement('div');
-            newInputDiv.className = 'team-member-input';
-            newInputDiv.innerHTML = `
-                <input type="email" name="teamMembers" placeholder="Email ${newIndex}">
-                <button type="button" class="remove-team-member">-</button>
-            `;
-            teamMembersContainer.appendChild(newInputDiv);
-        } else if (e.target.classList.contains('remove-team-member')) {
-            e.target.parentElement.remove();
-        }
-    });
+    if (teamMembersContainer) {
+        teamMembersContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-team-member')) {
+                const teamMemberInputs = teamMembersContainer.querySelectorAll('input[name="teamMembers"]');
+                const newIndex = teamMemberInputs.length + 1;
+                const newInputDiv = document.createElement('div');
+                newInputDiv.className = 'team-member-input';
+                newInputDiv.innerHTML = `
+                    <input type="email" name="teamMembers" placeholder="Email ${newIndex}">
+                    <button type="button" class="remove-team-member">-</button>
+                `;
+                teamMembersContainer.appendChild(newInputDiv);
+            } else if (e.target.classList.contains('remove-team-member')) {
+                e.target.parentElement.remove();
+            }
+        });
+    }
 
     const scriptURL = 'https://script.google.com/macros/s/AKfycbytGx01q1ERhEzr7GlU3Ua1aeJyvBZCNSNlEGJQhphpESTOIePeuCHH8PVkL9eHT5uuEw/exec';
 
@@ -144,55 +148,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!selectedEvent) {
-            alert('Please select an event.');
-            return;
-        }
-        const confirmationCode = generateConfirmationCode();
-        confirmationCodeEl.textContent = confirmationCode;
-        updatePrice();
-        const formData = new FormData(form);
-        const teamMembers = Array.from(formData.getAll('teamMembers')).filter(email => email);
-        const finalPrice = finalAmountEl.textContent;
-        const dataToSubmit = {
-            fullName: formData.get('fullName'),
-            email: formData.get('email'),
-            teamMembers: teamMembers.join(', '),
-            teamName: formData.get('teamName'),
-            phoneNumber: formData.get('phoneNumber'),
-            selectedEvent: selectedEvent.name,
-            discountCode: formData.get('discountCode').toUpperCase(),
-            finalEntryFee: finalPrice,
-            confirmationCode: confirmationCode,
-        };
-        // Validate code again on submit (in case user didn't blur input)
-        const code = dataToSubmit.discountCode;
-        if (code) {
-            const result = await validateDiscountCode(code, dataToSubmit.email);
-            if (!result.valid) {
-                alert(result.error || 'Invalid promo code.');
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!selectedEvent) {
+                alert('Please select an event.');
                 return;
             }
-            // Optionally update price again
-            currentDiscount = parseFloat(result.discount) / 100;
+            const confirmationCode = generateConfirmationCode();
+            if (confirmationCodeEl) confirmationCodeEl.textContent = confirmationCode;
             updatePrice();
-        }
-        // Submit registration data (no-cors mode for Apps Script)
-        fetch(backendURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataToSubmit)
-        })
-        .then(() => {
-            window.location.href = 'confirmation.html';
-        })
-        .catch(error => {
-            alert('There was an error submitting your registration. Please try again.');
-            console.error('Error:', error);
+            const formData = new FormData(form);
+            const teamMembers = Array.from(formData.getAll('teamMembers')).filter(email => email);
+            const finalPrice = finalAmountEl ? finalAmountEl.textContent : '';
+            const dataToSubmit = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                teamMembers: teamMembers.join(', '),
+                teamName: formData.get('teamName'),
+                phoneNumber: formData.get('phoneNumber'),
+                selectedEvent: selectedEvent.name,
+                discountCode: formData.get('discountCode').toUpperCase(),
+                finalEntryFee: finalPrice,
+                confirmationCode: confirmationCode,
+            };
+            // Validate code again on submit (in case user didn't blur input)
+            const code = dataToSubmit.discountCode;
+            if (code) {
+                const result = await validateDiscountCode(code, dataToSubmit.email);
+                if (!result.valid) {
+                    alert(result.error || 'Invalid promo code.');
+                    return;
+                }
+                // Optionally update price again
+                currentDiscount = parseFloat(result.discount) / 100;
+                updatePrice();
+            }
+            // Submit registration data (no-cors mode for Apps Script)
+            fetch(backendURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSubmit)
+            })
+            .then(() => {
+                window.location.href = 'confirmation.html';
+            })
+            .catch(error => {
+                alert('There was an error submitting your registration. Please try again.');
+                console.error('Error:', error);
+            });
         });
-    });
+    }
 
     /**
      * Placeholder function for sending a confirmation email.

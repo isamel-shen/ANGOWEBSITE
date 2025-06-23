@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = 'https://script.google.com/macros/s/AKfycbzVzffY-_144kbJUBmuX2FQNx4Jp1cDdrEtnGxrhhlCkYlzqXhpInExktPHSxJ42Rvh0w/exec';
+    const backendURL = 'https://script.google.com/macros/s/AKfycby72_yMgYg2HPIE168GwmHiWyjOOM9oO2nVWPppv0dD-8FzKyFaZhRdfFowuFG35vcKHw/exec';
     let generatedCode = '';
     let spunReward = '';
 
@@ -180,13 +180,17 @@ document.addEventListener('DOMContentLoaded', () => {
             // Call backend to generate code and log
             console.log('Generating promo code...');
             const backendRes = await generatePromoCode(userEmail, spunReward);
+            
+            // Find the parent paragraph to update its content correctly
+            const rewardParagraph = rewardText.parentElement;
+
             if (backendRes.error) {
                 console.log('Backend error:', backendRes.error);
-                rewardText.textContent = backendRes.error;
+                rewardParagraph.innerHTML = `An error occurred: <br><strong>${backendRes.error}</strong>`;
             } else {
                 generatedCode = backendRes.code;
                 console.log('Generated code:', generatedCode);
-                rewardText.innerHTML = `You won: <strong>${spunReward}</strong><br>Your code: <strong>${generatedCode}</strong>`;
+                rewardParagraph.innerHTML = `You won: <strong>${spunReward}</strong><br><br>Your code is: <strong>${generatedCode}</strong>`;
             }
             resultPopup.classList.add('show');
             isSpinning = false;

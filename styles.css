@@ -846,4 +846,11 @@ html {
         min-height: 35px;
         max-height: 60px;
     }
+}
+
+.hero-video-content {
+    background: var(--navy-dark);
+}
+.hero-video-content.killswitch-active {
+    background: #EBE8E1 !important;
 } 

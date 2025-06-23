@@ -377,8 +377,8 @@ function loadTournamentsAndRender() {
                 const videoContainer = document.getElementById('hero-video-content');
                 if (videoContainer) {
                     videoContainer.innerHTML = `
-                        <img src="assets/logo_transparent.png" alt="ANGO Logo" style="width:100%;height:100%;object-fit:contain;border-radius:16px;">
-                    `;
+                        <img src=\"assets/logo_transparent.png\" alt=\"ANGO Logo\" style=\"width:100%;height:100%;object-fit:contain;border-radius:16px;\">\n                    `;
+                    videoContainer.classList.add('killswitch-active');
                 }
             }
             

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = 'https://api.cors.lol/?url=https://script.google.com/macros/s/AKfycbwqMHtUZ7Qsrj6LYMhLv2FqAdMessBe6lxPwpyTrjIO8QTyM40qtztr1lpw3ZaZNXLBzQ/exec';
+    const backendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbwqMHtUZ7Qsrj6LYMhLv2FqAdMessBe6lxPwpyTrjIO8QTyM40qtztr1lpw3ZaZNXLBzQ/exec");
     let generatedCode = '';
     let spunReward = '';
 

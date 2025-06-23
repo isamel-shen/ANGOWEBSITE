@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rewards = [];
     let userEmail = '';
     let isSpinning = false;
-    const backendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxtsgJpRSEuwyVyZ4Ro9UMKoFM-5D2fLINZJRonn0UL1Fs41dzc53Z7Hcksbwbbk9Ni5Q/exec");
+    const backendURL = "https://corsfix-test-bitter-hill-8907.angocompetitive.workers.dev/?url=" + encodeURIComponent("https://script.google.com/macros/s/AKfycbxIZdHrBA5Ir2tKNjJM01f6zSiejFJLO3RxWVIW-lZY3lnAwSb_HEq7RSYeBWeT-x0Xhg/exec");
     let generatedCode = '';
     let spunReward = '';
 
@@ -119,12 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function generatePromoCode(email, reward) {
+    async function spinBackend(email, reward) {
         try {
             const res = await fetch(backendURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'generatePromoCode', email, reward })
+                body: JSON.stringify({ action: 'spin', email, reward })
             });
             const text = await res.text();
             try {
@@ -143,66 +143,50 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Already spinning, ignoring click');
             return;
         }
-        
         if (!userEmail) {
             console.log('No email found');
             alert('Email not found. Please sign up from the homepage.');
             return;
         }
-        
         console.log('Starting spin for email:', userEmail);
         isSpinning = true;
         spinButton.disabled = true;
-
-        // Check if email already used
-        console.log('Checking if email already used...');
-        const check = await checkIfEmailUsed(userEmail);
-        if (check.used) {
-            console.log('Email already used');
-            rewardText.textContent = "You've already used your spin with this email.";
-            resultPopup.classList.add('show');
-            isSpinning = false;
-            return;
-        }
-
         console.log('Email not used, proceeding with spin');
         const winningSliceIndex = getWeightedRandomReward();
         console.log('Winning slice index:', winningSliceIndex);
-        
         const sliceAngle = 360 / rewards.length;
         const midAngleOfWinner = (winningSliceIndex * sliceAngle) + (sliceAngle / 2);
         const randomOffset = (Math.random() - 0.5) * (sliceAngle * 0.8);
         const targetRotation = (360 * 5) + 270 - midAngleOfWinner - randomOffset;
-        
         console.log('Spinning wheel to rotation:', targetRotation);
         wheel.style.transform = `rotate(${targetRotation}deg)`;
-
         setTimeout(async () => {
             console.log('Spin animation complete');
             const winningReward = rewards[winningSliceIndex];
             spunReward = winningReward.text;
             console.log('Winning reward:', spunReward);
-            
-            // Call backend to generate code and log
-            console.log('Generating promo code...');
-            const backendRes = await generatePromoCode(userEmail, spunReward);
-            
+            // Call backend to check and generate in one call
+            console.log('Calling backend spin...');
+            const backendRes = await spinBackend(userEmail, spunReward);
             // Find the parent paragraph to update its content correctly
             const rewardParagraph = rewardText.parentElement;
             const popupContent = rewardParagraph.parentElement;
-            if (backendRes.error || (backendRes.message && backendRes.message.includes('already used'))) {
+            if (backendRes.status === "error" && backendRes.message && backendRes.message.includes('already used')) {
                 // Show error box
                 popupContent.innerHTML = `
                   <div class="error-popup-content">
                     <h2>Error</h2>
                     <p>You've already used your free spin.</p>
-                    <button onclick="window.location.href='index.html'" class="back-home-btn">Back to Home</button>
+                    <button onclick=\"window.location.href='index.html'\" class=\"back-home-btn\">Back to Home</button>
                   </div>
                 `;
-            } else {
+            } else if (backendRes.status === "success") {
                 generatedCode = backendRes.code;
                 console.log('Generated code:', generatedCode);
                 rewardParagraph.innerHTML = `You won: <strong>${spunReward}</strong><br><br>Your code is: <strong>${generatedCode}</strong>`;
+            } else {
+                // Handle other errors
+                rewardParagraph.innerHTML = `An error occurred: <br><strong>${backendRes.error || backendRes.raw || 'Unknown error'}</strong>`;
             }
             resultPopup.classList.add('show');
             isSpinning = false;

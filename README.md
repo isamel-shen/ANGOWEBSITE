@@ -12,7 +12,7 @@
 - registration system
 ---- logging down registrations & payment
 - promo code system
-- (Update your Google Apps Script backend URL to: https://script.google.com/macros/s/AKfycbxtsgJpRSEuwyVyZ4Ro9UMKoFM-5D2fLINZJRonn0UL1Fs41dzc53Z7Hcksbwbbk9Ni5Q/exec)
+- (Update your Google Apps Script backend URL to: https://api.cors.lol/?url=https://script.google.com/macros/s/AKfycbwqMHtUZ7Qsrj6LYMhLv2FqAdMessBe6lxPwpyTrjIO8QTyM40qtztr1lpw3ZaZNXLBzQ/exec)
 
 ## About
  ANGO Website

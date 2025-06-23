@@ -61,6 +61,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function checkDiscountCode(code, email) {
+        if (!code) return { valid: false };
+        try {
+            const res = await fetch(spinnerCodesBackendURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'checkCodeForRegistration', code, email })
+            });
+            const data = await res.json();
+            if (data.error) {
+                return { valid: false, error: data.error };
+            }
+            return { valid: true, discount: data.discount };
+        } catch (err) {
+            return { valid: false, error: 'Network error' };
+        }
+    }
+
     if (selectEvent) {
         selectEvent.addEventListener('change', () => {
             const eventId = parseInt(selectEvent.value);
@@ -71,25 +89,40 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (discountCodeInput) {
-        discountCodeInput.addEventListener('blur', async () => {
-            const code = discountCodeInput.value.trim().toUpperCase();
-            const userEmail = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
-            if (!code) {
-                currentDiscount = 0;
-                updatePrice();
-                return;
-            }
-            const result = await validateDiscountCode(code, userEmail);
-            if (result.valid) {
-                currentDiscount = parseFloat(result.discount) / 100;
-                alert(`Applied a ${result.discount}% discount!`);
-            } else {
-                currentDiscount = 0;
-                alert(result.error || 'Invalid promo code.');
-            }
+    // Reusable function to check and apply discount code
+    async function handleDiscountCodeCheck() {
+        const code = discountCodeInput.value.trim().toUpperCase();
+        const userEmail = document.getElementById('email') ? document.getElementById('email').value.trim() : '';
+        if (!code) {
+            currentDiscount = 0;
             updatePrice();
+            return;
+        }
+        const result = await checkDiscountCode(code, userEmail);
+        if (result.valid) {
+            currentDiscount = parseFloat(result.discount) / 100;
+            alert(`Applied a ${result.discount}% discount!`);
+        } else {
+            currentDiscount = 0;
+            alert(result.error || 'Invalid promo code.');
+        }
+        updatePrice();
+    }
+
+    // Prevent Enter key in discount code input from submitting the form
+    if (discountCodeInput) {
+        discountCodeInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
         });
+        discountCodeInput.addEventListener('blur', handleDiscountCodeCheck);
+    }
+
+    // Add event listener for the Apply button
+    const applyDiscountBtn = document.getElementById('apply-discount-btn');
+    if (applyDiscountBtn) {
+        applyDiscountBtn.addEventListener('click', handleDiscountCodeCheck);
     }
 
     if (teamMembersContainer) {
@@ -133,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 finalEntryFee: finalPrice,
                 confirmationCode: confirmationCode,
             };
-            // Validate code again on submit (in case user didn't blur input)
+            // Validate and mark code as used
             const code = dataToSubmit.discountCode;
             if (code) {
                 const result = await validateDiscountCode(code, dataToSubmit.email);

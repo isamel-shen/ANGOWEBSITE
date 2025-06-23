@@ -341,10 +341,18 @@ if (leadMagnetForm) {
     leadMagnetForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('lead-email').value;
+        // Simple email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('Please enter a valid email address.');
+            return;
+        }
         // TODO: Integrate with Mailchimp, Google Sheets, or other service here
         // Example: sendEmailToService(email);
         leadMagnetForm.style.display = 'none';
-        leadMagnetSuccess.style.display = 'block';
+        if (leadMagnetSuccess) leadMagnetSuccess.style.display = 'block';
+        // Redirect to the spin page with the email as a query parameter
+        window.location.href = `spin.html?email=${encodeURIComponent(email)}`;
     });
 }
 

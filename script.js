@@ -501,7 +501,7 @@ function renderCalendar(year, month) {
     }) : [];
     if (limitedEvents.length > 0) {
         html += `<div class='limited-spots-message' style="background: #ffefc1; color: #b30000; font-weight: bold; font-size: 1.2rem; padding: 1rem 1.5rem; border-radius: 10px; margin-bottom: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(199,161,91,0.10); animation: pulse 1.2s infinite alternate;">
-            ${limitedEvents.map(ev => `[1mLimited spots remaining for <span style='color:#b30000;'>${ev.name}</span>!`).join('<br>')}
+            ${limitedEvents.map(ev => `Limited spots remaining for <span style='color:#b30000;'>${ev.name}</span>!`).join('<br>')}
         </div>`;
     }
 

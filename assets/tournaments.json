@@ -5,7 +5,7 @@
             "id": 1,
             "name": "Spring Showdown",
             "sport": "Basketball",
-            "date": "2024-05-25",
+            "date": "2025-05-25",
             "time": "10:00 AM",
             "location": "Downtown Sports Center",
             "format": "Single Elimination",
@@ -14,13 +14,14 @@
             "skillLevel": "All Levels",
             "merch": ["Shirt", "Towel"],
             "media": [],
-            "description": "Kick off the season with our Spring Showdown!"
+            "description": "Kick off the season with our Spring Showdown!",
+            "limited": false
         },
         {
             "id": 2,
             "name": "Summer Slam",
             "sport": "Soccer",
-            "date": "2024-07-10",
+            "date": "2025-06-10",
             "time": "2:00 PM",
             "location": "Greenfield Park",
             "format": "Round Robin",
@@ -29,13 +30,14 @@
             "skillLevel": "Beginner/Intermediate",
             "merch": ["Shirt"],
             "media": [],
-            "description": "Join our fun and friendly summer soccer tournament!"
+            "description": "Join our fun and friendly summer soccer tournament!",
+            "limited": true
         },
         {
             "id": 3,
             "name": "Downtown Basketball Classic",
             "sport": "Basketball",
-            "date": "2024-06-27",
+            "date": "2025-06-23",
             "time": "5:00 PM",
             "location": "Downtown Arena",
             "format": "Single Elimination",
@@ -44,7 +46,8 @@
             "skillLevel": "All Levels",
             "merch": ["Shirt"],
             "media": [],
-            "description": "Compete in the Downtown Basketball Classic for a shot at $500! Open to all skill levels."
+            "description": "Compete in the Downtown Basketball Classic for a shot at $500! Open to all skill levels.",
+            "limited": false
         },
         {
             "id": 4,
@@ -59,7 +62,8 @@
             "skillLevel": "All Levels",
             "merch": ["Shirt"],
             "media": [],
-            "description": "Test your skills in our annual Pickleball Open!"
+            "description": "Test your skills in our annual Pickleball Open!",
+            "limited": false
         },
         {
             "id": 5,
@@ -74,7 +78,8 @@
             "skillLevel": "Intermediate",
             "merch": ["Towel"],
             "media": [],
-            "description": "Smash your way to the top at Badminton Bash!"
+            "description": "Smash your way to the top at Badminton Bash!",
+            "limited": false
         },
         {
             "id": 6,
@@ -89,7 +94,8 @@
             "skillLevel": "Beginner",
             "merch": ["Shirt"],
             "media": [],
-            "description": "Fun for all ages at the Bag Toss Showdown!"
+            "description": "Fun for all ages at the Bag Toss Showdown!",
+            "limited": false
         },
         {
             "id": 7,
@@ -104,7 +110,8 @@
             "skillLevel": "All Levels",
             "merch": ["Hat"],
             "media": [],
-            "description": "Serve up your best game at the June Tennis Classic!"
+            "description": "Serve up your best game at the June Tennis Classic!",
+            "limited": false
         },
         {
             "id": 8,
@@ -119,7 +126,8 @@
             "skillLevel": "All Levels",
             "merch": ["Frisbee"],
             "media": [],
-            "description": "Join the fun at our Ultimate Frisbee Fest!"
+            "description": "Join the fun at our Ultimate Frisbee Fest!",
+            "limited": false
         },
         {
             "id": 9,
@@ -134,7 +142,8 @@
             "skillLevel": "Advanced",
             "merch": ["Shirt", "Hat"],
             "media": [],
-            "description": "Spike your way to victory at the July Volleyball Cup!"
+            "description": "Spike your way to victory at the July Volleyball Cup!",
+            "limited": false
         },
         {
             "id": 10,
@@ -149,7 +158,8 @@
             "skillLevel": "All Levels",
             "merch": ["Shirt"],
             "media": [],
-            "description": "Compete in the June Soccer Showdown for glory and prizes!"
+            "description": "Compete in the June Soccer Showdown for glory and prizes!",
+            "limited": false
         }
     ]
 } 

@@ -152,6 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('assets/tournaments.json')
         .then(response => response.json())
         .then(data => {
+            // Check for killswitch
+            if (data.killSwitch) {
+                // If killswitch is true, don't populate events and show a message
+                if (selectEvent) {
+                    selectEvent.innerHTML = '<option value="">No events available</option>';
+                    selectEvent.disabled = true;
+                }
+                return;
+            }
+            
             tournaments = data.tournaments;
             if (selectEvent) populateEventsDropdown();
             // Autofill event if event id is in URL

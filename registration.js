@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalAmountEl = document.getElementById('final-amount');
     const confirmationCodeEl = document.getElementById('confirmation-code');
     const teamMembersContainer = document.getElementById('team-members-container');
+    const registerButton = document.querySelector('.btn-register');
 
     let tournaments = [];
     let selectedEvent = null;
@@ -13,6 +14,139 @@ document.addEventListener('DOMContentLoaded', () => {
     // Generate confirmation code ONCE on page load
     const confirmationCode = Math.random().toString(36).substring(2, 7).toUpperCase();
     if (confirmationCodeEl) confirmationCodeEl.textContent = confirmationCode;
+
+    // Validation functions
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    function validateRequiredField(value, fieldName) {
+        if (!value || value.trim() === '') {
+            return { valid: false, message: `${fieldName} is required.` };
+        }
+        return { valid: true };
+    }
+
+    function validateEmailField(email, fieldName) {
+        if (!email || email.trim() === '') {
+            return { valid: false, message: `${fieldName} is required.` };
+        }
+        if (!isValidEmail(email.trim())) {
+            return { valid: false, message: `${fieldName} must be a valid email address.` };
+        }
+        return { valid: true };
+    }
+
+    function validateForm() {
+        const fullName = document.getElementById('full-name').value;
+        const email = document.getElementById('email').value;
+        const teamName = document.getElementById('team-name').value;
+        const phoneNumber = document.getElementById('phone-number').value;
+        const selectedEventValue = selectEvent.value;
+
+        // Validate required fields
+        const fullNameValidation = validateRequiredField(fullName, 'Full Name');
+        if (!fullNameValidation.valid) {
+            alert(fullNameValidation.message);
+            document.getElementById('full-name').focus();
+            return false;
+        }
+
+        const emailValidation = validateEmailField(email, 'Email');
+        if (!emailValidation.valid) {
+            alert(emailValidation.message);
+            document.getElementById('email').focus();
+            return false;
+        }
+
+        const teamNameValidation = validateRequiredField(teamName, 'Team Name');
+        if (!teamNameValidation.valid) {
+            alert(teamNameValidation.message);
+            document.getElementById('team-name').focus();
+            return false;
+        }
+
+        const phoneValidation = validateRequiredField(phoneNumber, 'Phone Number');
+        if (!phoneValidation.valid) {
+            alert(phoneValidation.message);
+            document.getElementById('phone-number').focus();
+            return false;
+        }
+
+        if (!selectedEventValue) {
+            alert('Please select an event.');
+            selectEvent.focus();
+            return false;
+        }
+
+        // Validate team member emails if any are provided
+        const teamMemberInputs = teamMembersContainer.querySelectorAll('input[name="teamMembers"]');
+        for (let input of teamMemberInputs) {
+            const emailValue = input.value.trim();
+            if (emailValue) { // Only validate if email is provided (optional field)
+                const teamEmailValidation = validateEmailField(emailValue, 'Team Member Email');
+                if (!teamEmailValidation.valid) {
+                    alert(teamEmailValidation.message);
+                    input.focus();
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // Real-time validation for email fields
+    function setupEmailValidation() {
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('blur', function() {
+                const validation = validateEmailField(this.value, 'Email');
+                if (!validation.valid) {
+                    this.style.borderColor = '#ff4444';
+                } else {
+                    this.style.borderColor = '';
+                }
+            });
+        }
+
+        // Setup validation for team member emails
+        if (teamMembersContainer) {
+            teamMembersContainer.addEventListener('blur', function(e) {
+                if (e.target.name === 'teamMembers') {
+                    const emailValue = e.target.value.trim();
+                    if (emailValue) { // Only validate if email is provided
+                        const validation = validateEmailField(emailValue, 'Team Member Email');
+                        if (!validation.valid) {
+                            e.target.style.borderColor = '#ff4444';
+                        } else {
+                            e.target.style.borderColor = '';
+                        }
+                    }
+                }
+            }, true);
+        }
+    }
+
+    // Setup real-time validation
+    setupEmailValidation();
+
+    // Add validation to the initial team member input
+    const initialTeamMemberInput = teamMembersContainer ? teamMembersContainer.querySelector('input[name="teamMembers"]') : null;
+    if (initialTeamMemberInput) {
+        initialTeamMemberInput.addEventListener('blur', function() {
+            const emailValue = this.value.trim();
+            if (emailValue) { // Only validate if email is provided
+                const validation = validateEmailField(emailValue, 'Team Member Email');
+                if (!validation.valid) {
+                    this.style.borderColor = '#ff4444';
+                } else {
+                    this.style.borderColor = '';
+                }
+            }
+        });
+    }
 
     // Fetch tournament data
     fetch('assets/tournaments.json')
@@ -147,6 +281,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button type="button" class="remove-team-member">-</button>
                 `;
                 teamMembersContainer.appendChild(newInputDiv);
+                
+                // Add validation to the new input
+                const newInput = newInputDiv.querySelector('input[name="teamMembers"]');
+                newInput.addEventListener('blur', function() {
+                    const emailValue = this.value.trim();
+                    if (emailValue) { // Only validate if email is provided
+                        const validation = validateEmailField(emailValue, 'Team Member Email');
+                        if (!validation.valid) {
+                            this.style.borderColor = '#ff4444';
+                        } else {
+                            this.style.borderColor = '';
+                        }
+                    }
+                });
             } else if (e.target.classList.contains('remove-team-member')) {
                 e.target.parentElement.remove();
             }
@@ -156,6 +304,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            // Validate form before proceeding
+            if (!validateForm()) {
+                return;
+            }
+            
             if (!selectedEvent) {
                 alert('Please select an event.');
                 return;

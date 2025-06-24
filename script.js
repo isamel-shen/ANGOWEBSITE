@@ -493,6 +493,18 @@ function renderCalendar(year, month) {
     // Always show the calendar grid, but hide events if killSwitch is on
     // Build calendar header
     let html = `<div class='calendar-container-modern'>`;
+
+    // --- Limited Spots Message ---
+    const limitedEvents = (!killSwitch) ? tournaments.filter(ev => {
+        const evDate = new Date(ev.date);
+        return ev.limited && evDate.getFullYear() === year && evDate.getMonth() === month;
+    }) : [];
+    if (limitedEvents.length > 0) {
+        html += `<div class='limited-spots-message' style="background: #ffefc1; color: #b30000; font-weight: bold; font-size: 1.2rem; padding: 1rem 1.5rem; border-radius: 10px; margin-bottom: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(199,161,91,0.10); animation: pulse 1.2s infinite alternate;">
+            ${limitedEvents.map(ev => `[1mLimited spots remaining for <span style='color:#b30000;'>${ev.name}</span>!`).join('<br>')}
+        </div>`;
+    }
+
     html += `<div class='calendar-nav'>
         <button class='calendar-arrow' id='prev-month'>&lt;</button>
         <span class='calendar-title'>${new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }).toUpperCase()}</span>

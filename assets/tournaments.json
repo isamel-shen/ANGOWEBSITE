@@ -31,7 +31,7 @@
             "merch": ["Shirt"],
             "media": [],
             "description": "Join our fun and friendly summer soccer tournament!",
-            "limited": true
+            "limited": false
         },
         {
             "id": 3,

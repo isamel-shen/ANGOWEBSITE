@@ -1,5 +1,5 @@
 {
-    "killSwitch": true,
+    "killSwitch": false,
     "tournaments": [
         {
             "id": 1,

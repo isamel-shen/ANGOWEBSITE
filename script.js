@@ -55,6 +55,15 @@ const observer = new IntersectionObserver((entries) => {
 
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
+    // Fetch rewards.json to check if lead magnet should be disabled
+    fetch('assets/rewards.json')
+        .then(response => response.json())
+        .then(data => {
+            if (data.disabled) {
+                const leadMagnetContainer = document.getElementById('lead-magnet-container');
+                if (leadMagnetContainer) leadMagnetContainer.style.display = 'none';
+            }
+        });
     const animateElements = document.querySelectorAll('.service-card, .stat, .contact-item');
     animateElements.forEach(el => {
         el.classList.add('fade-in');

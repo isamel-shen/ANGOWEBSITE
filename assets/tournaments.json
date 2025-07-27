@@ -2,22 +2,6 @@
     "killSwitch": false,
     "tournaments": [
         {
-            "id": 1,
-            "name": "Beginners Grass Spikeball Tournament",
-            "sport": "Spikeball",
-            "date": "2025-07-27",
-            "time": "3:00 PM",
-            "location": "Helmkay Park, Richmond Hill",
-            "format": "Teams of 2",
-            "entryFee": "$20",
-            "prizePool": "$80",
-            "skillLevel": "Beginners",
-            "merch": ["Shirt"],
-            "media": [],
-            "description": "Join ANGO for our beginners spikeball tournament!",
-            "limited": true
-        },
-        {
             "id": 2,
             "name": "3v3 Basketball Tournament",
             "sport": "Basketball",

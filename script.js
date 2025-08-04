@@ -446,7 +446,6 @@ window.showEventDetails = function(id) {
             <p><strong>Entry Fee:</strong> ${event.entryFee}</p>
             <p><strong>Prize Pool:</strong> ${event.prizePool}</p>
             <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
-            <p><strong>Branded Merch:</strong> ${event.merch.join(', ')}</p>
             <p>${event.description}</p>
             <button class="btn btn-primary" onclick="showRegistrationForm(${event.id})">Register</button>
             <button class="btn btn-secondary" onclick="closeEventDetails()">Close</button>
@@ -603,7 +602,6 @@ function renderCalendar(year, month) {
                         <p><strong>Entry Fee:</strong> ${event.entryFee}</p>
                         <p><strong>Prize Pool:</strong> ${event.prizePool}</p>
                         <p><strong>Skill Level:</strong> ${event.skillLevel}</p>
-                        <p><strong>Branded Merch:</strong> ${event.merch ? event.merch.join(', ') : ''}</p>
                         <p>${event.description || ''}</p>
                         <button class="btn btn-primary" onclick="window.location.href='registration.html?event=${event.id}'">Register</button>
                         <button class="btn btn-secondary" onclick="document.getElementById('calendar-event-details').style.display='none';">Close</button>
@@ -634,7 +632,6 @@ function renderAllTournamentsInfo() {
             <p><strong>Entry Fee:</strong> ${t.entryFee}</p>
             <p><strong>Prize Pool:</strong> ${t.prizePool}</p>
             <p><strong>Skill Level:</strong> ${t.skillLevel}</p>
-            <p><strong>Branded Merch:</strong> ${t.merch.join(', ')}</p>
             <p>${t.description}</p>
         </div>
     `).join('');

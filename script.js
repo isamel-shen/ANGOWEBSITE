@@ -633,6 +633,11 @@ function renderAllTournamentsInfo() {
             <p><strong>Prize Pool:</strong> ${t.prizePool}</p>
             <p><strong>Skill Level:</strong> ${t.skillLevel}</p>
             <p>${t.description}</p>
+            <div style="text-align:center;margin-top:1.5rem;">
+                <button class="btn btn-primary" onclick="window.location.href='registration.html?event=${t.id}'" style="padding:0.75rem 2rem;font-size:1rem;font-weight:600;border-radius:8px;border:none;cursor:pointer;transition:all 0.3s ease;background:var(--navy-dark);color:white;">
+                    Register for ${t.name}
+                </button>
+            </div>
         </div>
     `).join('');
 }

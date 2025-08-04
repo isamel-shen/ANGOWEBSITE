@@ -2,19 +2,19 @@
     "killSwitch": false,
     "tournaments": [
         {
-            "id": 2,
-            "name": "3v3 Basketball Tournament",
+            "id": 1,
+            "name": "4v4 Basketball Tournament",
             "sport": "Basketball",
-            "date": "2025-08-02",
+            "date": "2025-08-10",
             "time": "1:00 PM",
             "location": "Vaughn Sportsplex",
-            "format": "3v3",
-            "entryFee": "$75",
-            "prizePool": "$300",
+            "format": "4v4",
+            "entryFee": "$100",
+            "prizePool": "$400",
             "skillLevel": "All",
             "merch": [],
             "media": [],
-            "description": "Compete in our 3v3 basketball tournament for a chance to win $300!",
+            "description": "Get ready to compete in 4v4 Basketball for a $400 cash prize. Free entry for all spectators - come watch the action live!",
             "limited": false
         }
     ]

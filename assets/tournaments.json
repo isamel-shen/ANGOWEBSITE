@@ -3,19 +3,33 @@
     "tournaments": [
         {
             "id": 1,
-            "name": "4v4 Basketball Tournament",
+            "name": "3v3 Basketball Tournament",
             "sport": "Basketball",
-            "date": "2025-08-10",
+            "date": "2025-08-30",
             "time": "1:00 PM",
-            "location": "Vaughn Sportsplex",
-            "format": "4v4",
-            "entryFee": "$100",
-            "prizePool": "$400",
+            "location": "Vaughan Sportsplex",
+            "format": "3v3",
+            "entryFee": "$200",
+            "prizePool": "$800",
             "skillLevel": "All",
-            "merch": [],
             "media": [],
-            "description": "Get ready to compete in 4v4 Basketball for a $400 cash prize. Free entry for all spectators - come watch the action live!",
+            "description": "Join us for an intense 3v3 basketball showdown! Bring your A-game and compete for the $800 prize pool!",
             "limited": false
+        },
+        {
+            "id": 2,
+            "name": "3v3 Under 16 Basketball Tournament",
+            "sport": "Basketball",
+            "date": "2025-08-24",
+            "time": "1:00 PM",
+            "location": "Vaughan Sportsplex",
+            "format": "3v3",
+            "entryFee": "$75",
+            "prizePool": "$300",
+            "skillLevel": "16 & Under",
+            "media": [],
+            "description": "Join our exciting 3v3 tournament designed specifically for players 16 and under. Fast-paced games, friendly competition, and a chance to showcase your skills against peers. Sign ups close this Friday (August 22nd)",
+            "limited": true
         }
     ]
 } 

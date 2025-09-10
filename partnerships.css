@@ -1,0 +1,603 @@
+/* Partnerships Page Specific Styles */
+
+/* Hero Section */
+.partnerships-hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-top: 120px;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--gold) 100%);
+    z-index: -2;
+}
+
+.hero-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    z-index: -1;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(23, 32, 42, 0.4);
+    z-index: -1;
+}
+
+.hero-content {
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, var(--gold), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% { filter: drop-shadow(0 0 10px rgba(199, 161, 91, 0.3)); }
+    100% { filter: drop-shadow(0 0 20px rgba(199, 161, 91, 0.6)); }
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.hero-description p {
+    margin-bottom: 1.5rem;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Partnership Benefits Section */
+.partnership-benefits {
+    padding: 5rem 0;
+    background: var(--offwhite);
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.benefit-card {
+    background: white;
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(23, 32, 42, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(199, 161, 91, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(199, 161, 91, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.benefit-card:hover::before {
+    left: 100%;
+}
+
+.benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(23, 32, 42, 0.15);
+    border-color: var(--gold);
+}
+
+.benefit-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--gold), #e5cfa2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--navy-dark);
+    transition: transform 0.3s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.benefit-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--navy-dark);
+    font-weight: 600;
+}
+
+.benefit-card p {
+    color: var(--navy);
+    line-height: 1.6;
+}
+
+/* Sponsorship Tiers Section */
+.sponsorship-tiers {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, #f8fafc 0%, var(--offwhite) 100%);
+}
+
+.tiers-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--navy);
+    margin-bottom: 3rem;
+    opacity: 0.8;
+}
+
+.tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.tier-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(23, 32, 42, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid transparent;
+    overflow: hidden;
+}
+
+.tier-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), #e5cfa2);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.tier-card:hover::before {
+    transform: scaleX(1);
+}
+
+.tier-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(23, 32, 42, 0.15);
+}
+
+.tier-card.featured {
+    border-color: var(--gold);
+    transform: scale(1.05);
+}
+
+.tier-card.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.tier-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: var(--gold);
+    color: var(--navy-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tier-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.tier-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--navy-dark);
+    margin-bottom: 1rem;
+}
+
+.tier-price {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tier-events {
+    background: var(--navy-dark);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tier-description {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--navy);
+    font-style: italic;
+}
+
+.tier-features {
+    list-style: none;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    transition: transform 0.2s ease;
+}
+
+.feature-item:hover {
+    transform: translateX(5px);
+}
+
+.feature-item i {
+    color: var(--gold);
+    margin-right: 1rem;
+    margin-top: 0.2rem;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.feature-item span {
+    color: var(--navy);
+    line-height: 1.5;
+}
+
+/* Bronze Tier Specific */
+.bronze-tier .tier-price {
+    color: #cd7f32;
+}
+
+.bronze-tier::before {
+    background: linear-gradient(90deg, #cd7f32, #e6a85c);
+}
+
+/* Silver Tier Specific */
+.silver-tier .tier-price {
+    color: #c0c0c0;
+}
+
+.silver-tier::before {
+    background: linear-gradient(90deg, #c0c0c0, #e8e8e8);
+}
+
+/* Gold Tier Specific */
+.gold-tier .tier-price {
+    color: var(--gold);
+}
+
+.gold-tier::before {
+    background: linear-gradient(90deg, var(--gold), #e5cfa2);
+}
+
+/* Platinum Tier Specific */
+.platinum-tier .tier-price {
+    color: #e5e4e2;
+}
+
+.platinum-tier::before {
+    background: linear-gradient(90deg, #e5e4e2, #f5f5f5);
+}
+
+/* Call to Action Section */
+.partnership-cta {
+    padding: 5rem 0;
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+    color: white;
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    background: linear-gradient(45deg, var(--gold), #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.cta-content p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.cta-button.btn-primary {
+    background: var(--gold);
+    color: var(--navy-dark);
+    border: 2px solid var(--gold);
+}
+
+.cta-button.btn-primary:hover {
+    background: transparent;
+    color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(199, 161, 91, 0.3);
+}
+
+.cta-button.btn-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid var(--gold);
+}
+
+.cta-button.btn-secondary:hover {
+    background: var(--gold);
+    color: var(--navy-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(199, 161, 91, 0.3);
+}
+
+.contact-info {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.contact-info p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.contact-info a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Animation Classes */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+}
+
+.fade-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s ease;
+}
+
+.fade-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.scale-in {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.6s ease;
+}
+
+.scale-in.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .hero-stats {
+        gap: 1.5rem;
+    }
+    
+    .stat-item {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tiers-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tier-card.featured {
+        transform: none;
+    }
+    
+    .tier-card.featured:hover {
+        transform: translateY(-10px);
+    }
+    
+    .cta-content h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-description {
+        font-size: 1rem;
+    }
+    
+    .tier-title {
+        font-size: 1.5rem;
+    }
+    
+    .tier-price {
+        font-size: 2.5rem;
+    }
+    
+    .benefit-card,
+    .tier-card {
+        padding: 2rem 1.5rem;
+    }
+}

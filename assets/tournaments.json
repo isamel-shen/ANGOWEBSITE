@@ -2,14 +2,14 @@
     "killSwitch": false,
     "notificationBar": {
         "enabled": true,
-        "rotationInterval": 5000,
+        "rotationInterval": 7000,
         "messages": [
             {
                 "text": "🎉 New U16 Basketball Tournament - Register Now!",
                 "link": "#scheduling"
             },
             {
-                "text": "🏆 Win amazing prizes in our upcoming tournaments!",
+                "text": "💰 Win cash prizes in upcoming tournaments!",
                 "link": "#information"
             },
             {

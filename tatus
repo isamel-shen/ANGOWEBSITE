@@ -1,0 +1,5 @@
+[33mb1a3454[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update notification bar configuration and sync all local changes
+[33mebff98a[m Add dynamic top notification bar with rotating messages and hover pause functionality
+[33mb422a93[m Added u16 tournament to tournaments.json
+[33m58e37e5[m Removed completed tournaments
+[33m20b7fb0[m Update tournaments.json

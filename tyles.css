@@ -1,0 +1,47 @@
+warning: in the working copy of 'styles.css', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/styles.css b/styles.css[m
+[1mindex e7fd644..92b25ee 100644[m
+[1m--- a/styles.css[m
+[1m+++ b/styles.css[m
+[36m@@ -519,7 +519,7 @@[m [mbody {[m
+     .nav-menu {[m
+         position: fixed;[m
+         left: -100%;[m
+[31m-        top: 110px;[m
+[32m+[m[32m        top: calc(40px + 10vh);[m
+         flex-direction: column;[m
+         background-color: white;[m
+         width: 100%;[m
+[36m@@ -573,6 +573,10 @@[m [mbody {[m
+         max-height: 70px;[m
+     }[m
+     [m
+[32m+[m[32m    .nav-menu {[m
+[32m+[m[32m        top: calc(40px + 7vh);[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+     .logo {[m
+         height: 4.5vh;[m
+         min-height: 30px;[m
+[36m@@ -609,6 +613,10 @@[m [mbody {[m
+         max-height: 60px;[m
+     }[m
+     [m
+[32m+[m[32m    .nav-menu {[m
+[32m+[m[32m        top: calc(40px + 6vh);[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+     .logo {[m
+         height: 4vh;[m
+         min-height: 25px;[m
+[36m@@ -878,6 +886,10 @@[m [mhtml {[m
+         max-height: 85px;[m
+     }[m
+     [m
+[32m+[m[32m    .nav-menu {[m
+[32m+[m[32m        top: calc(40px + 8vh);[m
+[32m+[m[32m    }[m
+[32m+[m[41m    [m
+     .logo {[m
+         height: 5.5vh;[m
+         min-height: 35px;[m

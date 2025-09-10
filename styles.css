@@ -519,7 +519,7 @@ body {
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: calc(40px + 10vh + 1vh);
+        top: calc(40px + 11vh);
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -574,7 +574,7 @@ body {
     }
     
     .nav-menu {
-        top: calc(40px + 7vh + 1vh);
+        top: calc(40px + 8vh);
     }
     
     .logo {
@@ -614,7 +614,7 @@ body {
     }
     
     .nav-menu {
-        top: calc(40px + 6vh + 1vh);
+        top: calc(40px + 7vh);
     }
     
     .logo {
@@ -887,7 +887,7 @@ html {
     }
     
     .nav-menu {
-        top: calc(40px + 8vh + 1vh);
+        top: calc(40px + 9vh);
     }
     
     .logo {

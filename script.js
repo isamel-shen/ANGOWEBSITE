@@ -642,7 +642,105 @@ function renderAllTournamentsInfo() {
     `).join('');
 }
 
+// --- Notification Bar Functionality ---
+let notificationBar = null;
+let currentMessageIndex = 0;
+let rotationInterval = null;
+let isHovered = false;
+
+function initializeNotificationBar() {
+    const notificationBarElement = document.getElementById('notification-bar');
+    const notificationTextElement = document.getElementById('notification-text');
+    
+    if (!notificationBarElement || !notificationTextElement) return;
+    
+    // Fetch notification bar configuration from tournaments.json
+    fetch('assets/tournaments.json')
+        .then(response => response.json())
+        .then(data => {
+            if (data.notificationBar && data.notificationBar.enabled && data.notificationBar.messages && data.notificationBar.messages.length > 0) {
+                notificationBar = data.notificationBar;
+                
+                // Set initial message
+                updateNotificationText();
+                
+                // Start rotation
+                startRotation();
+                
+                // Add click handler
+                notificationBarElement.addEventListener('click', handleNotificationClick);
+                
+                // Add hover handlers
+                notificationBarElement.addEventListener('mouseenter', handleNotificationHover);
+                notificationBarElement.addEventListener('mouseleave', handleNotificationLeave);
+            } else {
+                // Hide notification bar if disabled or no messages
+                notificationBarElement.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading notification bar configuration:', error);
+            notificationBarElement.style.display = 'none';
+        });
+}
+
+function updateNotificationText() {
+    const notificationTextElement = document.getElementById('notification-text');
+    if (!notificationTextElement || !notificationBar) return;
+    
+    const currentMessage = notificationBar.messages[currentMessageIndex];
+    notificationTextElement.textContent = currentMessage.text;
+}
+
+function startRotation() {
+    if (!notificationBar || notificationBar.messages.length <= 1) return;
+    
+    rotationInterval = setInterval(() => {
+        if (!isHovered) {
+            currentMessageIndex = (currentMessageIndex + 1) % notificationBar.messages.length;
+            updateNotificationText();
+        }
+    }, notificationBar.rotationInterval || 5000);
+}
+
+function stopRotation() {
+    if (rotationInterval) {
+        clearInterval(rotationInterval);
+        rotationInterval = null;
+    }
+}
+
+function handleNotificationClick() {
+    if (!notificationBar) return;
+    
+    const currentMessage = notificationBar.messages[currentMessageIndex];
+    if (currentMessage.link) {
+        if (currentMessage.link.startsWith('#')) {
+            // Internal anchor link
+            const target = document.querySelector(currentMessage.link);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        } else {
+            // External link
+            window.open(currentMessage.link, '_blank', 'noopener,noreferrer');
+        }
+    }
+}
+
+function handleNotificationHover() {
+    isHovered = true;
+}
+
+function handleNotificationLeave() {
+    isHovered = false;
+}
+
 // --- Render on Load ---
 (function() {
     loadTournamentsAndRender();
+    initializeNotificationBar();
 })(); 

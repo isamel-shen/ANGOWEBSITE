@@ -1,35 +1,38 @@
 {
     "killSwitch": false,
+    "notificationBar": {
+        "enabled": true,
+        "rotationInterval": 5000,
+        "messages": [
+            {
+                "text": "🎉 New U16 Basketball Tournament - Register Now!",
+                "link": "#scheduling"
+            },
+            {
+                "text": "🏆 Win amazing prizes in our upcoming tournaments!",
+                "link": "#information"
+            },
+            {
+                "text": "📱 Follow us on Instagram for the latest updates!",
+                "link": "https://www.instagram.com/ango.competitive/"
+            }
+        ]
+    },
     "tournaments": [
         {
             "id": 1,
-            "name": "3v3 Basketball Tournament",
+            "name": "U16 4v4 Basketball Tournament",
             "sport": "Basketball",
-            "date": "2025-08-30",
-            "time": "1:00 PM",
+            "date": "2025-10-05",
+            "time": "2:00 PM",
             "location": "Vaughan Sportsplex",
-            "format": "3v3",
-            "entryFee": "$200",
-            "prizePool": "$800",
-            "skillLevel": "All",
+            "format": "4v4",
+            "entryFee": "$100",
+            "prizePool": "$400",
+            "skillLevel": "U16",
             "media": [],
-            "description": "Join us for an intense 3v3 basketball showdown! Bring your A-game and compete for the $800 prize pool!",
+            "description": "Calling our U16 athletes to join us for an intense 4v4 basketball showdown! Bring your A-game and compete for the $400 prize pool!",
             "limited": false
-        },
-        {
-            "id": 2,
-            "name": "3v3 Under 16 Basketball Tournament",
-            "sport": "Basketball",
-            "date": "2025-08-24",
-            "time": "1:00 PM",
-            "location": "Vaughan Sportsplex",
-            "format": "3v3",
-            "entryFee": "$75",
-            "prizePool": "$300",
-            "skillLevel": "16 & Under",
-            "media": [],
-            "description": "Join our exciting 3v3 tournament designed specifically for players 16 and under. Fast-paced games, friendly competition, and a chance to showcase your skills against peers. Sign ups close this Friday (August 22nd)",
-            "limited": true
         }
     ]
 } 

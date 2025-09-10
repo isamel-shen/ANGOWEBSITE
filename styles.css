@@ -29,12 +29,49 @@ body {
     --gold: #C7A15B;
     --offwhite: #F7F5F2;
     --navy-dark: #101820;
+    --notification-bg: #071D2E;
+}
+
+/* Top Notification Bar */
+.notification-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--notification-bg);
+    color: white;
+    z-index: 1001;
+    padding: 8px 0;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+}
+
+.notification-bar:hover {
+    background-color: #0A2438;
+}
+
+.notification-content {
+    text-align: center;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+#notification-text {
+    display: inline-block;
+    transition: opacity 0.5s ease;
 }
 
 /* Navigation */
 .navbar {
     position: fixed;
-    top: 0;
+    top: 40px;
     width: 100%;
     background: var(--offwhite);
     backdrop-filter: blur(10px);
@@ -124,7 +161,7 @@ body {
     align-items: center;
     background: linear-gradient(135deg, var(--offwhite) 0%, var(--gold) 100%);
     color: var(--navy-dark);
-    padding-top: 80px;
+    padding-top: 120px;
 }
 
 .hero-container {
@@ -482,7 +519,7 @@ body {
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 70px;
+        top: 110px;
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -594,7 +631,7 @@ body {
 
 /* Smooth scrolling for anchor links */
 html {
-    scroll-padding-top: 80px;
+    scroll-padding-top: 120px;
 }
 
 .scroll-to-top {

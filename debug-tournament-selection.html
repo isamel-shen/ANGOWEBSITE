@@ -47,7 +47,7 @@
             const buttonsDiv = document.getElementById('test-buttons');
             
             try {
-                const response = await fetch('media.json');
+                const response = await fetch('media.json?t=' + Date.now());
                 const data = await response.json();
                 tournaments = data.tournaments;
                 

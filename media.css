@@ -180,6 +180,7 @@
 /* Grid View */
 .gallery-grid {
     display: block;
+    transition: opacity 0.2s ease;
 }
 
 .grid-container {
@@ -248,6 +249,7 @@
 /* Normal View */
 .gallery-normal {
     display: block;
+    transition: opacity 0.2s ease;
 }
 
 .media-container {

@@ -85,6 +85,11 @@ class MediaGallery {
     }
 
     switchView(view) {
+        // Don't switch if already in the requested view
+        if (this.currentView === view) {
+            return;
+        }
+        
         this.currentView = view;
         
         // Update button states
@@ -347,19 +352,33 @@ class MediaGallery {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new MediaGallery();
+    window.mediaGalleryInstance = new MediaGallery();
 });
 
 // Handle window resize for responsive view switching
+let resizeTimeout;
 window.addEventListener('resize', () => {
-    const isMobile = window.innerWidth <= 768;
-    const currentView = document.getElementById('grid-view').style.display !== 'none' ? 'grid' : 'normal';
-    
-    if (isMobile && currentView === 'normal') {
-        // Switch to grid view on mobile
-        document.getElementById('grid-view-btn').click();
-    } else if (!isMobile && currentView === 'grid') {
-        // Switch to normal view on desktop
-        document.getElementById('normal-view-btn').click();
-    }
+    // Debounce resize events to prevent rapid firing
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        const isMobile = window.innerWidth <= 768;
+        const gridView = document.getElementById('grid-view');
+        const normalView = document.getElementById('normal-view');
+        const currentView = gridView.style.display !== 'none' ? 'grid' : 'normal';
+        
+        // Only switch if the current view doesn't match the expected view for the screen size
+        if (isMobile && currentView === 'normal') {
+            // Switch to grid view on mobile - but don't click buttons, directly call switchView
+            const gallery = window.mediaGalleryInstance;
+            if (gallery) {
+                gallery.switchView('grid');
+            }
+        } else if (!isMobile && currentView === 'grid') {
+            // Switch to normal view on desktop - but don't click buttons, directly call switchView
+            const gallery = window.mediaGalleryInstance;
+            if (gallery) {
+                gallery.switchView('normal');
+            }
+        }
+    }, 100); // 100ms debounce
 });

@@ -150,8 +150,9 @@ class MediaGallery {
             card.className = 'tournament-card';
             card.addEventListener('click', () => this.selectTournament(tournament));
             
-            // Generate Cloudinary URL for thumbnail
-            const thumbnailUrl = this.getCloudinaryUrl(tournament.photos.thumbnail, 'image', {
+            // Generate Cloudinary URL for thumbnail - using Format 2 (works!)
+            const thumbnailId = tournament.photos.thumbnail.split('/').pop(); // Get just the public ID
+            const thumbnailUrl = this.getCloudinaryUrl(thumbnailId, 'image', {
                 width: 400,
                 height: 300,
                 crop: 'fill',
@@ -159,7 +160,7 @@ class MediaGallery {
             });
             
             card.innerHTML = `
-                <img src="${thumbnailUrl}" alt="${tournament.name}" class="tournament-thumbnail" loading="lazy">
+                <img src="${thumbnailUrl}" alt="${tournament.name}" class="tournament-thumbnail" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
                 <div class="tournament-info">
                     <h3 class="tournament-name">${tournament.name}</h3>
                     <p class="tournament-date">${tournament.date}</p>
@@ -197,13 +198,13 @@ class MediaGallery {
         try {
             // Use direct URLs instead of API calls to avoid CORS issues
             if (this.currentFilter === 'all' || this.currentFilter === 'photos') {
-                // Your actual photo public IDs
+                // Your actual photo public IDs - using Format 2 (works!)
                 const photoIds = ['IMG_1949_sgp2ck', 'IMG_1958_nixptn', 'IMG_1942_diuhjz'];
                 
                 photoIds.forEach((publicId, index) => {
                     mediaItems.push({
                         type: 'image',
-                        url: this.getCloudinaryUrl(`tournaments/spring-2025/photos/${publicId}`, 'image', {
+                        url: this.getCloudinaryUrl(publicId, 'image', {
                             width: 400,
                             height: 300,
                             crop: 'fill',
@@ -218,13 +219,13 @@ class MediaGallery {
             
             // Add videos if filter allows
             if (this.currentFilter === 'all' || this.currentFilter === 'videos') {
-                // Your actual video public ID
+                // Your actual video public ID - using Format 2 (works!)
                 const videoIds = ['IMG_4320_qftyay'];
                 
                 videoIds.forEach((publicId, index) => {
                     mediaItems.push({
                         type: 'video',
-                        url: this.getCloudinaryUrl(`tournaments/spring-2025/videos/${publicId}`, 'video'),
+                        url: this.getCloudinaryUrl(publicId, 'video'),
                         title: `${tournament.name} Video ${index + 1}`,
                         date: tournament.date,
                         created_at: new Date().toISOString()

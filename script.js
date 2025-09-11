@@ -757,10 +757,10 @@ async function loadFeaturedVideos() {
             return;
         }
         
-        // Use direct URLs for your actual video
+        // Use direct URLs for your actual video - using Format 2 (works!)
         let videos = [];
         try {
-            // Use your actual video public ID
+            // Use your actual video public ID - Format 2 works!
             const videoPublicId = 'IMG_4320_qftyay';
             const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/${videoPublicId}`;
             const thumbnailUrl = `https://res.cloudinary.com/${cloudName}/video/upload/w_400,h_300,c_fill,q_auto,f_auto/${videoPublicId}.jpg`;

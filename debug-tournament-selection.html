@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Tournament Selection</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #e8f5e8; }
+        .error { background: #ffebee; }
+        .info { background: #e3f2fd; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Debug Tournament Selection</h1>
+    <p>This will help us debug why tournament switching isn't working.</p>
+    
+    <div class="debug-section">
+        <h2>Tournament Data:</h2>
+        <div id="tournament-data">
+            <p>Loading tournament data...</p>
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Test Tournament Selection:</h2>
+        <div id="test-buttons">
+            <p>Click buttons to test tournament selection:</p>
+        </div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Media Loading Test:</h2>
+        <div id="media-test">
+            <p>Media loading results will appear here...</p>
+        </div>
+    </div>
+
+    <script>
+        let tournaments = [];
+        let currentTournament = null;
+        
+        async function loadTournamentData() {
+            const dataDiv = document.getElementById('tournament-data');
+            const buttonsDiv = document.getElementById('test-buttons');
+            
+            try {
+                const response = await fetch('media.json');
+                const data = await response.json();
+                tournaments = data.tournaments;
+                
+                dataDiv.innerHTML = `
+                    <p class="success">✅ Tournament data loaded successfully!</p>
+                    <p>Found ${tournaments.length} tournaments:</p>
+                    <ul>
+                        ${tournaments.map(t => `
+                            <li>
+                                <strong>${t.name}</strong> (${t.id})
+                                <br>Photos: ${t.photos.public_ids ? t.photos.public_ids.length : 0} items
+                                <br>Videos: ${t.videos.public_ids ? t.videos.public_ids.length : 0} items
+                                <br>Featured: ${t.featured ? 'Yes' : 'No'}
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                // Create test buttons
+                buttonsDiv.innerHTML = `
+                    <p>Click to test each tournament:</p>
+                    ${tournaments.map(t => `
+                        <button onclick="testTournament('${t.id}')">Test ${t.name}</button>
+                    `).join('')}
+                `;
+                
+            } catch (error) {
+                dataDiv.innerHTML = `<p class="error">❌ Error loading tournament data: ${error.message}</p>`;
+            }
+        }
+        
+        function testTournament(tournamentId) {
+            const mediaDiv = document.getElementById('media-test');
+            const tournament = tournaments.find(t => t.id === tournamentId);
+            
+            if (!tournament) {
+                mediaDiv.innerHTML = `<p class="error">❌ Tournament ${tournamentId} not found!</p>`;
+                return;
+            }
+            
+            currentTournament = tournament;
+            mediaDiv.innerHTML = `
+                <h3>Testing: ${tournament.name}</h3>
+                <p><strong>Tournament ID:</strong> ${tournament.id}</p>
+                <p><strong>Photos:</strong> ${tournament.photos.public_ids ? tournament.photos.public_ids.length : 0} items</p>
+                <p><strong>Videos:</strong> ${tournament.videos.public_ids ? tournament.videos.public_ids.length : 0} items</p>
+                <div id="media-items"></div>
+            `;
+            
+            loadTournamentMedia(tournament);
+        }
+        
+        function loadTournamentMedia(tournament) {
+            const mediaItemsDiv = document.getElementById('media-items');
+            const mediaItems = [];
+            
+            // Load photos
+            if (tournament.photos.public_ids && tournament.photos.public_ids.length > 0) {
+                tournament.photos.public_ids.forEach((publicId, index) => {
+                    const url = `https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/${publicId}`;
+                    mediaItems.push({
+                        type: 'image',
+                        url: url,
+                        title: `${tournament.name} Photo ${index + 1}`,
+                        publicId: publicId
+                    });
+                });
+            }
+            
+            // Load videos
+            if (tournament.videos.public_ids && tournament.videos.public_ids.length > 0) {
+                tournament.videos.public_ids.forEach((publicId, index) => {
+                    const url = `https://res.cloudinary.com/dsgvrmhds/video/upload/${publicId}`;
+                    mediaItems.push({
+                        type: 'video',
+                        url: url,
+                        title: `${tournament.name} Video ${index + 1}`,
+                        publicId: publicId
+                    });
+                });
+            }
+            
+            if (mediaItems.length === 0) {
+                mediaItemsDiv.innerHTML = `<p class="info">ℹ️ No media found for this tournament.</p>`;
+                return;
+            }
+            
+            mediaItemsDiv.innerHTML = `
+                <p class="success">✅ Found ${mediaItems.length} media items:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
+                    ${mediaItems.map(item => `
+                        <div style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+                            <p><strong>${item.title}</strong></p>
+                            <p>Type: ${item.type}</p>
+                            <p>Public ID: <code>${item.publicId}</code></p>
+                            <p>URL: <a href="${item.url}" target="_blank">View</a></p>
+                            ${item.type === 'image' ? 
+                                `<img src="${item.url}" style="max-width: 100%; height: 100px; object-fit: cover;" onerror="this.parentElement.innerHTML += '<p class=\\'error\\'>❌ Image failed to load</p>'" />` :
+                                `<p>Video: <a href="${item.url}" target="_blank">Play Video</a></p>`
+                            }
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Load data when page loads
+        loadTournamentData();
+    </script>
+</body>
+</html>

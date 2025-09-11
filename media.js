@@ -195,11 +195,15 @@ class MediaGallery {
     async fetchTournamentMedia(tournament) {
         const mediaItems = [];
         
+        console.log(`Loading media for tournament: ${tournament.name} (${tournament.id})`);
+        console.log('Tournament data:', tournament);
+        
         try {
             // Use direct URLs instead of API calls to avoid CORS issues
             if (this.currentFilter === 'all' || this.currentFilter === 'photos') {
                 // Get photo public IDs from tournament data
                 const photoIds = tournament.photos.public_ids || [];
+                console.log(`Found ${photoIds.length} photos for ${tournament.name}:`, photoIds);
                 
                 photoIds.forEach((publicId, index) => {
                     mediaItems.push({
@@ -221,6 +225,7 @@ class MediaGallery {
             if (this.currentFilter === 'all' || this.currentFilter === 'videos') {
                 // Get video public IDs from tournament data
                 const videoIds = tournament.videos.public_ids || [];
+                console.log(`Found ${videoIds.length} videos for ${tournament.name}:`, videoIds);
                 
                 videoIds.forEach((publicId, index) => {
                     mediaItems.push({
@@ -233,10 +238,11 @@ class MediaGallery {
                 });
             }
             
+            console.log(`Total media items for ${tournament.name}:`, mediaItems.length);
             return mediaItems;
         } catch (error) {
             console.error('Error fetching media:', error);
-            // Return mock data for demonstration
+            // Return empty array instead of mock data
             return this.getMockMediaItems(tournament);
         }
     }
@@ -266,34 +272,9 @@ class MediaGallery {
     }
 
     getMockMediaItems(tournament) {
-        // Mock data for demonstration when Cloudinary API is not available
-        const mockItems = [];
-        
-        if (this.currentFilter === 'all' || this.currentFilter === 'photos') {
-            for (let i = 1; i <= 6; i++) {
-                mockItems.push({
-                    type: 'image',
-                    url: `https://picsum.photos/400/300?random=${tournament.id}-${i}`,
-                    title: `${tournament.name} Photo ${i}`,
-                    date: tournament.date,
-                    created_at: new Date().toISOString()
-                });
-            }
-        }
-        
-        if (this.currentFilter === 'all' || this.currentFilter === 'videos') {
-            for (let i = 1; i <= 3; i++) {
-                mockItems.push({
-                    type: 'video',
-                    url: `https://sample-videos.com/zip/10/mp4/SampleVideo_${i}.mp4`,
-                    title: `${tournament.name} Video ${i}`,
-                    date: tournament.date,
-                    created_at: new Date().toISOString()
-                });
-            }
-        }
-        
-        return mockItems;
+        // Return empty array instead of mock data to avoid confusion
+        console.log(`No media found for tournament: ${tournament.name}`);
+        return [];
     }
 
     displayMediaItems(mediaItems) {

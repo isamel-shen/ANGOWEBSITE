@@ -196,13 +196,13 @@ class MediaGalleryDirect {
         
         // Add photos if filter allows
         if (this.currentFilter === 'all' || this.currentFilter === 'photos') {
-            // You'll need to update these with your actual photo names
-            const photoNames = ['IMG_001', 'IMG_002', 'IMG_003']; // Update these with your actual photo names
+            // Your actual photo public IDs
+            const photoIds = ['IMG_1949_sgp2ck', 'IMG_1958_nixptn', 'IMG_1942_diuhjz'];
             
-            photoNames.forEach((name, index) => {
+            photoIds.forEach((publicId, index) => {
                 mediaItems.push({
                     type: 'image',
-                    url: this.getCloudinaryUrl(`tournaments/spring-2025/photos/${name}`, 'image', {
+                    url: this.getCloudinaryUrl(`tournaments/spring-2025/photos/${publicId}`, 'image', {
                         width: 400,
                         height: 300,
                         crop: 'fill',
@@ -217,13 +217,13 @@ class MediaGalleryDirect {
         
         // Add videos if filter allows
         if (this.currentFilter === 'all' || this.currentFilter === 'videos') {
-            // Add your video names here
-            const videoNames = ['video1', 'video2']; // Update these with your actual video names
+            // Your actual video public ID
+            const videoIds = ['IMG_4320_qftyay'];
             
-            videoNames.forEach((name, index) => {
+            videoIds.forEach((publicId, index) => {
                 mediaItems.push({
                     type: 'video',
-                    url: this.getCloudinaryUrl(`tournaments/spring-2025/videos/${name}`, 'video'),
+                    url: this.getCloudinaryUrl(`tournaments/spring-2025/videos/${publicId}`, 'video'),
                     title: `${tournament.name} Video ${index + 1}`,
                     date: tournament.date,
                     created_at: new Date().toISOString()

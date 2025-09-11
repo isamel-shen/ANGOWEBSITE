@@ -757,19 +757,35 @@ async function loadFeaturedVideos() {
             return;
         }
         
-        // Try to fetch real videos from Cloudinary
+        // Use direct URLs for your actual video
         let videos = [];
         try {
-            const videosResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/resources/video?prefix=${featuredTournament.videos.folder}/&max_results=3`);
-            const videosData = await videosResponse.json();
+            // Use your actual video public ID
+            const videoPublicId = 'IMG_4320_qftyay';
+            const videoUrl = `https://res.cloudinary.com/${cloudName}/video/upload/${videoPublicId}`;
+            const thumbnailUrl = `https://res.cloudinary.com/${cloudName}/video/upload/w_400,h_300,c_fill,q_auto,f_auto/${videoPublicId}.jpg`;
             
-            videos = videosData.resources.slice(0, 3).map((video, index) => ({
-                title: `${featuredTournament.name} ${index === 0 ? 'Highlights' : index === 1 ? 'Championship' : 'Finals'}`,
-                date: featuredTournament.date,
-                url: video.secure_url,
-                thumbnail: getCloudinaryThumbnail(video.secure_url, cloudName)
-            }));
-        } catch (cloudinaryError) {
+            videos = [
+                {
+                    title: `${featuredTournament.name} Highlights`,
+                    date: featuredTournament.date,
+                    url: videoUrl,
+                    thumbnail: thumbnailUrl
+                },
+                {
+                    title: `${featuredTournament.name} Championship`,
+                    date: featuredTournament.date,
+                    url: videoUrl, // Using same video for now
+                    thumbnail: thumbnailUrl
+                },
+                {
+                    title: `${featuredTournament.name} Finals`,
+                    date: featuredTournament.date,
+                    url: videoUrl, // Using same video for now
+                    thumbnail: thumbnailUrl
+                }
+            ];
+        } catch (error) {
             console.log('Using mock videos (Cloudinary not configured)');
             // Fallback to mock videos
             videos = [

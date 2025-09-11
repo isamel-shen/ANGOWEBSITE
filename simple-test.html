@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Cloudinary Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        img { max-width: 300px; max-height: 200px; margin: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Simple Cloudinary Test</h1>
+    <p>This tests direct Cloudinary URLs without API calls.</p>
+    
+    <h2>Test Images (replace with your actual public IDs):</h2>
+    <div id="test-images">
+        <p>Replace these URLs with your actual Cloudinary public IDs:</p>
+        <img src="https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/your-photo-1.jpg" alt="Test 1" />
+        <img src="https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/your-photo-2.jpg" alt="Test 2" />
+        <img src="https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/your-photo-3.jpg" alt="Test 3" />
+    </div>
+    
+    <h2>Instructions:</h2>
+    <ol>
+        <li>Go to your Cloudinary dashboard</li>
+        <li>Find your uploaded Spring 2025 photos</li>
+        <li>Copy the public ID (the part after the last slash)</li>
+        <li>Replace "your-photo-1.jpg", "your-photo-2.jpg", etc. in the URLs above</li>
+        <li>Refresh this page to see if the images load</li>
+    </ol>
+    
+    <p><strong>Example:</strong> If your photo's public ID is "tournaments/spring-2025/photos/IMG_001.jpg", then the URL should be:</p>
+    <p><code>https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/IMG_001.jpg</code></p>
+</body>
+</html>

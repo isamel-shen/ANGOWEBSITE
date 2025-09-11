@@ -195,40 +195,42 @@ class MediaGallery {
         const mediaItems = [];
         
         try {
-            // Fetch photos if filter allows
+            // Use direct URLs instead of API calls to avoid CORS issues
             if (this.currentFilter === 'all' || this.currentFilter === 'photos') {
-                const photosResponse = await fetch(`https://api.cloudinary.com/v1_1/${this.cloudName}/resources/image?prefix=${tournament.photos.folder}/&max_results=50`);
-                const photosData = await photosResponse.json();
+                // Your actual photo public IDs
+                const photoIds = ['IMG_1949_sgp2ck', 'IMG_1958_nixptn', 'IMG_1942_diuhjz'];
                 
-                photosData.resources.forEach(photo => {
+                photoIds.forEach((publicId, index) => {
                     mediaItems.push({
                         type: 'image',
-                        url: photo.secure_url,
-                        title: photo.public_id.split('/').pop().replace(/[-_]/g, ' '),
-                        date: new Date(photo.created_at).toLocaleDateString(),
-                        created_at: photo.created_at
+                        url: this.getCloudinaryUrl(`tournaments/spring-2025/photos/${publicId}`, 'image', {
+                            width: 400,
+                            height: 300,
+                            crop: 'fill',
+                            quality: 'auto'
+                        }),
+                        title: `${tournament.name} Photo ${index + 1}`,
+                        date: tournament.date,
+                        created_at: new Date().toISOString()
                     });
                 });
             }
             
-            // Fetch videos if filter allows
+            // Add videos if filter allows
             if (this.currentFilter === 'all' || this.currentFilter === 'videos') {
-                const videosResponse = await fetch(`https://api.cloudinary.com/v1_1/${this.cloudName}/resources/video?prefix=${tournament.videos.folder}/&max_results=50`);
-                const videosData = await videosResponse.json();
+                // Your actual video public ID
+                const videoIds = ['IMG_4320_qftyay'];
                 
-                videosData.resources.forEach(video => {
+                videoIds.forEach((publicId, index) => {
                     mediaItems.push({
                         type: 'video',
-                        url: video.secure_url,
-                        title: video.public_id.split('/').pop().replace(/[-_]/g, ' '),
-                        date: new Date(video.created_at).toLocaleDateString(),
-                        created_at: video.created_at
+                        url: this.getCloudinaryUrl(`tournaments/spring-2025/videos/${publicId}`, 'video'),
+                        title: `${tournament.name} Video ${index + 1}`,
+                        date: tournament.date,
+                        created_at: new Date().toISOString()
                     });
                 });
             }
-            
-            // Sort by creation date (newest first)
-            mediaItems.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
             
             return mediaItems;
         } catch (error) {

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudinary Test</title>
+</head>
+<body>
+    <h1>Cloudinary API Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testCloudinaryAPI() {
+            const resultsDiv = document.getElementById('results');
+            const cloudName = 'dsgvrmhds';
+            
+            resultsDiv.innerHTML = '<p>Testing Cloudinary API...</p>';
+            
+            try {
+                // Test 1: Check if we can access the API
+                const testUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?max_results=10`;
+                resultsDiv.innerHTML += `<p>Testing URL: ${testUrl}</p>`;
+                
+                const response = await fetch(testUrl);
+                const data = await response.json();
+                
+                resultsDiv.innerHTML += `<p>✅ API Response received!</p>`;
+                resultsDiv.innerHTML += `<p>Total resources: ${data.resources ? data.resources.length : 'No resources'}</p>`;
+                
+                if (data.resources && data.resources.length > 0) {
+                    resultsDiv.innerHTML += `<h3>Found ${data.resources.length} images:</h3>`;
+                    data.resources.forEach((resource, index) => {
+                        resultsDiv.innerHTML += `
+                            <div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc;">
+                                <p><strong>Image ${index + 1}:</strong></p>
+                                <p>Public ID: ${resource.public_id}</p>
+                                <p>URL: <a href="${resource.secure_url}" target="_blank">${resource.secure_url}</a></p>
+                                <img src="${resource.secure_url}" style="max-width: 200px; max-height: 150px;" />
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsDiv.innerHTML += `<p>❌ No images found. Check your folder structure in Cloudinary.</p>`;
+                }
+                
+            } catch (error) {
+                resultsDiv.innerHTML += `<p>❌ Error: ${error.message}</p>`;
+                resultsDiv.innerHTML += `<p>This might be a CORS issue. Try opening this file directly in your browser (file://) instead of through a web server.</p>`;
+            }
+        }
+        
+        // Run the test when page loads
+        testCloudinaryAPI();
+    </script>
+</body>
+</html>

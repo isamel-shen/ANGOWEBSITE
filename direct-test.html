@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Cloudinary Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        img { max-width: 300px; max-height: 200px; margin: 10px; border: 1px solid #ccc; }
+        .success { background: #e8f5e8; }
+        .error { background: #ffebee; }
+    </style>
+</head>
+<body>
+    <h1>Direct Cloudinary URL Test</h1>
+    <p>This tests direct Cloudinary URLs without API calls.</p>
+    
+    <div class="test-section">
+        <h2>Test 1: Direct Image URLs</h2>
+        <p>Testing if we can load images directly from Cloudinary...</p>
+        <div id="direct-images">
+            <p>Loading test images...</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: API Call Test</h2>
+        <p>Testing if we can call the Cloudinary API...</p>
+        <div id="api-test">
+            <p>Testing API...</p>
+        </div>
+    </div>
+
+    <script>
+        async function testDirectUrls() {
+            const directImagesDiv = document.getElementById('direct-images');
+            const apiTestDiv = document.getElementById('api-test');
+            
+            // Test direct image URLs
+            const testImages = [
+                'https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/IMG_001.jpg',
+                'https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/IMG_002.jpg',
+                'https://res.cloudinary.com/dsgvrmhds/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/IMG_003.jpg'
+            ];
+            
+            directImagesDiv.innerHTML = '<p>Testing direct image URLs...</p>';
+            
+            for (let i = 0; i < testImages.length; i++) {
+                const img = document.createElement('img');
+                img.src = testImages[i];
+                img.alt = `Test Image ${i + 1}`;
+                img.onload = () => {
+                    directImagesDiv.innerHTML += `<p class="success">✅ Image ${i + 1} loaded successfully!</p>`;
+                };
+                img.onerror = () => {
+                    directImagesDiv.innerHTML += `<p class="error">❌ Image ${i + 1} failed to load. Check the public ID.</p>`;
+                };
+                directImagesDiv.appendChild(img);
+            }
+            
+            // Test API call
+            try {
+                apiTestDiv.innerHTML = '<p>Testing Cloudinary API...</p>';
+                const apiUrl = `https://api.cloudinary.com/v1_1/dsgvrmhds/resources/image?prefix=tournaments/spring-2025/photos/&max_results=10`;
+                apiTestDiv.innerHTML += `<p>API URL: ${apiUrl}</p>`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                if (data.resources && data.resources.length > 0) {
+                    apiTestDiv.innerHTML += `<p class="success">✅ API call successful! Found ${data.resources.length} images.</p>`;
+                    apiTestDiv.innerHTML += '<h3>Found Images:</h3>';
+                    data.resources.forEach((resource, index) => {
+                        apiTestDiv.innerHTML += `
+                            <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                                <p><strong>Image ${index + 1}:</strong> ${resource.public_id}</p>
+                                <img src="${resource.secure_url}" alt="API Image ${index + 1}" />
+                            </div>
+                        `;
+                    });
+                } else {
+                    apiTestDiv.innerHTML += `<p class="error">❌ API call successful but no images found in the folder.</p>`;
+                }
+            } catch (error) {
+                apiTestDiv.innerHTML += `<p class="error">❌ API call failed: ${error.message}</p>`;
+                apiTestDiv.innerHTML += `<p>This is likely a CORS issue. The API works, but your browser is blocking it.</p>`;
+            }
+        }
+        
+        // Run the test
+        testDirectUrls();
+    </script>
+</body>
+</html>

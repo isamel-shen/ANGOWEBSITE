@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Media Gallery</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        img { max-width: 200px; max-height: 150px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Debug Media Gallery</h1>
+    <div id="debug-info" class="debug-info">
+        <h3>Debug Information:</h3>
+        <div id="debug-content">Loading...</div>
+    </div>
+    
+    <div id="media-display">
+        <h3>Media Display:</h3>
+        <div id="media-content">Loading media...</div>
+    </div>
+
+    <script>
+        async function debugCloudinary() {
+            const debugContent = document.getElementById('debug-content');
+            const mediaContent = document.getElementById('media-content');
+            
+            try {
+                // Load media.json
+                debugContent.innerHTML += '<p>📁 Loading media.json...</p>';
+                const response = await fetch('media.json');
+                const data = await response.json();
+                
+                debugContent.innerHTML += `<p>✅ media.json loaded successfully</p>`;
+                debugContent.innerHTML += `<p>Cloud Name: ${data.cloudinary_cloud_name}</p>`;
+                debugContent.innerHTML += `<p>Tournaments: ${data.tournaments.length}</p>`;
+                
+                const spring2025 = data.tournaments.find(t => t.id === 'spring-2025');
+                if (spring2025) {
+                    debugContent.innerHTML += `<p>Spring 2025 folder: ${spring2025.photos.folder}</p>`;
+                    
+                    // Test API call
+                    debugContent.innerHTML += '<p>🌐 Testing Cloudinary API...</p>';
+                    const apiUrl = `https://api.cloudinary.com/v1_1/${data.cloudinary_cloud_name}/resources/image?prefix=${spring2025.photos.folder}/&max_results=10`;
+                    debugContent.innerHTML += `<p>API URL: ${apiUrl}</p>`;
+                    
+                    const apiResponse = await fetch(apiUrl);
+                    const apiData = await apiResponse.json();
+                    
+                    if (apiData.resources && apiData.resources.length > 0) {
+                        debugContent.innerHTML += `<p class="success">✅ Found ${apiData.resources.length} images in Spring 2025 photos folder!</p>`;
+                        
+                        mediaContent.innerHTML = '<h4>Spring 2025 Photos:</h4>';
+                        apiData.resources.forEach((resource, index) => {
+                            mediaContent.innerHTML += `
+                                <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                                    <p><strong>Photo ${index + 1}:</strong> ${resource.public_id}</p>
+                                    <img src="${resource.secure_url}" alt="Photo ${index + 1}" />
+                                </div>
+                            `;
+                        });
+                    } else {
+                        debugContent.innerHTML += `<p class="error">❌ No images found in Spring 2025 photos folder</p>`;
+                        debugContent.innerHTML += `<p>Check your Cloudinary folder structure. Make sure you uploaded to: ${spring2025.photos.folder}/</p>`;
+                    }
+                }
+                
+            } catch (error) {
+                debugContent.innerHTML += `<p class="error">❌ Error: ${error.message}</p>`;
+                debugContent.innerHTML += `<p>This might be a CORS issue. Try:</p>`;
+                debugContent.innerHTML += `<ul>
+                    <li>Opening this file directly in your browser (file://)</li>
+                    <li>Using a local web server</li>
+                    <li>Checking your Cloudinary folder structure</li>
+                </ul>`;
+            }
+        }
+        
+        // Run debug when page loads
+        debugCloudinary();
+    </script>
+</body>
+</html>

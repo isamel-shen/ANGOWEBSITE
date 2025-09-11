@@ -7,10 +7,12 @@
       "date": "March 15-17, 2025",
       "photos": {
         "folder": "tournaments/spring-2025/photos",
-        "thumbnail": "tournaments/spring-2025/thumbnails/IMG_1952_omzruyv"
+        "thumbnail": "tournaments/spring-2025/thumbnails/IMG_1952_omzruyv",
+        "public_ids": ["IMG_1949_sgp2ck", "IMG_1958_nixptn", "IMG_1942_diuhjz"]
       },
       "videos": {
-        "folder": "tournaments/spring-2025/videos"
+        "folder": "tournaments/spring-2025/videos",
+        "public_ids": ["IMG_4320_qftyay"]
       },
       "featured": true
     },
@@ -20,10 +22,12 @@
       "date": "December 10-12, 2024",
       "photos": {
         "folder": "tournaments/winter-2024/photos",
-        "thumbnail": "tournaments/winter-2024/thumbnails/winter-2024-thumb"
+        "thumbnail": "tournaments/winter-2024/thumbnails/winter-2024-thumb",
+        "public_ids": []
       },
       "videos": {
-        "folder": "tournaments/winter-2024/videos"
+        "folder": "tournaments/winter-2024/videos",
+        "public_ids": []
       },
       "featured": false
     },
@@ -33,10 +37,12 @@
       "date": "October 5-7, 2024",
       "photos": {
         "folder": "tournaments/fall-2024/photos",
-        "thumbnail": "tournaments/fall-2024/thumbnails/fall-2024-thumb"
+        "thumbnail": "tournaments/fall-2024/thumbnails/fall-2024-thumb",
+        "public_ids": []
       },
       "videos": {
-        "folder": "tournaments/fall-2024/videos"
+        "folder": "tournaments/fall-2024/videos",
+        "public_ids": []
       },
       "featured": false
     },
@@ -46,10 +52,12 @@
       "date": "July 20-22, 2024",
       "photos": {
         "folder": "tournaments/summer-2024/photos",
-        "thumbnail": "tournaments/summer-2024/thumbnails/summer-2024-thumb"
+        "thumbnail": "tournaments/summer-2024/thumbnails/summer-2024-thumb",
+        "public_ids": []
       },
       "videos": {
-        "folder": "tournaments/summer-2024/videos"
+        "folder": "tournaments/summer-2024/videos",
+        "public_ids": []
       },
       "featured": false
     }

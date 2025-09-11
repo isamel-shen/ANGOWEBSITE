@@ -198,8 +198,8 @@ class MediaGallery {
         try {
             // Use direct URLs instead of API calls to avoid CORS issues
             if (this.currentFilter === 'all' || this.currentFilter === 'photos') {
-                // Your actual photo public IDs - using Format 2 (works!)
-                const photoIds = ['IMG_1949_sgp2ck', 'IMG_1958_nixptn', 'IMG_1942_diuhjz'];
+                // Get photo public IDs from tournament data
+                const photoIds = tournament.photos.public_ids || [];
                 
                 photoIds.forEach((publicId, index) => {
                     mediaItems.push({
@@ -219,8 +219,8 @@ class MediaGallery {
             
             // Add videos if filter allows
             if (this.currentFilter === 'all' || this.currentFilter === 'videos') {
-                // Your actual video public ID - using Format 2 (works!)
-                const videoIds = ['IMG_4320_qftyay'];
+                // Get video public IDs from tournament data
+                const videoIds = tournament.videos.public_ids || [];
                 
                 videoIds.forEach((publicId, index) => {
                     mediaItems.push({

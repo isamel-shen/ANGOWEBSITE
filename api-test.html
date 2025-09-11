@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudinary API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        img { max-width: 300px; max-height: 200px; margin: 10px; border: 1px solid #ccc; }
+        .success { background: #e8f5e8; }
+        .error { background: #ffebee; }
+        .info { background: #e3f2fd; }
+    </style>
+</head>
+<body>
+    <h1>Cloudinary API Test</h1>
+    <p>This will test the API call and show you the exact public IDs of your uploaded files.</p>
+    
+    <div class="test-section">
+        <h2>API Test Results:</h2>
+        <div id="api-results">
+            <p>Testing API...</p>
+        </div>
+    </div>
+
+    <script>
+        async function testCloudinaryAPI() {
+            const resultsDiv = document.getElementById('api-results');
+            const cloudName = 'dsgvrmhds';
+            
+            try {
+                resultsDiv.innerHTML = '<p>🌐 Testing Cloudinary API...</p>';
+                
+                // Test API call for photos
+                const photosUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?prefix=tournaments/spring-2025/photos/&max_results=10`;
+                resultsDiv.innerHTML += `<p>📸 Photos API URL: ${photosUrl}</p>`;
+                
+                const photosResponse = await fetch(photosUrl);
+                const photosData = await photosResponse.json();
+                
+                if (photosData.resources && photosData.resources.length > 0) {
+                    resultsDiv.innerHTML += `<p class="success">✅ Found ${photosData.resources.length} photos!</p>`;
+                    resultsDiv.innerHTML += '<h3>📸 Your Photos:</h3>';
+                    
+                    photosData.resources.forEach((resource, index) => {
+                        resultsDiv.innerHTML += `
+                            <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; background: #f9f9f9;">
+                                <p><strong>Photo ${index + 1}:</strong></p>
+                                <p>Public ID: <code>${resource.public_id}</code></p>
+                                <p>URL: <a href="${resource.secure_url}" target="_blank">${resource.secure_url}</a></p>
+                                <img src="${resource.secure_url}" alt="Photo ${index + 1}" />
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsDiv.innerHTML += `<p class="error">❌ No photos found in tournaments/spring-2025/photos/</p>`;
+                }
+                
+                // Test API call for videos
+                const videosUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/video?prefix=tournaments/spring-2025/videos/&max_results=10`;
+                resultsDiv.innerHTML += `<p>🎥 Videos API URL: ${videosUrl}</p>`;
+                
+                const videosResponse = await fetch(videosUrl);
+                const videosData = await videosResponse.json();
+                
+                if (videosData.resources && videosData.resources.length > 0) {
+                    resultsDiv.innerHTML += `<p class="success">✅ Found ${videosData.resources.length} videos!</p>`;
+                    resultsDiv.innerHTML += '<h3>🎥 Your Videos:</h3>';
+                    
+                    videosData.resources.forEach((resource, index) => {
+                        resultsDiv.innerHTML += `
+                            <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; background: #f9f9f9;">
+                                <p><strong>Video ${index + 1}:</strong></p>
+                                <p>Public ID: <code>${resource.public_id}</code></p>
+                                <p>URL: <a href="${resource.secure_url}" target="_blank">${resource.secure_url}</a></p>
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsDiv.innerHTML += `<p class="info">ℹ️ No videos found in tournaments/spring-2025/videos/</p>`;
+                }
+                
+                // Test API call for thumbnails
+                const thumbnailsUrl = `https://api.cloudinary.com/v1_1/${cloudName}/resources/image?prefix=tournaments/spring-2025/thumbnails/&max_results=10`;
+                resultsDiv.innerHTML += `<p>🖼️ Thumbnails API URL: ${thumbnailsUrl}</p>`;
+                
+                const thumbnailsResponse = await fetch(thumbnailsUrl);
+                const thumbnailsData = await thumbnailsResponse.json();
+                
+                if (thumbnailsData.resources && thumbnailsData.resources.length > 0) {
+                    resultsDiv.innerHTML += `<p class="success">✅ Found ${thumbnailsData.resources.length} thumbnails!</p>`;
+                    resultsDiv.innerHTML += '<h3>🖼️ Your Thumbnails:</h3>';
+                    
+                    thumbnailsData.resources.forEach((resource, index) => {
+                        resultsDiv.innerHTML += `
+                            <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; background: #f9f9f9;">
+                                <p><strong>Thumbnail ${index + 1}:</strong></p>
+                                <p>Public ID: <code>${resource.public_id}</code></p>
+                                <p>URL: <a href="${resource.secure_url}" target="_blank">${resource.secure_url}</a></p>
+                                <img src="${resource.secure_url}" alt="Thumbnail ${index + 1}" />
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsDiv.innerHTML += `<p class="info">ℹ️ No thumbnails found in tournaments/spring-2025/thumbnails/</p>`;
+                }
+                
+            } catch (error) {
+                resultsDiv.innerHTML += `<p class="error">❌ API Error: ${error.message}</p>`;
+                resultsDiv.innerHTML += `<p>This might be a CORS issue. Try opening this file directly in your browser (file://) instead of through GitHub Pages.</p>`;
+            }
+        }
+        
+        // Run the test
+        testCloudinaryAPI();
+    </script>
+</body>
+</html>

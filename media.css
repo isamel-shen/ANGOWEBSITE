@@ -1,0 +1,445 @@
+/* Media Gallery Styles */
+
+.media-gallery {
+    padding: 120px 0 5rem 0;
+    background: var(--offwhite);
+    min-height: 100vh;
+}
+
+.gallery-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--navy-dark);
+}
+
+.gallery-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--navy);
+    margin-bottom: 3rem;
+    opacity: 0.8;
+}
+
+/* Gallery Controls */
+.gallery-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--navy);
+    z-index: 2;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 48px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: white;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.search-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(199, 161, 91, 0.1);
+}
+
+.dropdown-icon {
+    position: absolute;
+    right: 16px;
+    color: var(--navy);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+    display: none;
+}
+
+.search-dropdown.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.dropdown-item:hover {
+    background-color: #f9fafb;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.filter-buttons {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    padding: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    color: var(--navy);
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.filter-btn.active {
+    background: var(--gold);
+    color: var(--navy-dark);
+    font-weight: 600;
+}
+
+.filter-btn:hover:not(.active) {
+    background: #f3f4f6;
+}
+
+.view-toggle {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    padding: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.view-btn {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: var(--navy);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.view-btn.active {
+    background: var(--gold);
+    color: var(--navy-dark);
+}
+
+.view-btn:hover:not(.active) {
+    background: #f3f4f6;
+}
+
+/* Grid View */
+.gallery-grid {
+    display: block;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.tournament-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.tournament-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.tournament-thumbnail {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #f3f4f6;
+}
+
+.tournament-info {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.tournament-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--navy-dark);
+    margin-bottom: 0.5rem;
+}
+
+.tournament-date {
+    color: var(--navy);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.tournament-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: white;
+    padding: 1.5rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.tournament-card:hover .tournament-overlay {
+    transform: translateY(0);
+}
+
+/* Normal View */
+.gallery-normal {
+    display: block;
+}
+
+.media-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.media-item {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.media-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.media-image,
+.media-video {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #f3f4f6;
+}
+
+.media-video {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--navy-dark);
+    color: white;
+    font-size: 3rem;
+}
+
+.media-info {
+    padding: 1rem;
+}
+
+.media-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--navy-dark);
+    margin-bottom: 0.5rem;
+}
+
+.media-date {
+    color: var(--navy);
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Loading and Empty States */
+.loading-state,
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--navy);
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--navy-dark);
+}
+
+.empty-state p {
+    color: var(--navy);
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gallery-title {
+        font-size: 2.5rem;
+    }
+    
+    .gallery-subtitle {
+        font-size: 1rem;
+    }
+    
+    .gallery-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+    
+    .search-container {
+        min-width: auto;
+    }
+    
+    .filter-controls {
+        justify-content: space-between;
+    }
+    
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .media-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    
+    .tournament-thumbnail,
+    .media-image,
+    .media-video {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-title {
+        font-size: 2rem;
+    }
+    
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .media-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    .filter-buttons {
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        flex: 1;
+        min-width: 60px;
+    }
+}
+
+/* Mobile Default to Grid View */
+@media (max-width: 768px) {
+    .gallery-normal {
+        display: none;
+    }
+    
+    .gallery-grid {
+        display: block;
+    }
+    
+    #normal-view-btn {
+        display: none;
+    }
+}
+
+/* Desktop Default to Normal View */
+@media (min-width: 769px) {
+    .gallery-grid {
+        display: none;
+    }
+    
+    .gallery-normal {
+        display: block;
+    }
+}
+
+/* Active navigation link */
+.nav-link.active {
+    color: var(--gold);
+}
+
+.nav-link.active::after {
+    width: 100%;
+}

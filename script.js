@@ -739,8 +739,145 @@ function handleNotificationLeave() {
     isHovered = false;
 }
 
+// --- Featured Videos ---
+async function loadFeaturedVideos() {
+    const videosContainer = document.getElementById('featured-videos');
+    if (!videosContainer) return;
+    
+    try {
+        const response = await fetch('media.json');
+        const data = await response.json();
+        
+        // Get the most recent featured tournament or first tournament
+        const featuredTournament = data.tournaments.find(t => t.featured) || data.tournaments[0];
+        const cloudName = data.cloudinary_cloud_name;
+        
+        if (!featuredTournament) {
+            videosContainer.innerHTML = '<p>No featured videos available.</p>';
+            return;
+        }
+        
+        // Try to fetch real videos from Cloudinary
+        let videos = [];
+        try {
+            const videosResponse = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/resources/video?prefix=${featuredTournament.videos.folder}/&max_results=3`);
+            const videosData = await videosResponse.json();
+            
+            videos = videosData.resources.slice(0, 3).map((video, index) => ({
+                title: `${featuredTournament.name} ${index === 0 ? 'Highlights' : index === 1 ? 'Championship' : 'Finals'}`,
+                date: featuredTournament.date,
+                url: video.secure_url,
+                thumbnail: getCloudinaryThumbnail(video.secure_url, cloudName)
+            }));
+        } catch (cloudinaryError) {
+            console.log('Using mock videos (Cloudinary not configured)');
+            // Fallback to mock videos
+            videos = [
+                {
+                    title: `${featuredTournament.name} Highlights`,
+                    date: featuredTournament.date,
+                    url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1.mp4',
+                    thumbnail: 'https://picsum.photos/400/300?random=1'
+                },
+                {
+                    title: `${featuredTournament.name} Championship`,
+                    date: featuredTournament.date,
+                    url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_2.mp4',
+                    thumbnail: 'https://picsum.photos/400/300?random=2'
+                },
+                {
+                    title: `${featuredTournament.name} Finals`,
+                    date: featuredTournament.date,
+                    url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_3.mp4',
+                    thumbnail: 'https://picsum.photos/400/300?random=3'
+                }
+            ];
+        }
+        
+        videosContainer.innerHTML = '';
+        
+        videos.forEach((video, index) => {
+            const videoElement = document.createElement('div');
+            videoElement.className = 'media-video-item';
+            videoElement.innerHTML = `
+                <div class="media-video-thumbnail" style="background-image: url('${video.thumbnail}'); background-size: cover; background-position: center;">
+                </div>
+                <div class="media-video-info">
+                    <h3 class="media-video-title">${video.title}</h3>
+                    <p class="media-video-date">${video.date}</p>
+                </div>
+            `;
+            
+            // Add click handler to open video
+            videoElement.addEventListener('click', () => {
+                openVideoModal(video);
+            });
+            
+            videosContainer.appendChild(videoElement);
+        });
+        
+    } catch (error) {
+        console.error('Error loading featured videos:', error);
+        videosContainer.innerHTML = '<p>Error loading videos. Please try again later.</p>';
+    }
+}
+
+function getCloudinaryThumbnail(videoUrl, cloudName) {
+    // Extract public ID from video URL and generate thumbnail
+    const publicId = videoUrl.split('/').slice(-2).join('/').split('.')[0];
+    return `https://res.cloudinary.com/${cloudName}/video/upload/w_400,h_300,c_fill,q_auto,f_auto/${publicId}.jpg`;
+}
+
+function openVideoModal(video) {
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'video-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        cursor: pointer;
+    `;
+    
+    modal.innerHTML = `
+        <div style="position: relative; max-width: 90%; max-height: 90%;">
+            <video controls style="width: 100%; height: auto; max-height: 80vh;">
+                <source src="${video.url}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <button style="position: absolute; top: -40px; right: 0; background: var(--gold); color: var(--navy-dark); border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">×</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal handlers
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.tagName === 'BUTTON') {
+            document.body.removeChild(modal);
+        }
+    });
+    
+    // Close on escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            document.body.removeChild(modal);
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
 // --- Render on Load ---
 (function() {
     loadTournamentsAndRender();
     initializeNotificationBar();
+    loadFeaturedVideos();
 })(); 

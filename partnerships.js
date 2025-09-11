@@ -359,3 +359,4 @@ scrollToTopBtn.addEventListener('mouseleave', () => {
     scrollToTopBtn.style.background = 'var(--gold)';
     scrollToTopBtn.style.color = 'var(--navy-dark)';
 });
+

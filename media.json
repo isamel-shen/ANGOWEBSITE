@@ -1,0 +1,57 @@
+{
+  "cloudinary_cloud_name": "dsgvrmhds",
+  "tournaments": [
+    {
+      "id": "spring-2025",
+      "name": "Spring 2025 Tournament",
+      "date": "March 15-17, 2025",
+      "photos": {
+        "folder": "tournaments/spring-2025/photos",
+        "thumbnail": "tournaments/spring-2025/thumbnails/spring-2025-thumb"
+      },
+      "videos": {
+        "folder": "tournaments/spring-2025/videos"
+      },
+      "featured": true
+    },
+    {
+      "id": "winter-2024",
+      "name": "Winter 2024 Championship",
+      "date": "December 10-12, 2024",
+      "photos": {
+        "folder": "tournaments/winter-2024/photos",
+        "thumbnail": "tournaments/winter-2024/thumbnails/winter-2024-thumb"
+      },
+      "videos": {
+        "folder": "tournaments/winter-2024/videos"
+      },
+      "featured": false
+    },
+    {
+      "id": "fall-2024",
+      "name": "Fall 2024 Classic",
+      "date": "October 5-7, 2024",
+      "photos": {
+        "folder": "tournaments/fall-2024/photos",
+        "thumbnail": "tournaments/fall-2024/thumbnails/fall-2024-thumb"
+      },
+      "videos": {
+        "folder": "tournaments/fall-2024/videos"
+      },
+      "featured": false
+    },
+    {
+      "id": "summer-2024",
+      "name": "Summer 2024 Showdown",
+      "date": "July 20-22, 2024",
+      "photos": {
+        "folder": "tournaments/summer-2024/photos",
+        "thumbnail": "tournaments/summer-2024/thumbnails/summer-2024-thumb"
+      },
+      "videos": {
+        "folder": "tournaments/summer-2024/videos"
+      },
+      "featured": false
+    }
+  ]
+}

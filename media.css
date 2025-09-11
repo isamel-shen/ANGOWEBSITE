@@ -424,26 +424,36 @@
 /* Mobile Default to Grid View */
 @media (max-width: 768px) {
     .gallery-normal {
-        display: none;
+        display: none !important;
     }
     
     .gallery-grid {
-        display: block;
+        display: block !important;
     }
     
     #normal-view-btn {
         display: none;
+    }
+    
+    #grid-view-btn {
+        background: var(--gold);
+        color: var(--navy-dark);
     }
 }
 
 /* Desktop Default to Normal View */
 @media (min-width: 769px) {
     .gallery-grid {
-        display: none;
+        display: none !important;
     }
     
     .gallery-normal {
-        display: block;
+        display: block !important;
+    }
+    
+    #normal-view-btn {
+        background: var(--gold);
+        color: var(--navy-dark);
     }
 }
 

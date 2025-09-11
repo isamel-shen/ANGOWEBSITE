@@ -6,6 +6,7 @@ class MediaGallery {
         this.currentView = 'normal';
         this.currentTournament = null;
         this.searchQuery = '';
+        this.isSwitching = false; // Flag to prevent rapid view switching
         
         this.init();
     }
@@ -58,6 +59,8 @@ class MediaGallery {
         // Filter buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 this.currentFilter = e.target.dataset.filter;
@@ -66,12 +69,31 @@ class MediaGallery {
         });
 
         // View toggle buttons
-        document.getElementById('grid-view-btn').addEventListener('click', () => {
+        document.getElementById('grid-view-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.switchView('grid');
         });
 
-        document.getElementById('normal-view-btn').addEventListener('click', () => {
+        document.getElementById('normal-view-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             this.switchView('normal');
+        });
+
+        // Global click handler to prevent unwanted view switching
+        document.addEventListener('click', (e) => {
+            // Only handle clicks on the media gallery section
+            if (!e.target.closest('.media-gallery')) {
+                return;
+            }
+            
+            // Close search dropdown if clicking outside of it
+            const searchDropdown = document.getElementById('search-dropdown');
+            const searchContainer = document.querySelector('.search-container');
+            if (searchDropdown && searchContainer && !searchContainer.contains(e.target)) {
+                searchDropdown.classList.remove('show');
+            }
         });
     }
 
@@ -85,22 +107,46 @@ class MediaGallery {
     }
 
     switchView(view) {
-        // Don't switch if already in the requested view
-        if (this.currentView === view) {
+        // Don't switch if already in the requested view or currently switching
+        if (this.currentView === view || this.isSwitching) {
             return;
         }
         
+        this.isSwitching = true;
+        console.log(`Switching view from ${this.currentView} to ${view}`);
+        
         this.currentView = view;
         
-        // Update button states
-        document.getElementById('grid-view-btn').classList.toggle('active', view === 'grid');
-        document.getElementById('normal-view-btn').classList.toggle('active', view === 'normal');
+        // Update button states with more precise control
+        const gridBtn = document.getElementById('grid-view-btn');
+        const normalBtn = document.getElementById('normal-view-btn');
+        
+        if (view === 'grid') {
+            gridBtn.classList.add('active');
+            normalBtn.classList.remove('active');
+        } else {
+            gridBtn.classList.remove('active');
+            normalBtn.classList.add('active');
+        }
         
         // Show/hide views
-        document.getElementById('grid-view').style.display = view === 'grid' ? 'block' : 'none';
-        document.getElementById('normal-view').style.display = view === 'normal' ? 'block' : 'none';
+        const gridView = document.getElementById('grid-view');
+        const normalView = document.getElementById('normal-view');
+        
+        if (view === 'grid') {
+            gridView.style.display = 'block';
+            normalView.style.display = 'none';
+        } else {
+            gridView.style.display = 'none';
+            normalView.style.display = 'block';
+        }
         
         this.renderCurrentView();
+        
+        // Reset switching flag after a short delay
+        setTimeout(() => {
+            this.isSwitching = false;
+        }, 100);
     }
 
     populateSearchDropdown() {
@@ -361,24 +407,18 @@ window.addEventListener('resize', () => {
     // Debounce resize events to prevent rapid firing
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
+        const gallery = window.mediaGalleryInstance;
+        if (!gallery || gallery.isSwitching) {
+            return; // Don't switch if gallery is not ready or currently switching
+        }
+        
         const isMobile = window.innerWidth <= 768;
-        const gridView = document.getElementById('grid-view');
-        const normalView = document.getElementById('normal-view');
-        const currentView = gridView.style.display !== 'none' ? 'grid' : 'normal';
+        const expectedView = isMobile ? 'grid' : 'normal';
         
         // Only switch if the current view doesn't match the expected view for the screen size
-        if (isMobile && currentView === 'normal') {
-            // Switch to grid view on mobile - but don't click buttons, directly call switchView
-            const gallery = window.mediaGalleryInstance;
-            if (gallery) {
-                gallery.switchView('grid');
-            }
-        } else if (!isMobile && currentView === 'grid') {
-            // Switch to normal view on desktop - but don't click buttons, directly call switchView
-            const gallery = window.mediaGalleryInstance;
-            if (gallery) {
-                gallery.switchView('normal');
-            }
+        if (gallery.currentView !== expectedView) {
+            console.log(`Resize: switching from ${gallery.currentView} to ${expectedView} (mobile: ${isMobile})`);
+            gallery.switchView(expectedView);
         }
-    }, 100); // 100ms debounce
+    }, 200); // Increased debounce to 200ms
 });

@@ -7,6 +7,7 @@ class MediaGallery {
         this.currentTournament = null;
         this.searchQuery = '';
         this.isSwitching = false; // Flag to prevent rapid view switching
+        this.isInitialized = false; // Flag to prevent switching during initialization
         
         this.init();
     }
@@ -16,6 +17,7 @@ class MediaGallery {
         this.setupEventListeners();
         this.setDefaultView();
         this.renderCurrentView();
+        this.isInitialized = true; // Mark as initialized after everything is set up
     }
 
     async loadTournaments() {
@@ -101,14 +103,34 @@ class MediaGallery {
         const isMobile = window.innerWidth <= 768;
         this.currentView = isMobile ? 'grid' : 'normal';
         
-        // Update button states
-        document.getElementById('grid-view-btn').classList.toggle('active', this.currentView === 'grid');
-        document.getElementById('normal-view-btn').classList.toggle('active', this.currentView === 'normal');
+        // Update button states with precise control (same as switchView)
+        const gridBtn = document.getElementById('grid-view-btn');
+        const normalBtn = document.getElementById('normal-view-btn');
+        
+        if (this.currentView === 'grid') {
+            gridBtn.classList.add('active');
+            normalBtn.classList.remove('active');
+        } else {
+            gridBtn.classList.remove('active');
+            normalBtn.classList.add('active');
+        }
+        
+        // Show/hide views
+        const gridView = document.getElementById('grid-view');
+        const normalView = document.getElementById('normal-view');
+        
+        if (this.currentView === 'grid') {
+            gridView.style.display = 'block';
+            normalView.style.display = 'none';
+        } else {
+            gridView.style.display = 'none';
+            normalView.style.display = 'block';
+        }
     }
 
     switchView(view) {
-        // Don't switch if already in the requested view or currently switching
-        if (this.currentView === view || this.isSwitching) {
+        // Don't switch if already in the requested view, currently switching, or not initialized
+        if (this.currentView === view || this.isSwitching || !this.isInitialized) {
             return;
         }
         
@@ -199,7 +221,9 @@ class MediaGallery {
         this.tournaments.forEach(tournament => {
             const card = document.createElement('div');
             card.className = 'tournament-card';
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 this.selectTournament(tournament);
                 // Switch to normal view to show the selected tournament's media
                 this.switchView('normal');
@@ -408,8 +432,8 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
         const gallery = window.mediaGalleryInstance;
-        if (!gallery || gallery.isSwitching) {
-            return; // Don't switch if gallery is not ready or currently switching
+        if (!gallery || gallery.isSwitching || !gallery.isInitialized) {
+            return; // Don't switch if gallery is not ready, currently switching, or not initialized
         }
         
         const isMobile = window.innerWidth <= 768;

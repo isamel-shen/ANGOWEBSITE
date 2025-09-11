@@ -166,6 +166,9 @@
     justify-content: center;
     width: 40px;
     height: 40px;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
 }
 
 .view-btn.active {
@@ -181,6 +184,7 @@
 .gallery-grid {
     display: block;
     transition: opacity 0.2s ease;
+    will-change: opacity;
 }
 
 .grid-container {
@@ -250,6 +254,7 @@
 .gallery-normal {
     display: block;
     transition: opacity 0.2s ease;
+    will-change: opacity;
 }
 
 .media-container {

@@ -148,7 +148,11 @@ class MediaGallery {
         this.tournaments.forEach(tournament => {
             const card = document.createElement('div');
             card.className = 'tournament-card';
-            card.addEventListener('click', () => this.selectTournament(tournament));
+            card.addEventListener('click', () => {
+                this.selectTournament(tournament);
+                // Switch to normal view to show the selected tournament's media
+                this.switchView('normal');
+            });
             
             // Generate Cloudinary URL for thumbnail - using Format 2 (works!)
             const thumbnailId = tournament.photos.thumbnail.split('/').pop(); // Get just the public ID
@@ -293,10 +297,6 @@ class MediaGallery {
             if (item.type === 'image') {
                 mediaElement.innerHTML = `
                     <img src="${item.url}" alt="${item.title}" class="media-image" loading="lazy">
-                    <div class="media-info">
-                        <h3 class="media-title">${item.title}</h3>
-                        <p class="media-date">${item.date}</p>
-                    </div>
                 `;
             } else {
                 mediaElement.innerHTML = `
@@ -305,10 +305,6 @@ class MediaGallery {
                             <source src="${item.url}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
-                    </div>
-                    <div class="media-info">
-                        <h3 class="media-title">${item.title}</h3>
-                        <p class="media-date">${item.date}</p>
                     </div>
                 `;
             }

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Direct Cloudinary URLs</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        img { max-width: 300px; max-height: 200px; margin: 10px; border: 1px solid #ccc; }
+        .success { background: #e8f5e8; }
+        .error { background: #ffebee; }
+        .info { background: #e3f2fd; }
+    </style>
+</head>
+<body>
+    <h1>Test Direct Cloudinary URLs</h1>
+    <p>Testing the exact URLs that should work with your Cloudinary setup.</p>
+    
+    <div class="test-section">
+        <h2>Your Photos (with correct public IDs):</h2>
+        <div id="photos-test">
+            <p>Testing photo URLs...</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Your Video:</h2>
+        <div id="video-test">
+            <p>Testing video URL...</p>
+        </div>
+    </div>
+
+    <script>
+        function testDirectUrls() {
+            const photosDiv = document.getElementById('photos-test');
+            const videoDiv = document.getElementById('video-test');
+            const cloudName = 'dsgvrmhds';
+            
+            // Test photos with correct public IDs
+            const photoIds = ['IMG_1949_sgp2ck', 'IMG_1958_nixptn', 'IMG_1942_diuhjz'];
+            
+            photosDiv.innerHTML = '<p>Testing photo URLs...</p>';
+            
+            photoIds.forEach((publicId, index) => {
+                const img = document.createElement('img');
+                // Try different URL formats
+                const url1 = `https://res.cloudinary.com/${cloudName}/image/upload/w_400,h_300,c_fill,q_auto/tournaments/spring-2025/photos/${publicId}`;
+                const url2 = `https://res.cloudinary.com/${cloudName}/image/upload/w_400,h_300,c_fill,q_auto/${publicId}`;
+                const url3 = `https://res.cloudinary.com/${cloudName}/image/upload/${publicId}`;
+                
+                photosDiv.innerHTML += `
+                    <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd;">
+                        <h4>Photo ${index + 1}: ${publicId}</h4>
+                        <p>Testing different URL formats:</p>
+                        <p>Format 1: <a href="${url1}" target="_blank">${url1}</a></p>
+                        <p>Format 2: <a href="${url2}" target="_blank">${url2}</a></p>
+                        <p>Format 3: <a href="${url3}" target="_blank">${url3}</a></p>
+                        <div style="display: flex; gap: 10px;">
+                            <div>
+                                <p>Format 1:</p>
+                                <img src="${url1}" alt="Format 1" onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Loaded!</p>'" onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Failed</p>'" />
+                            </div>
+                            <div>
+                                <p>Format 2:</p>
+                                <img src="${url2}" alt="Format 2" onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Loaded!</p>'" onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Failed</p>'" />
+                            </div>
+                            <div>
+                                <p>Format 3:</p>
+                                <img src="${url3}" alt="Format 3" onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Loaded!</p>'" onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Failed</p>'" />
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Test video
+            const videoId = 'IMG_4320_qftyay';
+            const videoUrl1 = `https://res.cloudinary.com/${cloudName}/video/upload/tournaments/spring-2025/videos/${videoId}`;
+            const videoUrl2 = `https://res.cloudinary.com/${cloudName}/video/upload/${videoId}`;
+            const thumbnailUrl = `https://res.cloudinary.com/${cloudName}/video/upload/w_400,h_300,c_fill,q_auto,f_auto/tournaments/spring-2025/videos/${videoId}.jpg`;
+            
+            videoDiv.innerHTML = `
+                <h4>Video: ${videoId}</h4>
+                <p>Video URL 1: <a href="${videoUrl1}" target="_blank">${videoUrl1}</a></p>
+                <p>Video URL 2: <a href="${videoUrl2}" target="_blank">${videoUrl2}</a></p>
+                <p>Thumbnail URL: <a href="${thumbnailUrl}" target="_blank">${thumbnailUrl}</a></p>
+                <div style="display: flex; gap: 10px;">
+                    <div>
+                        <p>Video 1:</p>
+                        <video controls width="300" height="200">
+                            <source src="${videoUrl1}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div>
+                        <p>Video 2:</p>
+                        <video controls width="300" height="200">
+                            <source src="${videoUrl2}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div>
+                        <p>Thumbnail:</p>
+                        <img src="${thumbnailUrl}" alt="Video Thumbnail" onload="this.parentElement.innerHTML += '<p class=\'success\'>✅ Thumbnail loaded!</p>'" onerror="this.parentElement.innerHTML += '<p class=\'error\'>❌ Thumbnail failed</p>'" />
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Run the test
+        testDirectUrls();
+    </script>
+</body>
+</html>

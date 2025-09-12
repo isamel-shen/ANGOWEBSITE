@@ -129,7 +129,7 @@
 
         <div style="background: #d4edda; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #28a745;">
             <h4 style="margin-top: 0; color: #155724;">✅ Expected Behavior:</h4>
-            <p style="margin: 0; color: #155724;">The dropdown should now appear perfectly aligned below the navbar on all devices, with no gaps or overlaps. The positioning should be consistent across different screen sizes and orientations.</p>
+            <p style="margin: 0; color: #155724;">The dropdown should now appear perfectly aligned at the bottom edge of the navbar with a 1px overlap to ensure no gap. The logo should remain completely visible and not be covered by the dropdown menu.</p>
         </div>
 
         <div style="background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #ffc107;">
@@ -144,10 +144,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             const navbar = document.querySelector('.navbar');
             const navMenu = document.querySelector('.nav-menu');
+            const navContainer = document.querySelector('.nav-container');
+            const logo = document.querySelector('.nav-logo img');
             
             if (navbar) {
                 navbar.style.border = '2px solid red';
                 navbar.style.boxSizing = 'border-box';
+            }
+            
+            if (navContainer) {
+                navContainer.style.border = '2px solid orange';
+                navContainer.style.boxSizing = 'border-box';
             }
             
             if (navMenu) {
@@ -155,11 +162,18 @@
                 navMenu.style.boxSizing = 'border-box';
             }
             
+            if (logo) {
+                logo.style.border = '2px solid green';
+                logo.style.boxSizing = 'border-box';
+            }
+            
             // Log positioning info
             setTimeout(() => {
-                if (navbar && navMenu) {
+                if (navbar && navMenu && navContainer && logo) {
                     const navbarRect = navbar.getBoundingClientRect();
                     const navMenuRect = navMenu.getBoundingClientRect();
+                    const navContainerRect = navContainer.getBoundingClientRect();
+                    const logoRect = logo.getBoundingClientRect();
                     
                     console.log('Visual Debug Info:', {
                         navbar: {
@@ -167,12 +181,23 @@
                             bottom: navbarRect.bottom,
                             height: navbarRect.height
                         },
+                        navContainer: {
+                            top: navContainerRect.top,
+                            bottom: navContainerRect.bottom,
+                            height: navContainerRect.height
+                        },
+                        logo: {
+                            top: logoRect.top,
+                            bottom: logoRect.bottom,
+                            height: logoRect.height
+                        },
                         navMenu: {
                             top: navMenuRect.top,
                             bottom: navMenuRect.bottom,
                             height: navMenuRect.height
                         },
-                        gap: navMenuRect.top - navbarRect.bottom
+                        gap: navMenuRect.top - navbarRect.bottom,
+                        logoOverlap: logoRect.bottom - navMenuRect.top
                     });
                 }
             }, 1000);

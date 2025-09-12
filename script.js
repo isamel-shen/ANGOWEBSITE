@@ -2,70 +2,27 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-// Dynamic dropdown positioning and max-height calculation
-function updateDropdownPosition() {
+// Dynamic dropdown max-height calculation only
+function updateDropdownMaxHeight() {
     if (!navMenu) return;
     
     const navbar = document.querySelector('.navbar');
     const notificationBar = document.querySelector('.notification-bar');
     
     if (navbar) {
+        const navbarRect = navbar.getBoundingClientRect();
         const notificationHeight = notificationBar ? notificationBar.offsetHeight : 0;
         
-        // Use getBoundingClientRect but account for both elements being position: fixed
-        const navbarRect = navbar.getBoundingClientRect();
-        const navbarBottom = navbarRect.bottom;
-        
-        // Since both navbar and dropdown are position: fixed, we can use the bottom directly
-        // But we need to account for the fact that the dropdown might be affected by transforms
-        
-        // Position dropdown at navbar bottom with 1px overlap
-        const dropdownTop = navbarBottom - 1;
-        
-        // Force the positioning with !important to override any CSS
-        navMenu.style.setProperty('top', `${dropdownTop}px`, 'important');
-        navMenu.style.setProperty('position', 'fixed', 'important');
-        navMenu.style.setProperty('left', '0', 'important');
-        
-        // Set CSS custom property for additional override
-        navMenu.style.setProperty('--js-top', `${dropdownTop}px`, 'important');
-        
-        // Add a class to ensure positioning sticks
-        navMenu.classList.add('js-positioned');
-        
-        // Add a temporary debug line to show where we're positioning
-        let debugLine = document.getElementById('debug-line');
-        if (!debugLine) {
-            debugLine = document.createElement('div');
-            debugLine.id = 'debug-line';
-            debugLine.style.cssText = `
-                position: fixed;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: red;
-                z-index: 10000;
-                pointer-events: none;
-            `;
-            document.body.appendChild(debugLine);
-        }
-        debugLine.style.top = `${dropdownTop}px`;
-        
         // Calculate remaining viewport space for max-height
-        const remainingHeight = window.innerHeight - navbarBottom;
+        const remainingHeight = window.innerHeight - navbarRect.bottom;
         const maxHeight = Math.max(remainingHeight - 20, 200); // 20px buffer, min 200px
         
         // Set dynamic max-height
         navMenu.style.maxHeight = `${maxHeight}px`;
         
         // Debug logging for troubleshooting
-        console.log('Dropdown positioning debug (manual calculation):', {
-            notificationHeight,
-            navbarTop: navbarTop,
-            navbarHeight: navbarHeight,
-            navbarBottom: navbarBottom,
-            dropdownTop: dropdownTop,
-            actualDropdownTop: navMenu.getBoundingClientRect().top,
+        console.log('Dropdown max-height debug:', {
+            navbarBottom: navbarRect.bottom,
             viewportHeight: window.innerHeight,
             remainingHeight,
             maxHeight,
@@ -74,23 +31,20 @@ function updateDropdownPosition() {
     }
 }
 
-// Update position on window resize and orientation change
-window.addEventListener('resize', updateDropdownPosition);
+// Update max-height on window resize and orientation change
+window.addEventListener('resize', updateDropdownMaxHeight);
 window.addEventListener('orientationchange', () => {
     // Small delay to ensure viewport has updated
-    setTimeout(updateDropdownPosition, 100);
+    setTimeout(updateDropdownMaxHeight, 100);
 });
 
-// Update position when menu is toggled
+// Update max-height when menu is toggled
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
     
-    // Update position multiple times to ensure it sticks
-    updateDropdownPosition();
-    setTimeout(updateDropdownPosition, 10);
-    setTimeout(updateDropdownPosition, 50);
-    setTimeout(updateDropdownPosition, 100);
+    // Update max-height after toggling
+    setTimeout(updateDropdownMaxHeight, 10);
 });
 
 // Close mobile menu when clicking on a link
@@ -99,19 +53,19 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial position update with multiple triggers
-document.addEventListener('DOMContentLoaded', updateDropdownPosition);
-window.addEventListener('load', updateDropdownPosition);
+// Initial max-height update with multiple triggers
+document.addEventListener('DOMContentLoaded', updateDropdownMaxHeight);
+window.addEventListener('load', updateDropdownMaxHeight);
 
 // Additional trigger for when images and fonts are loaded
 window.addEventListener('load', () => {
-    setTimeout(updateDropdownPosition, 100); // Small delay to ensure all elements are rendered
+    setTimeout(updateDropdownMaxHeight, 100); // Small delay to ensure all elements are rendered
 });
 
 // Trigger on any layout changes
 if (window.ResizeObserver) {
     const resizeObserver = new ResizeObserver(() => {
-        updateDropdownPosition();
+        updateDropdownMaxHeight();
     });
     
     // Observe navbar for size changes
@@ -125,24 +79,6 @@ if (window.ResizeObserver) {
     if (notificationBar) {
         resizeObserver.observe(notificationBar);
     }
-}
-
-// Watch for changes to the dropdown menu that might reset its position
-if (window.MutationObserver && navMenu) {
-    const mutationObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' && 
-                (mutation.attributeName === 'class' || mutation.attributeName === 'style')) {
-                // Re-apply positioning if dropdown attributes change
-                setTimeout(updateDropdownPosition, 10);
-            }
-        });
-    });
-    
-    mutationObserver.observe(navMenu, {
-        attributes: true,
-        attributeFilter: ['class', 'style']
-    });
 }
 
 // Navbar background on scroll

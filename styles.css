@@ -519,9 +519,9 @@ body {
     }
 
     .nav-menu {
-        position: fixed !important;
-        left: 0 !important;
-        top: 0; /* Will be set dynamically by JavaScript */
+        position: fixed;
+        left: 0;
+        top: calc(40px + 7vh + 0.5vh - 1px); /* Notification bar + navbar height + padding - 1px overlap */
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -624,7 +624,7 @@ body {
     }
     
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: calc(40px + 6vh + 0.5vh - 1px); /* Notification bar + navbar height + padding - 1px overlap */
         max-height: calc(100vh - 100px); /* Fallback height */
     }
     
@@ -639,7 +639,7 @@ body {
 /* Extra small screens and landscape phones */
 @media (max-width: 360px) {
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: calc(40px + 6vh + 0.5vh - 1px); /* Notification bar + navbar height + padding - 1px overlap */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1.5rem 0;
     }
@@ -654,7 +654,7 @@ body {
 /* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: calc(40px + 6vh + 0.5vh - 1px); /* Notification bar + navbar height + padding - 1px overlap */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1rem 0;
     }
@@ -1064,7 +1064,7 @@ html {
     }
     
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: calc(40px + 8vh + 0.5vh - 1px); /* Notification bar + navbar height + padding - 1px overlap */
     }
     
     .logo {

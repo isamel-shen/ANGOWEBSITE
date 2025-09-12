@@ -7,6 +7,8 @@
 
 html {
     scroll-behavior: smooth;
+    /* iOS safe area support */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 body {
@@ -519,7 +521,7 @@ body {
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: calc(40px + 7vh);
+        top: 0; /* Will be set dynamically by JavaScript */
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -528,7 +530,7 @@ body {
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
         padding: 2rem 0;
         z-index: 999;
-        max-height: calc(100vh - 40px - 7vh);
+        max-height: calc(100vh - 120px); /* Fallback height */
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -614,8 +616,8 @@ body {
     }
     
     .nav-menu {
-        top: calc(40px + 6vh);
-        max-height: calc(100vh - 40px - 6vh);
+        top: 0; /* Will be set dynamically by JavaScript */
+        max-height: calc(100vh - 100px); /* Fallback height */
     }
     
     .logo {
@@ -629,8 +631,8 @@ body {
 /* Extra small screens and landscape phones */
 @media (max-width: 360px) {
     .nav-menu {
-        top: calc(40px + 6vh);
-        max-height: calc(100vh - 40px - 6vh);
+        top: 0; /* Will be set dynamically by JavaScript */
+        max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1.5rem 0;
     }
     
@@ -644,7 +646,8 @@ body {
 /* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .nav-menu {
-        max-height: calc(100vh - 40px - 6vh);
+        top: 0; /* Will be set dynamically by JavaScript */
+        max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1rem 0;
     }
     
@@ -1053,7 +1056,7 @@ html {
     }
     
     .nav-menu {
-        top: calc(40px + 8vh);
+        top: 0; /* Will be set dynamically by JavaScript */
     }
     
     .logo {

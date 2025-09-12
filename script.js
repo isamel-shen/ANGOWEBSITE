@@ -13,11 +13,41 @@ function updateDropdownPosition() {
         const navbarRect = navbar.getBoundingClientRect();
         const notificationHeight = notificationBar ? notificationBar.offsetHeight : 0;
         
-        // Calculate the total height from top of viewport to bottom of navbar
-        const totalHeight = notificationHeight + navbarRect.height;
+        // Calculate the exact position - navbar bottom edge
+        const navbarBottom = navbarRect.bottom;
         
-        // Set the dropdown position dynamically
-        navMenu.style.top = `${totalHeight}px`;
+        // Set the dropdown position to start exactly at the navbar bottom
+        navMenu.style.top = `${navbarBottom}px`;
+        
+        // Calculate dynamic max-height based on remaining viewport space
+        const remainingHeight = window.innerHeight - navbarBottom;
+        navMenu.style.maxHeight = `${Math.max(remainingHeight - 20, 200)}px`; // 20px buffer, min 200px
+        
+        // iPhone-specific adjustments
+        const isIPhone = /iPhone|iPad|iPod/.test(navigator.userAgent);
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        
+        if (isIOS) {
+            // Account for iOS safe areas and dynamic island
+            const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat') || '0');
+            const adjustedTop = navbarBottom + safeAreaTop;
+            navMenu.style.top = `${adjustedTop}px`;
+        }
+        
+        // Debug logging for troubleshooting (remove in production)
+        console.log('Dropdown positioning debug:', {
+            notificationHeight,
+            navbarTop: navbarRect.top,
+            navbarBottom: navbarRect.bottom,
+            navbarHeight: navbarRect.height,
+            dropdownTop: navbarBottom,
+            viewportHeight: window.innerHeight,
+            remainingHeight,
+            isIPhone,
+            isIOS,
+            userAgent: navigator.userAgent
+        });
     }
 }
 
@@ -43,8 +73,33 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial position update
+// Initial position update with multiple triggers
 document.addEventListener('DOMContentLoaded', updateDropdownPosition);
+window.addEventListener('load', updateDropdownPosition);
+
+// Additional trigger for when images and fonts are loaded
+window.addEventListener('load', () => {
+    setTimeout(updateDropdownPosition, 100); // Small delay to ensure all elements are rendered
+});
+
+// Trigger on any layout changes
+if (window.ResizeObserver) {
+    const resizeObserver = new ResizeObserver(() => {
+        updateDropdownPosition();
+    });
+    
+    // Observe navbar for size changes
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        resizeObserver.observe(navbar);
+    }
+    
+    // Observe notification bar for size changes
+    const notificationBar = document.querySelector('.notification-bar');
+    if (notificationBar) {
+        resizeObserver.observe(notificationBar);
+    }
+}
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {

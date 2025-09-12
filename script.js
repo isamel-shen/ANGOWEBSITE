@@ -2,39 +2,55 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-// Dropdown max-height calculation only (CSS handles positioning)
-function updateDropdownMaxHeight() {
+// Dropdown positioning and max-height calculation
+function updateDropdownPosition() {
     if (!navMenu) return;
     
     const navbar = document.querySelector('.navbar');
     if (navbar) {
         const navbarRect = navbar.getBoundingClientRect();
         
+        // Calculate exact dropdown position using actual navbar measurements
+        const dropdownTop = navbarRect.bottom - 1; // 1px overlap to prevent gap
+        
+        // Set position directly on the element
+        navMenu.style.setProperty('top', `${dropdownTop}px`, 'important');
+        navMenu.style.setProperty('position', 'fixed', 'important');
+        navMenu.style.setProperty('left', '0', 'important');
+        
         // Calculate remaining viewport space for max-height
         const remainingHeight = window.innerHeight - navbarRect.bottom;
         const maxHeight = Math.max(remainingHeight - 20, 200);
         navMenu.style.maxHeight = `${maxHeight}px`;
         
-        console.log('Dropdown max-height:', {
+        console.log('Dropdown positioning (exact):', {
             navbarBottom: navbarRect.bottom,
+            dropdownTop: dropdownTop,
+            actualDropdownTop: navMenu.getBoundingClientRect().top,
             viewportHeight: window.innerHeight,
             remainingHeight: remainingHeight,
-            maxHeight: maxHeight
+            maxHeight: maxHeight,
+            gap: navMenu.getBoundingClientRect().top - navbarRect.bottom
         });
     }
 }
 
-// Update max-height on window resize and orientation change
-window.addEventListener('resize', updateDropdownMaxHeight);
+// Update position on window resize and orientation change
+window.addEventListener('resize', updateDropdownPosition);
 window.addEventListener('orientationchange', () => {
-    setTimeout(updateDropdownMaxHeight, 100);
+    setTimeout(updateDropdownPosition, 100);
 });
 
-// Update max-height when menu is toggled
+// Update position when menu is toggled
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
-    setTimeout(updateDropdownMaxHeight, 10);
+    
+    // Apply positioning multiple times to ensure it sticks
+    updateDropdownPosition();
+    setTimeout(updateDropdownPosition, 10);
+    setTimeout(updateDropdownPosition, 50);
+    setTimeout(updateDropdownPosition, 100);
 });
 
 // Close mobile menu when clicking on a link
@@ -43,9 +59,9 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial max-height update
-document.addEventListener('DOMContentLoaded', updateDropdownMaxHeight);
-window.addEventListener('load', updateDropdownMaxHeight);
+// Initial position update
+document.addEventListener('DOMContentLoaded', updateDropdownPosition);
+window.addEventListener('load', updateDropdownPosition);
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {

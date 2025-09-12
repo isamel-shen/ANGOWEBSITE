@@ -10,22 +10,46 @@ function updateDropdownPosition() {
     const notificationBar = document.querySelector('.notification-bar');
     
     if (navbar) {
-        const navbarRect = navbar.getBoundingClientRect();
         const notificationHeight = notificationBar ? notificationBar.offsetHeight : 0;
         
-        // Calculate exact navbar bottom position
+        // Use getBoundingClientRect but account for both elements being position: fixed
+        const navbarRect = navbar.getBoundingClientRect();
         const navbarBottom = navbarRect.bottom;
         
+        // Since both navbar and dropdown are position: fixed, we can use the bottom directly
+        // But we need to account for the fact that the dropdown might be affected by transforms
+        
+        // Position dropdown at navbar bottom with 1px overlap
+        const dropdownTop = navbarBottom - 1;
+        
         // Force the positioning with !important to override any CSS
-        navMenu.style.setProperty('top', `${navbarBottom - 1}px`, 'important');
+        navMenu.style.setProperty('top', `${dropdownTop}px`, 'important');
         navMenu.style.setProperty('position', 'fixed', 'important');
         navMenu.style.setProperty('left', '0', 'important');
         
         // Set CSS custom property for additional override
-        navMenu.style.setProperty('--js-top', `${navbarBottom - 1}px`, 'important');
+        navMenu.style.setProperty('--js-top', `${dropdownTop}px`, 'important');
         
         // Add a class to ensure positioning sticks
         navMenu.classList.add('js-positioned');
+        
+        // Add a temporary debug line to show where we're positioning
+        let debugLine = document.getElementById('debug-line');
+        if (!debugLine) {
+            debugLine = document.createElement('div');
+            debugLine.id = 'debug-line';
+            debugLine.style.cssText = `
+                position: fixed;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: red;
+                z-index: 10000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(debugLine);
+        }
+        debugLine.style.top = `${dropdownTop}px`;
         
         // Calculate remaining viewport space for max-height
         const remainingHeight = window.innerHeight - navbarBottom;
@@ -35,11 +59,12 @@ function updateDropdownPosition() {
         navMenu.style.maxHeight = `${maxHeight}px`;
         
         // Debug logging for troubleshooting
-        console.log('Dropdown positioning debug:', {
-            navbarTop: navbarRect.top,
-            navbarBottom: navbarRect.bottom,
-            navbarHeight: navbarRect.height,
-            dropdownTop: navbarBottom - 1,
+        console.log('Dropdown positioning debug (manual calculation):', {
+            notificationHeight,
+            navbarTop: navbarTop,
+            navbarHeight: navbarHeight,
+            navbarBottom: navbarBottom,
+            dropdownTop: dropdownTop,
             actualDropdownTop: navMenu.getBoundingClientRect().top,
             viewportHeight: window.innerHeight,
             remainingHeight,

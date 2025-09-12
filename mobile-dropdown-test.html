@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Dropdown Test - ANGO</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Test page specific styles */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .test-info {
+            background: #f0f8ff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .test-info h2 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .test-info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .test-info li {
+            margin: 5px 0;
+        }
+        
+        .device-test {
+            background: #fff3cd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .device-test h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Notification Bar -->
+    <div class="notification-bar" id="notification-bar">
+        <div class="notification-content">
+            <span id="notification-text">Test the mobile dropdown positioning across different devices!</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo" style="display:flex;align-items:center;position:relative;">
+                <img src="assets/logo_transparent.png" alt="ANGO Logo" style="height:65px;vertical-align:middle;margin-top:2px;">
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#scheduling" class="nav-link">Scheduling</a></li>
+                <li class="nav-item"><a href="#information" class="nav-link">Information</a></li>
+                <li class="nav-item"><a href="registration.html" class="nav-link">Registration</a></li>
+                <li class="nav-item"><a href="media.html" class="nav-link">Media</a></li>
+                <li class="nav-item"><a href="#community" class="nav-link">Community</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About Us</a></li>
+                <li class="nav-item"><a href="partnerships.html" class="nav-link">Partnerships</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Test Content -->
+    <div style="padding-top: 120px; padding: 120px 20px 20px 20px;">
+        <div class="test-info">
+            <h2>🧪 Mobile Dropdown Positioning Test</h2>
+            <p>This page tests the improved mobile dropdown menu positioning system. The dropdown should now correctly align across different devices and screen sizes.</p>
+            
+            <h3>✅ Improvements Made:</h3>
+            <ul>
+                <li><strong>Dynamic Positioning:</strong> JavaScript calculates dropdown position based on actual navbar height</li>
+                <li><strong>Responsive CSS:</strong> Uses calc() functions instead of fixed pixel values</li>
+                <li><strong>Viewport Awareness:</strong> Adapts to different screen sizes and orientations</li>
+                <li><strong>Touch Optimization:</strong> Smooth scrolling and proper touch handling</li>
+                <li><strong>Cross-Device Compatibility:</strong> Works on phones, tablets, and various screen sizes</li>
+            </ul>
+        </div>
+
+        <div class="device-test">
+            <h4>📱 Test Instructions:</h4>
+            <ol>
+                <li>Open this page on different mobile devices or use browser dev tools</li>
+                <li>Click the hamburger menu (☰) to open the dropdown</li>
+                <li>Check that the dropdown appears directly below the navbar</li>
+                <li>Test on different screen sizes (320px, 375px, 414px, 768px, etc.)</li>
+                <li>Test in both portrait and landscape orientations</li>
+                <li>Verify the dropdown doesn't overlap with content or go off-screen</li>
+            </ol>
+        </div>
+
+        <div class="device-test">
+            <h4>🔧 Technical Details:</h4>
+            <p><strong>CSS Changes:</strong> Replaced fixed pixel values with calc() functions that dynamically calculate position based on navbar height and notification bar height.</p>
+            <p><strong>JavaScript Enhancement:</strong> Added real-time position calculation that updates on window resize and orientation change.</p>
+            <p><strong>Responsive Breakpoints:</strong> Added specific media queries for extra small screens and landscape orientations.</p>
+        </div>
+
+        <div style="background: #d4edda; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #28a745;">
+            <h4 style="margin-top: 0; color: #155724;">✅ Expected Behavior:</h4>
+            <p style="margin: 0; color: #155724;">The dropdown should now appear perfectly aligned below the navbar on all devices, with no gaps or overlaps. The positioning should be consistent across different screen sizes and orientations.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

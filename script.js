@@ -2,9 +2,39 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
+// Dynamic dropdown positioning function
+function updateDropdownPosition() {
+    if (!navMenu) return;
+    
+    const navbar = document.querySelector('.navbar');
+    const notificationBar = document.querySelector('.notification-bar');
+    
+    if (navbar) {
+        const navbarRect = navbar.getBoundingClientRect();
+        const notificationHeight = notificationBar ? notificationBar.offsetHeight : 0;
+        
+        // Calculate the total height from top of viewport to bottom of navbar
+        const totalHeight = notificationHeight + navbarRect.height;
+        
+        // Set the dropdown position dynamically
+        navMenu.style.top = `${totalHeight}px`;
+    }
+}
+
+// Update position on window resize and orientation change
+window.addEventListener('resize', updateDropdownPosition);
+window.addEventListener('orientationchange', () => {
+    // Small delay to ensure viewport has updated
+    setTimeout(updateDropdownPosition, 100);
+});
+
+// Update position when menu is toggled
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
+    
+    // Update position after toggling
+    setTimeout(updateDropdownPosition, 10);
 });
 
 // Close mobile menu when clicking on a link
@@ -12,6 +42,9 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     hamburger.classList.remove('active');
     navMenu.classList.remove('active');
 }));
+
+// Initial position update
+document.addEventListener('DOMContentLoaded', updateDropdownPosition);
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {

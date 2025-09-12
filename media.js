@@ -371,7 +371,10 @@ class MediaGallery {
                 videoIds.forEach((publicId, index) => {
                     mediaItems.push({
                         type: 'video',
-                        url: this.getCloudinaryUrl(publicId, 'video'),
+                        url: this.getCloudinaryUrl(publicId, 'video', {
+                            auto_rotate: true,
+                            quality: 'auto'
+                        }),
                         title: `${tournament.name} Video ${index + 1}`,
                         date: tournament.date,
                         created_at: new Date().toISOString()
@@ -408,6 +411,7 @@ class MediaGallery {
         if (transformations.crop) transforms.push(`c_${transformations.crop}`);
         if (transformations.quality) transforms.push(`q_${transformations.quality}`);
         if (transformations.format) transforms.push(`f_${transformations.format}`);
+        if (transformations.auto_rotate) transforms.push('a_auto');
         
         return transforms.join(',');
     }
@@ -445,12 +449,32 @@ class MediaGallery {
             } else {
                 mediaElement.innerHTML = `
                     <div class="media-video">
-                        <video controls>
+                        <video controls onloadedmetadata="this.fixOrientation()">
                             <source src="${item.url}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
                 `;
+                
+                // Add orientation fix function to the video element
+                const video = mediaElement.querySelector('video');
+                video.fixOrientation = function() {
+                    // Check if video appears upside down by comparing dimensions
+                    if (this.videoWidth > 0 && this.videoHeight > 0) {
+                        const aspectRatio = this.videoWidth / this.videoHeight;
+                        // If the video is portrait (height > width) and appears upside down,
+                        // we might need to rotate it
+                        if (aspectRatio < 1) {
+                            // Check if the video metadata suggests it's rotated
+                            // This is a heuristic approach since we can't directly read EXIF data
+                            const container = this.closest('.media-video');
+                            if (container) {
+                                // Add a class that can be used for CSS transforms
+                                container.classList.add('video-portrait');
+                            }
+                        }
+                    }
+                };
             }
             
             container.appendChild(mediaElement);

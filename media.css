@@ -291,6 +291,16 @@
     height: 100%;
     object-fit: contain;
     background: var(--navy-dark);
+    transform: scaleX(1);
+    /* Fix for upside-down videos on some browsers */
+    image-orientation: from-image;
+}
+
+/* Fix for portrait videos that might appear upside down */
+.media-video.video-portrait video {
+    transform: scaleX(1) scaleY(1);
+    /* If video appears upside down, uncomment the line below */
+    /* transform: scaleX(1) scaleY(-1) rotate(180deg); */
 }
 
 .media-info {

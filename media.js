@@ -32,7 +32,9 @@ class MediaGallery {
         try {
             const response = await fetch('media.json');
             const data = await response.json();
-            this.tournaments = data.tournaments;
+            
+            // Filter tournaments to only show visible ones
+            this.tournaments = data.tournaments.filter(tournament => tournament.visible !== false);
             this.cloudName = data.cloudinary_cloud_name;
             
             // Set current tournament to the most recent featured one, or first one

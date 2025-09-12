@@ -14,7 +14,8 @@
         "folder": "tournaments/4v4-Basketball-2025/videos",
         "public_ids": ["IMG_4320_qftyay", "IMG_4323_qf1tkh", "IMG_4789_u8nlf3"]
       },
-      "featured": true
+      "featured": true,
+      "visible": true
     },
     {
       "id": "winter-2024",
@@ -29,7 +30,8 @@
         "folder": "tournaments/winter-2024/videos",
         "public_ids": ["copy_5E78BE4F-4641-454C-AD62-A6D0F534BC18_sokhho"]
       },
-      "featured": false
+      "featured": false,
+      "visible": true
     },
     {
       "id": "fall-2024",
@@ -44,7 +46,8 @@
         "folder": "tournaments/fall-2024/videos",
         "public_ids": []
       },
-      "featured": false
+      "featured": false,
+      "visible": false
     },
     {
       "id": "summer-2024",
@@ -59,7 +62,8 @@
         "folder": "tournaments/summer-2024/videos",
         "public_ids": []
       },
-      "featured": false
+      "featured": false,
+      "visible": false
     }
   ]
 }

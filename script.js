@@ -16,8 +16,16 @@ function updateDropdownPosition() {
         // Calculate exact navbar bottom position
         const navbarBottom = navbarRect.bottom;
         
-        // Set dropdown position to start exactly at navbar bottom with 1px overlap
-        navMenu.style.top = `${navbarBottom - 1}px`;
+        // Force the positioning with !important to override any CSS
+        navMenu.style.setProperty('top', `${navbarBottom - 1}px`, 'important');
+        navMenu.style.setProperty('position', 'fixed', 'important');
+        navMenu.style.setProperty('left', '0', 'important');
+        
+        // Set CSS custom property for additional override
+        navMenu.style.setProperty('--js-top', `${navbarBottom - 1}px`, 'important');
+        
+        // Add a class to ensure positioning sticks
+        navMenu.classList.add('js-positioned');
         
         // Calculate remaining viewport space for max-height
         const remainingHeight = window.innerHeight - navbarBottom;
@@ -32,6 +40,7 @@ function updateDropdownPosition() {
             navbarBottom: navbarRect.bottom,
             navbarHeight: navbarRect.height,
             dropdownTop: navbarBottom - 1,
+            actualDropdownTop: navMenu.getBoundingClientRect().top,
             viewportHeight: window.innerHeight,
             remainingHeight,
             maxHeight,
@@ -52,8 +61,11 @@ hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
     
-    // Update position after toggling
+    // Update position multiple times to ensure it sticks
+    updateDropdownPosition();
     setTimeout(updateDropdownPosition, 10);
+    setTimeout(updateDropdownPosition, 50);
+    setTimeout(updateDropdownPosition, 100);
 });
 
 // Close mobile menu when clicking on a link
@@ -88,6 +100,24 @@ if (window.ResizeObserver) {
     if (notificationBar) {
         resizeObserver.observe(notificationBar);
     }
+}
+
+// Watch for changes to the dropdown menu that might reset its position
+if (window.MutationObserver && navMenu) {
+    const mutationObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && 
+                (mutation.attributeName === 'class' || mutation.attributeName === 'style')) {
+                // Re-apply positioning if dropdown attributes change
+                setTimeout(updateDropdownPosition, 10);
+            }
+        });
+    });
+    
+    mutationObserver.observe(navMenu, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
 }
 
 // Navbar background on scroll

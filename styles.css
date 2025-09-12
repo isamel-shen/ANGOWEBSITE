@@ -519,8 +519,8 @@ body {
     }
 
     .nav-menu {
-        position: fixed;
-        left: 0;
+        position: fixed !important;
+        left: 0 !important;
         top: 0; /* Will be set dynamically by JavaScript */
         flex-direction: column;
         background-color: white;
@@ -538,6 +538,13 @@ body {
 
     .nav-menu.active {
         transform: translateX(0); /* Slide in from left */
+    }
+    
+    /* Force positioning when JavaScript has positioned it */
+    .nav-menu.js-positioned {
+        position: fixed !important;
+        left: 0 !important;
+        top: var(--js-top, 0) !important;
     }
 
     .hero-container {

@@ -521,7 +521,8 @@ body {
     .nav-menu {
         position: fixed;
         left: 0;
-        top: var(--dropdown-top, calc(40px + 7vh + 0.5vh - 1px)); /* JavaScript sets --dropdown-top, fallback to calc */
+        top: calc(40px + 7vh + 0.5vh); /* Notification bar + navbar height + padding */
+        margin-top: -1px; /* 1px overlap to prevent gap */
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -619,7 +620,8 @@ body {
     }
     
     .nav-menu {
-        top: var(--dropdown-top, calc(40px + 6vh + 0.5vh - 1px)); /* JavaScript sets --dropdown-top, fallback to calc */
+        top: calc(40px + 6vh + 0.5vh); /* Notification bar + navbar height + padding */
+        margin-top: -1px; /* 1px overlap to prevent gap */
         max-height: calc(100vh - 100px); /* Fallback height */
     }
     
@@ -634,7 +636,8 @@ body {
 /* Extra small screens and landscape phones */
 @media (max-width: 360px) {
     .nav-menu {
-        top: var(--dropdown-top, calc(40px + 6vh + 0.5vh - 1px)); /* JavaScript sets --dropdown-top, fallback to calc */
+        top: calc(40px + 6vh + 0.5vh); /* Notification bar + navbar height + padding */
+        margin-top: -1px; /* 1px overlap to prevent gap */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1.5rem 0;
     }
@@ -649,7 +652,8 @@ body {
 /* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .nav-menu {
-        top: var(--dropdown-top, calc(40px + 6vh + 0.5vh - 1px)); /* JavaScript sets --dropdown-top, fallback to calc */
+        top: calc(40px + 6vh + 0.5vh); /* Notification bar + navbar height + padding */
+        margin-top: -1px; /* 1px overlap to prevent gap */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1rem 0;
     }
@@ -1059,7 +1063,8 @@ html {
     }
     
     .nav-menu {
-        top: var(--dropdown-top, calc(40px + 8vh + 0.5vh - 1px)); /* JavaScript sets --dropdown-top, fallback to calc */
+        top: calc(40px + 8vh + 0.5vh); /* Notification bar + navbar height + padding */
+        margin-top: -1px; /* 1px overlap to prevent gap */
     }
     
     .logo {

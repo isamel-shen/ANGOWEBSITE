@@ -93,6 +93,7 @@ body {
     height: 10vh;
     min-height: 60px;
     max-height: 100px;
+    position: relative; /* Enable absolute positioning for dropdown */
 }
 
 .logo {
@@ -519,9 +520,9 @@ body {
     }
 
     .nav-menu {
-        position: fixed;
-        left: -100%;
-        top: 0; /* Will be set dynamically by JavaScript */
+        position: absolute;
+        left: 0;
+        top: 100%; /* Position directly below the navbar */
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -533,10 +534,11 @@ body {
         max-height: calc(100vh - 120px); /* Fallback height */
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        transform: translateX(-100%); /* Use transform for slide animation */
     }
 
     .nav-menu.active {
-        left: 0;
+        transform: translateX(0); /* Slide in from left */
     }
 
     .hero-container {
@@ -616,7 +618,7 @@ body {
     }
     
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: 100%; /* Position directly below the navbar */
         max-height: calc(100vh - 100px); /* Fallback height */
     }
     
@@ -631,7 +633,7 @@ body {
 /* Extra small screens and landscape phones */
 @media (max-width: 360px) {
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: 100%; /* Position directly below the navbar */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1.5rem 0;
     }
@@ -646,7 +648,7 @@ body {
 /* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: 100%; /* Position directly below the navbar */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1rem 0;
     }
@@ -1056,7 +1058,7 @@ html {
     }
     
     .nav-menu {
-        top: 0; /* Will be set dynamically by JavaScript */
+        top: 100%; /* Position directly below the navbar */
     }
     
     .logo {

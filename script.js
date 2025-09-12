@@ -2,8 +2,8 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-// Dynamic dropdown positioning function
-function updateDropdownPosition() {
+// Dynamic dropdown max-height calculation
+function updateDropdownMaxHeight() {
     if (!navMenu) return;
     
     const navbar = document.querySelector('.navbar');
@@ -13,58 +13,38 @@ function updateDropdownPosition() {
         const navbarRect = navbar.getBoundingClientRect();
         const notificationHeight = notificationBar ? notificationBar.offsetHeight : 0;
         
-        // Calculate the exact position - navbar bottom edge
-        const navbarBottom = navbarRect.bottom;
+        // Calculate remaining viewport space for max-height
+        const remainingHeight = window.innerHeight - navbarRect.bottom;
+        const maxHeight = Math.max(remainingHeight - 20, 200); // 20px buffer, min 200px
         
-        // Set the dropdown position to start exactly at the navbar bottom
-        navMenu.style.top = `${navbarBottom}px`;
+        // Set dynamic max-height
+        navMenu.style.maxHeight = `${maxHeight}px`;
         
-        // Calculate dynamic max-height based on remaining viewport space
-        const remainingHeight = window.innerHeight - navbarBottom;
-        navMenu.style.maxHeight = `${Math.max(remainingHeight - 20, 200)}px`; // 20px buffer, min 200px
-        
-        // iPhone-specific adjustments
-        const isIPhone = /iPhone|iPad|iPod/.test(navigator.userAgent);
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        
-        if (isIOS) {
-            // Account for iOS safe areas and dynamic island
-            const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sat') || '0');
-            const adjustedTop = navbarBottom + safeAreaTop;
-            navMenu.style.top = `${adjustedTop}px`;
-        }
-        
-        // Debug logging for troubleshooting (remove in production)
-        console.log('Dropdown positioning debug:', {
-            notificationHeight,
-            navbarTop: navbarRect.top,
+        // Debug logging for troubleshooting
+        console.log('Dropdown max-height debug:', {
             navbarBottom: navbarRect.bottom,
-            navbarHeight: navbarRect.height,
-            dropdownTop: navbarBottom,
             viewportHeight: window.innerHeight,
             remainingHeight,
-            isIPhone,
-            isIOS,
+            maxHeight,
             userAgent: navigator.userAgent
         });
     }
 }
 
-// Update position on window resize and orientation change
-window.addEventListener('resize', updateDropdownPosition);
+// Update max-height on window resize and orientation change
+window.addEventListener('resize', updateDropdownMaxHeight);
 window.addEventListener('orientationchange', () => {
     // Small delay to ensure viewport has updated
-    setTimeout(updateDropdownPosition, 100);
+    setTimeout(updateDropdownMaxHeight, 100);
 });
 
-// Update position when menu is toggled
+// Update max-height when menu is toggled
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
     
-    // Update position after toggling
-    setTimeout(updateDropdownPosition, 10);
+    // Update max-height after toggling
+    setTimeout(updateDropdownMaxHeight, 10);
 });
 
 // Close mobile menu when clicking on a link
@@ -73,19 +53,19 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial position update with multiple triggers
-document.addEventListener('DOMContentLoaded', updateDropdownPosition);
-window.addEventListener('load', updateDropdownPosition);
+// Initial max-height update with multiple triggers
+document.addEventListener('DOMContentLoaded', updateDropdownMaxHeight);
+window.addEventListener('load', updateDropdownMaxHeight);
 
 // Additional trigger for when images and fonts are loaded
 window.addEventListener('load', () => {
-    setTimeout(updateDropdownPosition, 100); // Small delay to ensure all elements are rendered
+    setTimeout(updateDropdownMaxHeight, 100); // Small delay to ensure all elements are rendered
 });
 
 // Trigger on any layout changes
 if (window.ResizeObserver) {
     const resizeObserver = new ResizeObserver(() => {
-        updateDropdownPosition();
+        updateDropdownMaxHeight();
     });
     
     // Observe navbar for size changes

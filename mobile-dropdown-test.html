@@ -131,8 +131,52 @@
             <h4 style="margin-top: 0; color: #155724;">✅ Expected Behavior:</h4>
             <p style="margin: 0; color: #155724;">The dropdown should now appear perfectly aligned below the navbar on all devices, with no gaps or overlaps. The positioning should be consistent across different screen sizes and orientations.</p>
         </div>
+
+        <div style="background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <h4 style="margin-top: 0; color: #856404;">🔍 Debug Information:</h4>
+            <p style="margin: 0; color: #856404;">Open browser console (F12) to see positioning debug information when you toggle the menu.</p>
+        </div>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Visual debugging - add border to navbar and dropdown for testing
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.querySelector('.navbar');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (navbar) {
+                navbar.style.border = '2px solid red';
+                navbar.style.boxSizing = 'border-box';
+            }
+            
+            if (navMenu) {
+                navMenu.style.border = '2px solid blue';
+                navMenu.style.boxSizing = 'border-box';
+            }
+            
+            // Log positioning info
+            setTimeout(() => {
+                if (navbar && navMenu) {
+                    const navbarRect = navbar.getBoundingClientRect();
+                    const navMenuRect = navMenu.getBoundingClientRect();
+                    
+                    console.log('Visual Debug Info:', {
+                        navbar: {
+                            top: navbarRect.top,
+                            bottom: navbarRect.bottom,
+                            height: navbarRect.height
+                        },
+                        navMenu: {
+                            top: navMenuRect.top,
+                            bottom: navMenuRect.bottom,
+                            height: navMenuRect.height
+                        },
+                        gap: navMenuRect.top - navbarRect.bottom
+                    });
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>

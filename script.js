@@ -2,39 +2,22 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-// Dynamic dropdown max-height calculation only
+// Simple dropdown max-height calculation only
 function updateDropdownMaxHeight() {
     if (!navMenu) return;
     
     const navbar = document.querySelector('.navbar');
-    const notificationBar = document.querySelector('.notification-bar');
-    
     if (navbar) {
         const navbarRect = navbar.getBoundingClientRect();
-        const notificationHeight = notificationBar ? notificationBar.offsetHeight : 0;
-        
-        // Calculate remaining viewport space for max-height
         const remainingHeight = window.innerHeight - navbarRect.bottom;
-        const maxHeight = Math.max(remainingHeight - 20, 200); // 20px buffer, min 200px
-        
-        // Set dynamic max-height
+        const maxHeight = Math.max(remainingHeight - 20, 200);
         navMenu.style.maxHeight = `${maxHeight}px`;
-        
-        // Debug logging for troubleshooting
-        console.log('Dropdown max-height debug:', {
-            navbarBottom: navbarRect.bottom,
-            viewportHeight: window.innerHeight,
-            remainingHeight,
-            maxHeight,
-            userAgent: navigator.userAgent
-        });
     }
 }
 
 // Update max-height on window resize and orientation change
 window.addEventListener('resize', updateDropdownMaxHeight);
 window.addEventListener('orientationchange', () => {
-    // Small delay to ensure viewport has updated
     setTimeout(updateDropdownMaxHeight, 100);
 });
 
@@ -42,8 +25,6 @@ window.addEventListener('orientationchange', () => {
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
-    
-    // Update max-height after toggling
     setTimeout(updateDropdownMaxHeight, 10);
 });
 
@@ -53,33 +34,9 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial max-height update with multiple triggers
+// Initial max-height update
 document.addEventListener('DOMContentLoaded', updateDropdownMaxHeight);
 window.addEventListener('load', updateDropdownMaxHeight);
-
-// Additional trigger for when images and fonts are loaded
-window.addEventListener('load', () => {
-    setTimeout(updateDropdownMaxHeight, 100); // Small delay to ensure all elements are rendered
-});
-
-// Trigger on any layout changes
-if (window.ResizeObserver) {
-    const resizeObserver = new ResizeObserver(() => {
-        updateDropdownMaxHeight();
-    });
-    
-    // Observe navbar for size changes
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        resizeObserver.observe(navbar);
-    }
-    
-    // Observe notification bar for size changes
-    const notificationBar = document.querySelector('.notification-bar');
-    if (notificationBar) {
-        resizeObserver.observe(notificationBar);
-    }
-}
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {
@@ -362,53 +319,6 @@ scrollToTopBtn.addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
-
-// Add loading spinner for form submission
-function showLoadingSpinner(button) {
-    const spinner = document.createElement('div');
-    spinner.className = 'spinner';
-    spinner.style.cssText = `
-        width: 20px;
-        height: 20px;
-        border: 2px solid #ffffff;
-        border-top: 2px solid transparent;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-right: 10px;
-    `;
-    
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    button.prepend(spinner);
-}
-
-// Enhanced form submission with loading spinner
-if (contactForm) {
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        
-        showLoadingSpinner(submitBtn);
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
-        
-        setTimeout(() => {
-            alert('Thank you for your message! We\'ll get back to you soon.');
-            this.reset();
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-        }, 2000);
-    });
-}
 
 // --- Modular Email Signup (Lead Magnet) ---
 const leadMagnetForm = document.getElementById('lead-magnet-form');
@@ -964,4 +874,4 @@ function openVideoModal(video) {
     loadTournamentsAndRender();
     initializeNotificationBar();
     loadFeaturedVideos();
-})(); 
+})();

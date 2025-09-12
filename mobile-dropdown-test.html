@@ -129,7 +129,7 @@
 
         <div style="background: #d4edda; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #28a745;">
             <h4 style="margin-top: 0; color: #155724;">✅ Expected Behavior:</h4>
-            <p style="margin: 0; color: #155724;">The dropdown (blue border) should now align perfectly with the red navbar border with NO gap. JavaScript dynamically calculates the exact navbar bottom position and positions the dropdown with a 1px overlap to ensure seamless connection.</p>
+            <p style="margin: 0; color: #155724;">The dropdown should now align perfectly with the navbar with NO gap. CSS positioning uses calc() functions to precisely position the dropdown with a 1px overlap to ensure seamless connection.</p>
         </div>
 
         <div style="background: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #ffc107;">
@@ -138,70 +138,10 @@
         </div>
     </div>
 
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
     <script>
-        // Visual debugging - add border to navbar and dropdown for testing
-        document.addEventListener('DOMContentLoaded', () => {
-            const navbar = document.querySelector('.navbar');
-            const navMenu = document.querySelector('.nav-menu');
-            const navContainer = document.querySelector('.nav-container');
-            const logo = document.querySelector('.nav-logo img');
-            
-            if (navbar) {
-                navbar.style.border = '2px solid red';
-                navbar.style.boxSizing = 'border-box';
-            }
-            
-            if (navContainer) {
-                navContainer.style.border = '2px solid orange';
-                navContainer.style.boxSizing = 'border-box';
-            }
-            
-            if (navMenu) {
-                navMenu.style.border = '2px solid blue';
-                navMenu.style.boxSizing = 'border-box';
-            }
-            
-            if (logo) {
-                logo.style.border = '2px solid green';
-                logo.style.boxSizing = 'border-box';
-            }
-            
-            // Log positioning info
-            setTimeout(() => {
-                if (navbar && navMenu && navContainer && logo) {
-                    const navbarRect = navbar.getBoundingClientRect();
-                    const navMenuRect = navMenu.getBoundingClientRect();
-                    const navContainerRect = navContainer.getBoundingClientRect();
-                    const logoRect = logo.getBoundingClientRect();
-                    
-                    console.log('Visual Debug Info:', {
-                        navbar: {
-                            top: navbarRect.top,
-                            bottom: navbarRect.bottom,
-                            height: navbarRect.height
-                        },
-                        navContainer: {
-                            top: navContainerRect.top,
-                            bottom: navContainerRect.bottom,
-                            height: navContainerRect.height
-                        },
-                        logo: {
-                            top: logoRect.top,
-                            bottom: logoRect.bottom,
-                            height: logoRect.height
-                        },
-                        navMenu: {
-                            top: navMenuRect.top,
-                            bottom: navMenuRect.bottom,
-                            height: navMenuRect.height
-                        },
-                        gap: navMenuRect.top - navbarRect.bottom,
-                        logoOverlap: logoRect.bottom - navMenuRect.top
-                    });
-                }
-            }, 1000);
-        });
+        // Debug code removed to prevent interference with main page
+        console.log('Mobile dropdown test page loaded - debug borders removed');
     </script>
 </body>
 </html>

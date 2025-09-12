@@ -540,12 +540,7 @@ body {
         transform: translateX(0); /* Slide in from left */
     }
     
-    /* Force positioning when JavaScript has positioned it */
-    .nav-menu.js-positioned {
-        position: fixed !important;
-        left: 0 !important;
-        top: var(--js-top, 0) !important;
-    }
+    /* JavaScript positioning removed - using CSS-only positioning */
 
     .hero-container {
         grid-template-columns: 1fr;

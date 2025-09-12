@@ -93,7 +93,6 @@ body {
     height: 10vh;
     min-height: 60px;
     max-height: 100px;
-    position: relative; /* Enable absolute positioning for dropdown */
 }
 
 .logo {
@@ -520,9 +519,9 @@ body {
     }
 
     .nav-menu {
-        position: absolute;
+        position: fixed;
         left: 0;
-        top: calc(100% - 1px); /* Position at navbar bottom edge with 1px overlap */
+        top: calc(40px + 7vh + 0.5vh - 1px); /* Position at navbar bottom edge with 1px overlap */
         flex-direction: column;
         background-color: white;
         width: 100%;
@@ -618,7 +617,7 @@ body {
     }
     
     .nav-menu {
-        top: calc(100% - 1px); /* Position at navbar bottom edge with 1px overlap */
+        top: calc(40px + 6vh + 0.5vh - 1px); /* Position at navbar bottom edge with 1px overlap */
         max-height: calc(100vh - 100px); /* Fallback height */
     }
     
@@ -633,7 +632,7 @@ body {
 /* Extra small screens and landscape phones */
 @media (max-width: 360px) {
     .nav-menu {
-        top: calc(100% - 1px); /* Position at navbar bottom edge with 1px overlap */
+        top: calc(40px + 6vh + 0.5vh - 1px); /* Position at navbar bottom edge with 1px overlap */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1.5rem 0;
     }
@@ -648,7 +647,7 @@ body {
 /* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .nav-menu {
-        top: calc(100% - 1px); /* Position at navbar bottom edge with 1px overlap */
+        top: calc(40px + 6vh + 0.5vh - 1px); /* Position at navbar bottom edge with 1px overlap */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1rem 0;
     }
@@ -1058,7 +1057,7 @@ html {
     }
     
     .nav-menu {
-        top: calc(100% - 1px); /* Position at navbar bottom edge with 1px overlap */
+        top: calc(40px + 8vh + 0.5vh - 1px); /* Position at navbar bottom edge with 1px overlap */
     }
     
     .logo {

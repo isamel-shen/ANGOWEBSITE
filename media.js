@@ -30,7 +30,7 @@ class MediaGallery {
 
     async loadTournaments() {
         try {
-            const response = await fetch('media.json');
+            const response = await fetch(`media.json?t=${Date.now()}`);
             const data = await response.json();
             
             // Filter tournaments to only show visible ones
@@ -279,6 +279,8 @@ class MediaGallery {
     renderGridView() {
         const container = document.getElementById('tournament-grid');
         container.innerHTML = '';
+        
+        console.log('Rendering grid view with tournaments:', this.tournaments.length);
         
         this.tournaments.forEach(tournament => {
             const card = document.createElement('div');

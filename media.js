@@ -409,14 +409,21 @@ class MediaGallery {
             return;
         }
         
-        mediaItems.forEach(item => {
+        // Store media items for modal navigation
+        this.currentMediaItems = mediaItems;
+        
+        mediaItems.forEach((item, index) => {
             const mediaElement = document.createElement('div');
             mediaElement.className = 'media-item';
             
             if (item.type === 'image') {
                 mediaElement.innerHTML = `
-                    <img src="${item.url}" alt="${item.title}" class="media-image" loading="lazy">
+                    <img src="${item.url}" alt="${item.title}" class="media-image" loading="lazy" data-index="${index}">
                 `;
+                
+                // Add click handler for image modal
+                const img = mediaElement.querySelector('.media-image');
+                img.addEventListener('click', () => this.openImageModal(index));
             } else {
                 mediaElement.innerHTML = `
                     <div class="media-video">
@@ -462,11 +469,125 @@ class MediaGallery {
         `;
         this.hideLoading();
     }
+
+    // Modal functionality
+    openImageModal(index) {
+        if (!this.currentMediaItems || !this.currentMediaItems[index]) return;
+        
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const item = this.currentMediaItems[index];
+        
+        // Set current image index
+        this.currentImageIndex = index;
+        
+        // Update modal image
+        modalImage.src = item.url;
+        modalImage.alt = item.title;
+        
+        // Show modal
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        
+        // Update navigation buttons visibility
+        this.updateModalNavigation();
+    }
+
+    closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restore scrolling
+    }
+
+    nextImage() {
+        if (!this.currentMediaItems || this.currentImageIndex === undefined) return;
+        
+        const nextIndex = (this.currentImageIndex + 1) % this.currentMediaItems.length;
+        this.currentImageIndex = nextIndex;
+        
+        const modalImage = document.getElementById('modalImage');
+        const item = this.currentMediaItems[nextIndex];
+        
+        modalImage.src = item.url;
+        modalImage.alt = item.title;
+        
+        this.updateModalNavigation();
+    }
+
+    prevImage() {
+        if (!this.currentMediaItems || this.currentImageIndex === undefined) return;
+        
+        const prevIndex = this.currentImageIndex === 0 
+            ? this.currentMediaItems.length - 1 
+            : this.currentImageIndex - 1;
+        this.currentImageIndex = prevIndex;
+        
+        const modalImage = document.getElementById('modalImage');
+        const item = this.currentMediaItems[prevIndex];
+        
+        modalImage.src = item.url;
+        modalImage.alt = item.title;
+        
+        this.updateModalNavigation();
+    }
+
+    updateModalNavigation() {
+        const prevBtn = document.getElementById('modalPrev');
+        const nextBtn = document.getElementById('modalNext');
+        
+        if (this.currentMediaItems && this.currentMediaItems.length > 1) {
+            prevBtn.style.display = 'block';
+            nextBtn.style.display = 'block';
+        } else {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+    }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.mediaGalleryInstance = new MediaGallery();
+    
+    // Modal event listeners
+    const modal = document.getElementById('imageModal');
+    const closeBtn = document.querySelector('.modal-close');
+    const prevBtn = document.getElementById('modalPrev');
+    const nextBtn = document.getElementById('modalNext');
+    
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+        window.mediaGalleryInstance.closeImageModal();
+    });
+    
+    // Close modal when clicking outside the image
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            window.mediaGalleryInstance.closeImageModal();
+        }
+    });
+    
+    // Navigation buttons
+    prevBtn.addEventListener('click', () => {
+        window.mediaGalleryInstance.prevImage();
+    });
+    
+    nextBtn.addEventListener('click', () => {
+        window.mediaGalleryInstance.nextImage();
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (modal.style.display === 'block') {
+            if (e.key === 'Escape') {
+                window.mediaGalleryInstance.closeImageModal();
+            } else if (e.key === 'ArrowLeft') {
+                window.mediaGalleryInstance.prevImage();
+            } else if (e.key === 'ArrowRight') {
+                window.mediaGalleryInstance.nextImage();
+            }
+        }
+    });
 });
 
 // Handle window resize for responsive view switching - DISABLED to prevent conflicts

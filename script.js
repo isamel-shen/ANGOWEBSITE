@@ -13,19 +13,23 @@ function updateDropdownPosition() {
         // Calculate exact dropdown position
         const dropdownTop = navbarRect.bottom - 1; // 1px overlap to prevent gap
         
-        // Set CSS custom property for precise positioning
-        document.documentElement.style.setProperty('--dropdown-top', `${dropdownTop}px`);
+        // Set position directly on the element with !important to override CSS
+        navMenu.style.setProperty('top', `${dropdownTop}px`, 'important');
+        navMenu.style.setProperty('position', 'fixed', 'important');
+        navMenu.style.setProperty('left', '0', 'important');
         
         // Calculate remaining viewport space for max-height
         const remainingHeight = window.innerHeight - navbarRect.bottom;
         const maxHeight = Math.max(remainingHeight - 20, 200);
         navMenu.style.maxHeight = `${maxHeight}px`;
         
-        console.log('Dropdown positioning:', {
+        console.log('Dropdown positioning (direct):', {
             navbarBottom: navbarRect.bottom,
             dropdownTop: dropdownTop,
+            actualDropdownTop: navMenu.getBoundingClientRect().top,
             viewportHeight: window.innerHeight,
-            remainingHeight: remainingHeight
+            remainingHeight: remainingHeight,
+            gap: navMenu.getBoundingClientRect().top - navbarRect.bottom
         });
     }
 }
@@ -40,7 +44,12 @@ window.addEventListener('orientationchange', () => {
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
+    
+    // Apply positioning multiple times to ensure it sticks
+    updateDropdownPosition();
     setTimeout(updateDropdownPosition, 10);
+    setTimeout(updateDropdownPosition, 50);
+    setTimeout(updateDropdownPosition, 100);
 });
 
 // Close mobile menu when clicking on a link
@@ -52,6 +61,24 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
 // Initial position update
 document.addEventListener('DOMContentLoaded', updateDropdownPosition);
 window.addEventListener('load', updateDropdownPosition);
+
+// Watch for changes to the dropdown that might reset its position
+if (window.MutationObserver && navMenu) {
+    const mutationObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && 
+                (mutation.attributeName === 'class' || mutation.attributeName === 'style')) {
+                // Re-apply positioning if dropdown attributes change
+                setTimeout(updateDropdownPosition, 10);
+            }
+        });
+    });
+    
+    mutationObserver.observe(navMenu, {
+        attributes: true,
+        attributeFilter: ['class', 'style']
+    });
+}
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {

@@ -424,11 +424,11 @@
 /* Mobile Default to Grid View */
 @media (max-width: 768px) {
     .gallery-normal {
-        display: none !important;
+        display: none;
     }
     
     .gallery-grid {
-        display: block !important;
+        display: block;
     }
     
     #normal-view-btn {
@@ -444,11 +444,11 @@
 /* Desktop Default to Normal View */
 @media (min-width: 769px) {
     .gallery-grid {
-        display: none !important;
+        display: none;
     }
     
     .gallery-normal {
-        display: block !important;
+        display: block;
     }
     
     #normal-view-btn {

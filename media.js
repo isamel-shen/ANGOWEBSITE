@@ -154,7 +154,7 @@ class MediaGallery {
             return;
         }
         
-        // If view is locked, queue the switch
+        // If view is locked, queue the switch (but allow immediate switch if it's the same)
         if (this.viewLock) {
             this.pendingViewSwitch = view;
             return;
@@ -163,12 +163,12 @@ class MediaGallery {
         // Lock the view switching
         this.viewLock = true;
         
-        console.log(`Atomic switch: ${this.currentView} → ${view}`);
+        console.log(`Switching view: ${this.currentView} → ${view}`);
         
-        // Perform atomic view switch
+        // Perform view switch immediately
         this.performViewSwitch(view);
         
-        // Unlock after a delay
+        // Unlock after a shorter delay
         setTimeout(() => {
             this.viewLock = false;
             
@@ -178,7 +178,7 @@ class MediaGallery {
                 this.pendingViewSwitch = null;
                 this.switchView(pendingView);
             }
-        }, 150);
+        }, 50); // Reduced from 150ms to 50ms
     }
     
     performViewSwitch(view) {
@@ -197,46 +197,23 @@ class MediaGallery {
             return;
         }
         
-        // Atomic DOM updates
-        requestAnimationFrame(() => {
-            // Update button states
-            if (view === 'grid') {
-                gridBtn.classList.add('active');
-                normalBtn.classList.remove('active');
-                gridView.style.display = 'block';
-                normalView.style.display = 'none';
-            } else {
-                gridBtn.classList.remove('active');
-                normalBtn.classList.add('active');
-                gridView.style.display = 'none';
-                normalView.style.display = 'block';
-            }
-            
-            // Render content
-            this.renderCurrentView();
-            
-            // Validate the switch was successful
-            this.validateViewState();
-        });
+        // Update button states immediately
+        if (view === 'grid') {
+            gridBtn.classList.add('active');
+            normalBtn.classList.remove('active');
+            gridView.style.setProperty('display', 'block', 'important');
+            normalView.style.setProperty('display', 'none', 'important');
+        } else {
+            gridBtn.classList.remove('active');
+            normalBtn.classList.add('active');
+            gridView.style.setProperty('display', 'none', 'important');
+            normalView.style.setProperty('display', 'block', 'important');
+        }
+        
+        // Render content
+        this.renderCurrentView();
     }
     
-    validateViewState() {
-        const gridView = document.getElementById('grid-view');
-        const normalView = document.getElementById('normal-view');
-        const gridBtn = document.getElementById('grid-view-btn');
-        const normalBtn = document.getElementById('normal-view-btn');
-        
-        if (!gridView || !normalView || !gridBtn || !normalBtn) {
-            return;
-        }
-        
-        const actualView = gridView.style.display !== 'none' ? 'grid' : 'normal';
-        
-        if (actualView !== this.currentView) {
-            console.warn(`View state mismatch: expected ${this.currentView}, got ${actualView}. Recovering...`);
-            this.performViewSwitch(this.currentView);
-        }
-    }
 
     populateSearchDropdown() {
         const dropdown = document.getElementById('search-dropdown');

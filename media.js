@@ -306,10 +306,6 @@ class MediaGallery {
                     <h3 class="tournament-name">${tournament.name}</h3>
                     <p class="tournament-date">${tournament.date}</p>
                 </div>
-                <div class="tournament-overlay">
-                    <h3 class="tournament-name">${tournament.name}</h3>
-                    <p class="tournament-date">${tournament.date}</p>
-                </div>
             `;
             
             container.appendChild(card);

@@ -208,6 +208,8 @@
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .tournament-card:hover {
@@ -220,12 +222,15 @@
     height: 280px;
     object-fit: cover;
     background: #f3f4f6;
+    display: block;
+    margin: 0;
+    padding: 0;
 }
 
 .tournament-info {
     padding: 1.5rem;
-    position: relative;
     background: white;
+    flex-shrink: 0;
 }
 
 .tournament-name {

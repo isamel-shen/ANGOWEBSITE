@@ -2,30 +2,45 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-// Simple dropdown max-height calculation only
-function updateDropdownMaxHeight() {
+// Dropdown positioning and max-height calculation
+function updateDropdownPosition() {
     if (!navMenu) return;
     
     const navbar = document.querySelector('.navbar');
     if (navbar) {
         const navbarRect = navbar.getBoundingClientRect();
+        
+        // Calculate exact dropdown position
+        const dropdownTop = navbarRect.bottom - 1; // 1px overlap to prevent gap
+        
+        // Set CSS custom property for precise positioning
+        document.documentElement.style.setProperty('--dropdown-top', `${dropdownTop}px`);
+        
+        // Calculate remaining viewport space for max-height
         const remainingHeight = window.innerHeight - navbarRect.bottom;
         const maxHeight = Math.max(remainingHeight - 20, 200);
         navMenu.style.maxHeight = `${maxHeight}px`;
+        
+        console.log('Dropdown positioning:', {
+            navbarBottom: navbarRect.bottom,
+            dropdownTop: dropdownTop,
+            viewportHeight: window.innerHeight,
+            remainingHeight: remainingHeight
+        });
     }
 }
 
-// Update max-height on window resize and orientation change
-window.addEventListener('resize', updateDropdownMaxHeight);
+// Update position on window resize and orientation change
+window.addEventListener('resize', updateDropdownPosition);
 window.addEventListener('orientationchange', () => {
-    setTimeout(updateDropdownMaxHeight, 100);
+    setTimeout(updateDropdownPosition, 100);
 });
 
-// Update max-height when menu is toggled
+// Update position when menu is toggled
 hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navMenu.classList.toggle('active');
-    setTimeout(updateDropdownMaxHeight, 10);
+    setTimeout(updateDropdownPosition, 10);
 });
 
 // Close mobile menu when clicking on a link
@@ -34,9 +49,9 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial max-height update
-document.addEventListener('DOMContentLoaded', updateDropdownMaxHeight);
-window.addEventListener('load', updateDropdownMaxHeight);
+// Initial position update
+document.addEventListener('DOMContentLoaded', updateDropdownPosition);
+window.addEventListener('load', updateDropdownPosition);
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {

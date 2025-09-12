@@ -120,9 +120,17 @@ class MediaGallery {
         if (this.currentView === 'grid') {
             gridBtn.classList.add('active');
             normalBtn.classList.remove('active');
+            gridBtn.style.setProperty('background', 'var(--gold)', 'important');
+            gridBtn.style.setProperty('color', 'var(--navy-dark)', 'important');
+            normalBtn.style.setProperty('background', 'transparent', 'important');
+            normalBtn.style.setProperty('color', 'var(--navy)', 'important');
         } else {
             gridBtn.classList.remove('active');
             normalBtn.classList.add('active');
+            normalBtn.style.setProperty('background', 'var(--gold)', 'important');
+            normalBtn.style.setProperty('color', 'var(--navy-dark)', 'important');
+            gridBtn.style.setProperty('background', 'transparent', 'important');
+            gridBtn.style.setProperty('color', 'var(--navy)', 'important');
         }
         
         // Show/hide views
@@ -203,11 +211,19 @@ class MediaGallery {
         if (view === 'grid') {
             gridBtn.classList.add('active');
             normalBtn.classList.remove('active');
+            gridBtn.style.setProperty('background', 'var(--gold)', 'important');
+            gridBtn.style.setProperty('color', 'var(--navy-dark)', 'important');
+            normalBtn.style.setProperty('background', 'transparent', 'important');
+            normalBtn.style.setProperty('color', 'var(--navy)', 'important');
             gridView.style.setProperty('display', 'block', 'important');
             normalView.style.setProperty('display', 'none', 'important');
         } else {
             gridBtn.classList.remove('active');
             normalBtn.classList.add('active');
+            normalBtn.style.setProperty('background', 'var(--gold)', 'important');
+            normalBtn.style.setProperty('color', 'var(--navy-dark)', 'important');
+            gridBtn.style.setProperty('background', 'transparent', 'important');
+            gridBtn.style.setProperty('color', 'var(--navy)', 'important');
             gridView.style.setProperty('display', 'none', 'important');
             normalView.style.setProperty('display', 'block', 'important');
         }

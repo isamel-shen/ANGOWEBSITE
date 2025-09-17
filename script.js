@@ -6,6 +6,44 @@ const navbar = document.querySelector('.navbar');
 // Debug: Log that script is loading
 console.log('🔧 Robust positioning script loaded on:', window.location.pathname);
 
+// Enhanced debugging function to inspect all ancestors
+function debugAncestors(element, name = 'element') {
+    console.log(`🔍 Debugging ancestors of ${name}:`);
+    let current = element;
+    let depth = 0;
+    
+    while (current && current !== document.documentElement) {
+        const style = getComputedStyle(current);
+        const rect = current.getBoundingClientRect();
+        
+        console.log(`  Level ${depth}:`, {
+            tagName: current.tagName,
+            className: current.className,
+            id: current.id,
+            position: style.position,
+            transform: style.transform,
+            perspective: style.perspective,
+            filter: style.filter,
+            contain: style.contain,
+            overflow: style.overflow,
+            zIndex: style.zIndex,
+            top: style.top,
+            left: style.left,
+            rect: {
+                top: rect.top,
+                left: rect.left,
+                bottom: rect.bottom,
+                right: rect.right,
+                width: rect.width,
+                height: rect.height
+            }
+        });
+        
+        current = current.parentElement;
+        depth++;
+    }
+}
+
 // Check if dropdown is inside transformed ancestors or positioned ancestors
 function hasPositioningAncestor(el) {
     while (el && el !== document.documentElement) {
@@ -22,6 +60,53 @@ function hasPositioningAncestor(el) {
     return false;
 }
 
+// Ensure element is in a fixed positioning context (direct child of body)
+function ensureFixedContext(el) {
+    if (!el) return;
+    
+    console.log('🔧 Ensuring fixed context for nav-menu');
+    debugAncestors(el, 'nav-menu before fix');
+    
+    let ancestor = el.parentElement;
+    let moved = false;
+    
+    while (ancestor && ancestor !== document.body) {
+        const style = getComputedStyle(ancestor);
+        if (style.transform !== 'none' || 
+            style.perspective !== 'none' || 
+            style.filter !== 'none' ||
+            style.position !== 'static' ||
+            style.willChange !== 'auto' ||
+            style.contain !== 'none') {
+            
+            console.log('🚨 Found containing block ancestor:', {
+                tagName: ancestor.tagName,
+                className: ancestor.className,
+                id: ancestor.id,
+                transform: style.transform,
+                position: style.position,
+                perspective: style.perspective,
+                filter: style.filter,
+                willChange: style.willChange,
+                contain: style.contain
+            });
+            
+            // Move to body
+            document.body.appendChild(el);
+            moved = true;
+            console.log('✅ Moved nav-menu to body');
+            break;
+        }
+        ancestor = ancestor.parentElement;
+    }
+    
+    if (moved) {
+        debugAncestors(el, 'nav-menu after fix');
+    }
+    
+    return moved;
+}
+
 // Move dropdown outside positioning ancestors if needed
 if (navMenu && hasPositioningAncestor(navMenu)) {
     console.log('🔧 Moving nav-menu to body to avoid containing block issues');
@@ -35,10 +120,13 @@ function updateMenuPosition() {
         return;
     }
     
-    // Safety check: if nav-menu is still inside a positioned ancestor, move it to body
-    if (hasPositioningAncestor(navMenu)) {
-        console.log('🔧 Safety check: Moving nav-menu to body to ensure proper positioning');
-        document.body.appendChild(navMenu);
+    // Ensure nav-menu is in proper fixed context
+    const wasMoved = ensureFixedContext(navMenu);
+    
+    if (wasMoved) {
+        console.log('🔄 Menu was moved, forcing reflow and reapplying styles');
+        // Force a reflow
+        navMenu.offsetHeight;
     }
     
     // Check if notification bar exists and measure the correct element
@@ -80,20 +168,56 @@ function updateMenuPosition() {
     const maxHeight = Math.max(remainingHeight - 20, 200);
     navMenu.style.maxHeight = `${maxHeight}px`;
     
-    console.log('Robust positioning:', {
+    // Ensure proper z-index to appear above header
+    const navbarZIndex = parseInt(getComputedStyle(navbar).zIndex) || 1000;
+    navMenu.style.zIndex = (navbarZIndex + 100).toString();
+    
+    // Get actual rendered position after setting styles
+    const actualRect = navMenu.getBoundingClientRect();
+    const actualGap = actualRect.top - rect.bottom;
+    
+    console.log('🔧 Detailed positioning debug:', {
         targetElement: notificationBar ? 'notification + navbar' : 'navbar only',
         targetBottom: rect.bottom,
-        topPx: topPx,
-        actualTop: navMenu.getBoundingClientRect().top,
+        calculatedTop: topPx - 1,
+        actualRenderedTop: actualRect.top,
+        gap: actualGap,
         viewportHeight: window.innerHeight,
         remainingHeight: remainingHeight,
         maxHeight: maxHeight,
-        gap: navMenu.getBoundingClientRect().top - rect.bottom,
         computedTop: getComputedStyle(navMenu).top,
         inlineTop: navMenu.style.top,
         computedPosition: getComputedStyle(navMenu).position,
-        computedTransform: getComputedStyle(navMenu).transform
+        computedTransform: getComputedStyle(navMenu).transform,
+        parentElement: navMenu.parentElement?.tagName,
+        parentClass: navMenu.parentElement?.className,
+        parentId: navMenu.parentElement?.id
     });
+    
+    // If there's still a gap after positioning, try to fix it
+    if (Math.abs(actualGap) > 2) {
+        console.warn('⚠️ Gap detected between header and dropdown:', actualGap + 'px');
+        console.log('🔍 Additional debugging info:');
+        console.log('  - Navbar rect:', rect);
+        console.log('  - Menu rect:', actualRect);
+        console.log('  - Menu computed styles:', {
+            position: getComputedStyle(navMenu).position,
+            top: getComputedStyle(navMenu).top,
+            left: getComputedStyle(navMenu).left,
+            transform: getComputedStyle(navMenu).transform
+        });
+        
+        // Try to fix the gap by adjusting the top position
+        console.log('🔧 Attempting to fix gap by adjusting position');
+        const correctedTop = Math.round(rect.bottom - 1);
+        navMenu.style.top = `${correctedTop}px`;
+        
+        // Force a reflow and check again
+        navMenu.offsetHeight;
+        const newRect = navMenu.getBoundingClientRect();
+        const newGap = newRect.top - rect.bottom;
+        console.log('🔧 After correction - gap:', newGap + 'px');
+    }
 }
 
 // Debounced resize handler
@@ -111,7 +235,14 @@ hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     hamburger.setAttribute('aria-expanded', isOpen);
     navMenu.setAttribute('aria-hidden', !isOpen);
-    updateMenuPosition();
+    
+    if (isOpen) {
+        console.log('🍔 Opening menu - ensuring proper positioning');
+        // Ensure fixed context before positioning
+        ensureFixedContext(navMenu);
+        // Update position
+        updateMenuPosition();
+    }
 });
 
 // Update position while menu is open (for address bar hiding on mobile)

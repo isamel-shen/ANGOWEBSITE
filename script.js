@@ -6,18 +6,25 @@ const navbar = document.querySelector('.navbar');
 // Debug: Log that script is loading
 console.log('🔧 Robust positioning script loaded on:', window.location.pathname);
 
-// Check if dropdown is inside transformed ancestors
-function hasTransformAncestor(el) {
+// Check if dropdown is inside transformed ancestors or positioned ancestors
+function hasPositioningAncestor(el) {
     while (el && el !== document.documentElement) {
         const s = getComputedStyle(el);
+        // Check for any property that creates a new containing block
         if (s.transform && s.transform !== 'none') return true;
+        if (s.position && s.position !== 'static') return true;
+        if (s.willChange && s.willChange !== 'auto') return true;
+        if (s.filter && s.filter !== 'none') return true;
+        if (s.perspective && s.perspective !== 'none') return true;
+        if (s.contain && s.contain !== 'none') return true;
         el = el.parentElement;
     }
     return false;
 }
 
-// Move dropdown outside transformed ancestors if needed
-if (hasTransformAncestor(navMenu)) {
+// Move dropdown outside positioning ancestors if needed
+if (navMenu && hasPositioningAncestor(navMenu)) {
+    console.log('🔧 Moving nav-menu to body to avoid containing block issues');
     document.body.appendChild(navMenu); // Move to body so fixed is relative to viewport
 }
 
@@ -26,6 +33,12 @@ function updateMenuPosition() {
     if (!navMenu || !navbar) {
         console.log('❌ Missing elements:', { navMenu: !!navMenu, navbar: !!navbar });
         return;
+    }
+    
+    // Safety check: if nav-menu is still inside a positioned ancestor, move it to body
+    if (hasPositioningAncestor(navMenu)) {
+        console.log('🔧 Safety check: Moving nav-menu to body to ensure proper positioning');
+        document.body.appendChild(navMenu);
     }
     
     // Check if notification bar exists and measure the correct element
@@ -114,8 +127,15 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial position update
-document.addEventListener('DOMContentLoaded', updateMenuPosition);
+// Initial position update and safety check
+document.addEventListener('DOMContentLoaded', () => {
+    // Re-check for positioning ancestors after DOM is loaded
+    if (navMenu && hasPositioningAncestor(navMenu)) {
+        console.log('🔧 Moving nav-menu to body after DOM load to avoid containing block issues');
+        document.body.appendChild(navMenu);
+    }
+    updateMenuPosition();
+});
 window.addEventListener('load', updateMenuPosition);
 
 // Navbar background on scroll

@@ -22,8 +22,22 @@ if (hasTransformAncestor(navMenu)) {
 function updateMenuPosition() {
     if (!navMenu || !navbar) return;
     
-    // Measure actual bottom of the navbar (viewport coordinates)
-    const rect = navbar.getBoundingClientRect();
+    // Check if notification bar exists and measure the correct element
+    const notificationBar = document.getElementById('notification-bar');
+    let targetElement = navbar;
+    
+    if (notificationBar) {
+        // If notification bar exists, measure from the bottom of the entire top section
+        // (notification bar + navbar combined)
+        const notificationRect = notificationBar.getBoundingClientRect();
+        const navbarRect = navbar.getBoundingClientRect();
+        // Use the bottom of whichever element is lower
+        const bottomY = Math.max(notificationRect.bottom, navbarRect.bottom);
+        targetElement = { getBoundingClientRect: () => ({ bottom: bottomY }) };
+    }
+    
+    // Measure actual bottom of the target element (viewport coordinates)
+    const rect = targetElement.getBoundingClientRect();
     // Use rounding to avoid sub-pixel hairline gaps on high-DPR devices
     const topPx = Math.round(rect.bottom);
     // Small 1px intentional overlap to hide any gap
@@ -35,7 +49,8 @@ function updateMenuPosition() {
     navMenu.style.maxHeight = `${maxHeight}px`;
     
     console.log('Robust positioning:', {
-        navbarBottom: rect.bottom,
+        targetElement: notificationBar ? 'notification + navbar' : 'navbar only',
+        targetBottom: rect.bottom,
         topPx: topPx,
         actualTop: navMenu.getBoundingClientRect().top,
         viewportHeight: window.innerHeight,

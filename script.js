@@ -3,6 +3,9 @@ const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 const navbar = document.querySelector('.navbar');
 
+// Debug: Log that script is loading
+console.log('🔧 Robust positioning script loaded on:', window.location.pathname);
+
 // Check if dropdown is inside transformed ancestors
 function hasTransformAncestor(el) {
     while (el && el !== document.documentElement) {
@@ -20,11 +23,16 @@ if (hasTransformAncestor(navMenu)) {
 
 // Robust positioning function using getBoundingClientRect
 function updateMenuPosition() {
-    if (!navMenu || !navbar) return;
+    if (!navMenu || !navbar) {
+        console.log('❌ Missing elements:', { navMenu: !!navMenu, navbar: !!navbar });
+        return;
+    }
     
     // Check if notification bar exists and measure the correct element
     const notificationBar = document.getElementById('notification-bar');
     let targetElement = navbar;
+    
+    console.log('🔍 Notification bar found:', !!notificationBar);
     
     if (notificationBar) {
         // If notification bar exists, measure from the bottom of the entire top section
@@ -34,6 +42,12 @@ function updateMenuPosition() {
         // Use the bottom of whichever element is lower
         const bottomY = Math.max(notificationRect.bottom, navbarRect.bottom);
         targetElement = { getBoundingClientRect: () => ({ bottom: bottomY }) };
+        
+        console.log('📊 Notification bar measurements:', {
+            notificationBottom: notificationRect.bottom,
+            navbarBottom: navbarRect.bottom,
+            usingBottom: bottomY
+        });
     }
     
     // Measure actual bottom of the target element (viewport coordinates)

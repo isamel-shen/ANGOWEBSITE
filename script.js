@@ -45,8 +45,13 @@ function updateMenuPosition() {
         
         console.log('📊 Notification bar measurements:', {
             notificationBottom: notificationRect.bottom,
+            notificationHeight: notificationRect.height,
+            notificationTop: notificationRect.top,
             navbarBottom: navbarRect.bottom,
-            usingBottom: bottomY
+            navbarHeight: navbarRect.height,
+            navbarTop: navbarRect.top,
+            usingBottom: bottomY,
+            expectedNotificationBottom: notificationRect.top + notificationRect.height
         });
     }
     
@@ -70,7 +75,11 @@ function updateMenuPosition() {
         viewportHeight: window.innerHeight,
         remainingHeight: remainingHeight,
         maxHeight: maxHeight,
-        gap: navMenu.getBoundingClientRect().top - rect.bottom
+        gap: navMenu.getBoundingClientRect().top - rect.bottom,
+        computedTop: getComputedStyle(navMenu).top,
+        inlineTop: navMenu.style.top,
+        computedPosition: getComputedStyle(navMenu).position,
+        computedTransform: getComputedStyle(navMenu).transform
     });
 }
 

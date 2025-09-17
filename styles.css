@@ -520,22 +520,24 @@ body {
     }
 
     .nav-menu {
-        position: absolute;
+        position: fixed; /* Fixed to viewport for reliable positioning */
         left: 0;
-        top: 100%; /* Position directly below the nav-container (orange line) */
-        margin-top: -1px; /* 1px overlap to prevent gap */
+        top: 0; /* JS will set inline top value */
+        width: 100%;
         flex-direction: column;
         background-color: white;
-        width: 100%;
         text-align: center;
-        transition: 0.3s;
-        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-        padding: 2rem 0;
-        z-index: 999;
+        z-index: 1100; /* Above navbar */
         max-height: calc(100vh - 120px); /* Fallback height */
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        transform: translateX(-100%); /* Use transform for slide animation */
+        transform: translateX(-100%); /* Slide animation */
+        transform-origin: top right;
+        transition: transform 0.22s ease;
+        /* Visual fixes to hide tiny gaps */
+        border-top: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        padding: 2rem 0;
     }
 
     .nav-menu.active {
@@ -621,8 +623,8 @@ body {
     }
     
     .nav-menu {
-        top: 100%; /* Position directly below the nav-container (orange line) */
-        margin-top: -1px; /* 1px overlap to prevent gap */
+        position: fixed; /* Fixed to viewport for reliable positioning */
+        top: 0; /* JS will set inline top value */
         max-height: calc(100vh - 100px); /* Fallback height */
     }
     
@@ -637,8 +639,8 @@ body {
 /* Extra small screens and landscape phones */
 @media (max-width: 360px) {
     .nav-menu {
-        top: 100%; /* Position directly below the nav-container (orange line) */
-        margin-top: -1px; /* 1px overlap to prevent gap */
+        position: fixed; /* Fixed to viewport for reliable positioning */
+        top: 0; /* JS will set inline top value */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1.5rem 0;
     }
@@ -653,8 +655,8 @@ body {
 /* Landscape orientation adjustments */
 @media (max-height: 500px) and (orientation: landscape) {
     .nav-menu {
-        top: 100%; /* Position directly below the nav-container (orange line) */
-        margin-top: -1px; /* 1px overlap to prevent gap */
+        position: fixed; /* Fixed to viewport for reliable positioning */
+        top: 0; /* JS will set inline top value */
         max-height: calc(100vh - 100px); /* Fallback height */
         padding: 1rem 0;
     }
@@ -1064,8 +1066,8 @@ html {
     }
     
     .nav-menu {
-        top: 100%; /* Position directly below the nav-container (orange line) */
-        margin-top: -1px; /* 1px overlap to prevent gap */
+        position: fixed; /* Fixed to viewport for reliable positioning */
+        top: 0; /* JS will set inline top value */
     }
     
     .logo {

@@ -138,10 +138,79 @@
         </div>
     </div>
 
-    <script src="script.js?v=10"></script>
+    <script src="script.js?v=11"></script>
     <script>
-        // Debug code removed to prevent interference with main page
-        console.log('Mobile dropdown test page loaded - debug borders removed');
+        // Troubleshooting lines for mobile dropdown test page only
+        console.log('🔍 Mobile Dropdown Test Page - Troubleshooting Mode');
+        
+        // Add visual debugging borders
+        function addDebugBorders() {
+            const navbar = document.querySelector('.navbar');
+            const navContainer = document.querySelector('.nav-container');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (navbar) {
+                navbar.style.border = '3px solid red';
+                navbar.style.boxSizing = 'border-box';
+                console.log('🔴 Red border added to navbar (red line)');
+            }
+            
+            if (navContainer) {
+                navContainer.style.border = '3px solid orange';
+                navContainer.style.boxSizing = 'border-box';
+                console.log('🟠 Orange border added to nav-container (orange line)');
+            }
+            
+            if (navMenu) {
+                navMenu.style.border = '3px solid blue';
+                navMenu.style.boxSizing = 'border-box';
+                console.log('🔵 Blue border added to nav-menu (dropdown)');
+            }
+        }
+        
+        // Enhanced debugging function
+        function debugPositioning() {
+            const navbar = document.querySelector('.navbar');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (navbar && navMenu) {
+                const navbarRect = navbar.getBoundingClientRect();
+                const menuRect = navMenu.getBoundingClientRect();
+                
+                console.log('📊 Positioning Debug Info:');
+                console.log('Navbar bottom:', navbarRect.bottom);
+                console.log('Menu top:', menuRect.top);
+                console.log('Gap between navbar and menu:', menuRect.top - navbarRect.bottom);
+                console.log('Menu computed top style:', getComputedStyle(navMenu).top);
+                console.log('Menu inline top style:', navMenu.style.top);
+                console.log('Menu position:', getComputedStyle(navMenu).position);
+                console.log('Menu transform:', getComputedStyle(navMenu).transform);
+                console.log('Viewport height:', window.innerHeight);
+                console.log('Scroll position:', window.scrollY);
+            }
+        }
+        
+        // Add debug borders on load
+        document.addEventListener('DOMContentLoaded', () => {
+            addDebugBorders();
+            console.log('🎯 Debug borders added - check visual alignment');
+        });
+        
+        // Debug on menu toggle
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.hamburger')) {
+                setTimeout(() => {
+                    debugPositioning();
+                }, 100);
+            }
+        });
+        
+        // Debug on resize
+        window.addEventListener('resize', () => {
+            setTimeout(debugPositioning, 150);
+        });
+        
+        console.log('✅ Troubleshooting mode active - check console for debug info');
     </script>
 </body>
 </html>

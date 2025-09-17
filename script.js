@@ -1,40 +1,73 @@
-// Mobile Navigation Toggle
+// Mobile Navigation Toggle - Robust Positioning Approach
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
+const navbar = document.querySelector('.navbar');
 
-// Dropdown max-height calculation only (CSS handles positioning)
-function updateDropdownMaxHeight() {
-    if (!navMenu) return;
-    
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        const navbarRect = navbar.getBoundingClientRect();
-        
-        // Calculate remaining viewport space for max-height
-        const remainingHeight = window.innerHeight - navbarRect.bottom;
-        const maxHeight = Math.max(remainingHeight - 20, 200);
-        navMenu.style.maxHeight = `${maxHeight}px`;
-        
-        console.log('Dropdown max-height (orange line alignment):', {
-            navbarBottom: navbarRect.bottom,
-            viewportHeight: window.innerHeight,
-            remainingHeight: remainingHeight,
-            maxHeight: maxHeight
-        });
+// Check if dropdown is inside transformed ancestors
+function hasTransformAncestor(el) {
+    while (el && el !== document.documentElement) {
+        const s = getComputedStyle(el);
+        if (s.transform && s.transform !== 'none') return true;
+        el = el.parentElement;
     }
+    return false;
 }
 
-// Update max-height on window resize and orientation change
-window.addEventListener('resize', updateDropdownMaxHeight);
-window.addEventListener('orientationchange', () => {
-    setTimeout(updateDropdownMaxHeight, 100);
+// Move dropdown outside transformed ancestors if needed
+if (hasTransformAncestor(navMenu)) {
+    document.body.appendChild(navMenu); // Move to body so fixed is relative to viewport
+}
+
+// Robust positioning function using getBoundingClientRect
+function updateMenuPosition() {
+    if (!navMenu || !navbar) return;
+    
+    // Measure actual bottom of the navbar (viewport coordinates)
+    const rect = navbar.getBoundingClientRect();
+    // Use rounding to avoid sub-pixel hairline gaps on high-DPR devices
+    const topPx = Math.round(rect.bottom);
+    // Small 1px intentional overlap to hide any gap
+    navMenu.style.top = `${topPx - 1}px`;
+    
+    // Calculate remaining viewport space for max-height
+    const remainingHeight = window.innerHeight - rect.bottom;
+    const maxHeight = Math.max(remainingHeight - 20, 200);
+    navMenu.style.maxHeight = `${maxHeight}px`;
+    
+    console.log('Robust positioning:', {
+        navbarBottom: rect.bottom,
+        topPx: topPx,
+        actualTop: navMenu.getBoundingClientRect().top,
+        viewportHeight: window.innerHeight,
+        remainingHeight: remainingHeight,
+        maxHeight: maxHeight,
+        gap: navMenu.getBoundingClientRect().top - rect.bottom
+    });
+}
+
+// Debounced resize handler
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateMenuPosition, 120);
 });
 
-// Update max-height when menu is toggled
+window.addEventListener('orientationchange', updateMenuPosition);
+
+// Update position when menu is toggled
 hamburger.addEventListener('click', () => {
+    const isOpen = navMenu.classList.toggle('active');
     hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-    setTimeout(updateDropdownMaxHeight, 10);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    navMenu.setAttribute('aria-hidden', !isOpen);
+    updateMenuPosition();
+});
+
+// Update position while menu is open (for address bar hiding on mobile)
+window.addEventListener('scroll', () => {
+    if (navMenu.classList.contains('active')) {
+        requestAnimationFrame(updateMenuPosition);
+    }
 });
 
 // Close mobile menu when clicking on a link
@@ -43,9 +76,9 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
     navMenu.classList.remove('active');
 }));
 
-// Initial max-height update
-document.addEventListener('DOMContentLoaded', updateDropdownMaxHeight);
-window.addEventListener('load', updateDropdownMaxHeight);
+// Initial position update
+document.addEventListener('DOMContentLoaded', updateMenuPosition);
+window.addEventListener('load', updateMenuPosition);
 
 // Navbar background on scroll
 window.addEventListener('scroll', () => {

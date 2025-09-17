@@ -1,0 +1,5 @@
+[33m3049446[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Revert to orange line alignment that was working
+[33mdea58c9[m Fix dropdown alignment with exact JavaScript positioning
+[33m1482d09[m Align dropdown with red navbar line like orange nav-container
+[33maa1edec[m Fix dropdown positioning with relative parent context
+[33mdf70e58[m Revert to CSS-only approach with margin-top overlap

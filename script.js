@@ -107,9 +107,9 @@ function ensureFixedContext(el) {
     return moved;
 }
 
-// Move dropdown outside positioning ancestors if needed
-if (navMenu && hasPositioningAncestor(navMenu)) {
-    console.log('🔧 Moving nav-menu to body to avoid containing block issues');
+// Move dropdown outside positioning ancestors if needed (only on mobile)
+if (navMenu && hasPositioningAncestor(navMenu) && window.innerWidth <= 768) {
+    console.log('🔧 Moving nav-menu to body to avoid containing block issues (mobile only)');
     document.body.appendChild(navMenu); // Move to body so fixed is relative to viewport
 }
 
@@ -117,6 +117,12 @@ if (navMenu && hasPositioningAncestor(navMenu)) {
 function updateMenuPosition() {
     if (!navMenu || !navbar) {
         console.log('❌ Missing elements:', { navMenu: !!navMenu, navbar: !!navbar });
+        return;
+    }
+    
+    // Only apply mobile positioning on mobile devices
+    if (window.innerWidth > 768) {
+        console.log('🖥️ Desktop view - skipping mobile positioning');
         return;
     }
     
@@ -224,7 +230,23 @@ function updateMenuPosition() {
 let resizeTimer;
 window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(updateMenuPosition, 120);
+    resizeTimer = setTimeout(() => {
+        // If resizing to desktop, restore nav-menu to original position
+        if (window.innerWidth > 768 && navMenu && navMenu.parentElement === document.body) {
+            console.log('🖥️ Resizing to desktop - restoring nav-menu to original position');
+            const navContainer = document.querySelector('.nav-container');
+            if (navContainer) {
+                navContainer.appendChild(navMenu);
+                // Reset any mobile-specific styles
+                navMenu.style.top = '';
+                navMenu.style.left = '';
+                navMenu.style.width = '';
+                navMenu.style.maxHeight = '';
+                navMenu.style.zIndex = '';
+            }
+        }
+        updateMenuPosition();
+    }, 120);
 });
 
 window.addEventListener('orientationchange', updateMenuPosition);
@@ -236,8 +258,8 @@ hamburger.addEventListener('click', () => {
     hamburger.setAttribute('aria-expanded', isOpen);
     navMenu.setAttribute('aria-hidden', !isOpen);
     
-    if (isOpen) {
-        console.log('🍔 Opening menu - ensuring proper positioning');
+    if (isOpen && window.innerWidth <= 768) {
+        console.log('🍔 Opening menu - ensuring proper positioning (mobile only)');
         // Ensure fixed context before positioning
         ensureFixedContext(navMenu);
         // Update position
@@ -247,7 +269,7 @@ hamburger.addEventListener('click', () => {
 
 // Update position while menu is open (for address bar hiding on mobile)
 window.addEventListener('scroll', () => {
-    if (navMenu.classList.contains('active')) {
+    if (navMenu.classList.contains('active') && window.innerWidth <= 768) {
         requestAnimationFrame(updateMenuPosition);
     }
 });
@@ -260,9 +282,9 @@ document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', 
 
 // Initial position update and safety check
 document.addEventListener('DOMContentLoaded', () => {
-    // Re-check for positioning ancestors after DOM is loaded
-    if (navMenu && hasPositioningAncestor(navMenu)) {
-        console.log('🔧 Moving nav-menu to body after DOM load to avoid containing block issues');
+    // Re-check for positioning ancestors after DOM is loaded (mobile only)
+    if (navMenu && hasPositioningAncestor(navMenu) && window.innerWidth <= 768) {
+        console.log('🔧 Moving nav-menu to body after DOM load to avoid containing block issues (mobile only)');
         document.body.appendChild(navMenu);
     }
     updateMenuPosition();

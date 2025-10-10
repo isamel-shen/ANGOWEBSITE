@@ -1,11 +1,11 @@
 {
-    "killSwitch": false,
+    "killSwitch": true,
     "notificationBar": {
         "enabled": true,
         "rotationInterval": 7000,
         "messages": [
             {
-                "text": "🎉 New U16 Basketball Tournament - Register Now!",
+                "text": "🎉 Register for upcoming tournaments!",
                 "link": "#scheduling"
             },
             {

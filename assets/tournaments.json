@@ -5,11 +5,11 @@
         "rotationInterval": 7000,
         "messages": [
             {
-                "text": "🎉 New U16 Basketball Tournament - Register Now!",
+                "text": "🎉 Check Registration for New Tournaments!",
                 "link": "#scheduling"
             },
             {
-                "text": "💰 Win cash prizes in upcoming tournaments!",
+                "text": "💰 Win $800 in Our Upcoming 3v3 Tournament!",
                 "link": "#information"
             },
             {
@@ -21,17 +21,17 @@
     "tournaments": [
         {
             "id": 1,
-            "name": "U16 4v4 Basketball Tournament",
+            "name": "3v3 Basketball Grand Prix",
             "sport": "Basketball",
-            "date": "2025-10-05",
+            "date": "2025-11-22",
             "time": "2:00 PM",
-            "location": "Vaughan Sportsplex",
-            "format": "4v4",
-            "entryFee": "$100",
-            "prizePool": "$400",
-            "skillLevel": "U16",
+            "location": "Kings Court Mississauga",
+            "format": "3v3",
+            "entryFee": "$200",
+            "prizePool": "$800",
+            "skillLevel": "Intermediate",
             "media": [],
-            "description": "Calling our U16 athletes to join us for an intense 4v4 basketball showdown! Bring your A-game and compete for the $400 prize pool!",
+            "description": "Compete in our upcoming 3v3 Basketball Grand Prix for a $800 cash prize pool!",
             "limited": false
         }
     ]
